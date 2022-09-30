@@ -36,6 +36,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'bootstrap5',
 ]
 
 MIDDLEWARE = [
@@ -74,8 +75,12 @@ WSGI_APPLICATION = 'newLousList.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'NAME': 'd7siauh3hsgh65',
+        'USER': 'znocwaswfbysrt',
+        'PASSWORD': 'dbef0f5df30d827aa377a237b3add18adaf99773fa2637bb6e5a77d6d4ec6eb9',
+        'HOST': 'ec2-34-200-205-45.compute-1.amazonaws.com',
+        'PORT':  '5432',
     }
 }
 
