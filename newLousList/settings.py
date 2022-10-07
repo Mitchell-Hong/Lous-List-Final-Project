@@ -77,10 +77,10 @@ WSGI_APPLICATION = 'newLousList.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': 'd7siauh3hsgh65',
-        'USER': 'znocwaswfbysrt',
-        'PASSWORD': 'dbef0f5df30d827aa377a237b3add18adaf99773fa2637bb6e5a77d6d4ec6eb9',
-        'HOST': 'ec2-34-200-205-45.compute-1.amazonaws.com',
+        'NAME': 'd1ol43ug520s2i',
+        'USER': 'eczkgmyumgqrvl',
+        'PASSWORD': '7aa3e89714bd37d712686e832e98a4d35ef74c7b6c24a53cf4438c3454a4dc17',
+        'HOST': 'ec2-34-231-190-161.compute-1.amazonaws.com',
         'PORT':  '5432',
     }
 }
