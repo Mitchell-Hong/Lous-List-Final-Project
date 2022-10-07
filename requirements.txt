@@ -10,3 +10,5 @@ gunicorn
 django-heroku
 
 django-bootstrap-v5
+
+django-allauth
