@@ -11,8 +11,23 @@
 
     <body>
         {% block content %}
-            <div class="mx-auto bg-primary bg-gradient" style="width: 100%">
-                <h2 class="text-center py-3">Lou's List 2.0</h2>
+            <div class="mx-auto bg-gradient" 
+            style="width: 100%; background-color:darkslateblue">
+                {% load static %}
+                <div class="d-inline-block">
+                    <img src="{% static "main/images/uvaLogo.png" %}" class="d-inline-block ms-2 pb-2" alt="UVA" />
+                    <h4 class="text-center d-inline-block pt-3 ms-2 me-5" style="color:gainsboro">Lou's List 2.0</h4>
+
+                    <a href="#" class="d-inline-block mx-2" style="color:gainsboro; text-decoration:none">Class Search</a>
+                    <a href="#" class="d-inline-block mx-2" style="color:gainsboro; text-decoration:none">Course Catalog</a>
+                    <a href="#" class="d-inline-block mx-2" style="color:gainsboro; text-decoration:none">My Schedule</a>
+                    <a href="#" class="d-inline-block mx-2" style="color:gainsboro; text-decoration:none">Shopping Cart</a>
+                </div>
+
+                <div class="d-inline-block float-end pt-3 mt-1 me-5">
+                    <a href="/accounts/google/login/?process=login" class="text-end"
+                    style="color:gainsboro; text-decoration:none">Sign In</a>
+                </div>
             </div>
         {% endblock content %}
     </body>

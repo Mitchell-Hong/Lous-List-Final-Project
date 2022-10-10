@@ -1,4 +1,5 @@
 from django.urls import path
+from django.contrib.staticfiles.urls import staticfiles_urlpatterns
 
 from . import views
 
@@ -8,3 +9,5 @@ urlpatterns = [
     # the path for the /main/ route
     path('', views.index, name='index'),
 ]
+
+urlpatterns += staticfiles_urlpatterns()
