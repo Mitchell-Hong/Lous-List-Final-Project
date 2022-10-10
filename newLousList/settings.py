@@ -91,7 +91,29 @@ AUTHENTICATION_BACKENDS = [
 SITE_ID = 1
 
 WSGI_APPLICATION = 'newLousList.wsgi.application'
+# from https://dev.to/mdrhmn/django-google-authentication-using-django-allauth-18f8
+# showing how to properly set up and use google login and overwrite bad HTML
+LOGIN_REDIRECT_URL = '/main/'
+LOGOUT_REDIRECT_URL = '/main/'
 
+# Additional configuration settings
+SOCIALACCOUNT_QUERY_EMAIL = True
+ACCOUNT_LOGOUT_ON_GET= True
+ACCOUNT_UNIQUE_EMAIL = True
+ACCOUNT_EMAIL_REQUIRED = True
+
+# allows us to get the users profile and email on login useful for displaying personal info
+SOCIALACCOUNT_PROVIDERS = {
+    'google': {
+        'SCOPE': [
+            'profile',
+            'email',
+        ],
+        'AUTH_PARAMS': {
+            'access_type': 'online',
+        }
+    }
+}
 
 # Database
 # https://docs.djangoproject.com/en/3.2/ref/settings/#databases

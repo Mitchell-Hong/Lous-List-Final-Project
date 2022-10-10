@@ -1,3 +1,5 @@
+{% load socialaccount %}
+
 <html lang="en">
     <head>
         <meta charset="UTF-8">
@@ -23,11 +25,18 @@
                     <a href="#" class="d-inline-block mx-2" style="color:gainsboro; text-decoration:none">My Schedule</a>
                     <a href="#" class="d-inline-block mx-2" style="color:gainsboro; text-decoration:none">Shopping Cart</a>
                 </div>
-
+                {% if user.is_authenticated %}
+                    <div class="d-inline-block float-end pt-3 me-4">
+                        <img src="{{user.socialaccount_set.all.0.extra_data.picture}}" 
+                        alt="Welcome, {{user.socialaccount_set.all.0.extra_data.given_name}}"
+                        style="height: 5%; border-radius: 50%;"/>
+                    </div>
+                {% else %}
                 <div class="d-inline-block float-end pt-3 mt-1 me-5">
                     <a href="/accounts/google/login/?process=login" class="text-end"
                     style="color:gainsboro; text-decoration:none">Sign In</a>
                 </div>
+                {% endif %}
             </div>
         {% endblock content %}
     </body>
