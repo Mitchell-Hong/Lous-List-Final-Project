@@ -1,4 +1,7 @@
 {% load socialaccount %}
+{% load static %}
+
+<link rel="stylesheet" href="{% static 'main/index/style.css'%}?{% now "U" %}">
 
 <html lang="en">
     <head>
@@ -10,31 +13,36 @@
         {% bootstrap_javascript %}
         {% bootstrap_messages %}
     </head>
+    <script>
+        const profile = document.getElementById("profile").addEventListener("click", function() {})
+    </script>
 
     <body>
         {% block content %}
-            <div class="mx-auto bg-gradient" 
-            style="width: 100%; background-color:darkslateblue">
+            <div class="mx-auto bg-gradient" class="tab"
+            style="width: 100%; height: 8.5%; background-color:darkslateblue">
                 {% load static %}
-                <div class="d-inline-block">
+                <div class="d-inline-block position-relative">
                     <img src="{% static "main/images/uvaLogo.png" %}" class="d-inline-block ms-2 pb-2" alt="UVA" />
                     <h4 class="text-center d-inline-block pt-3 ms-2 me-5" style="color:gainsboro">Lou's List 2.0</h4>
 
-                    <a href="#" class="d-inline-block mx-2" style="color:gainsboro; text-decoration:none">Class Search</a>
-                    <a href="#" class="d-inline-block mx-2" style="color:gainsboro; text-decoration:none">Course Catalog</a>
-                    <a href="#" class="d-inline-block mx-2" style="color:gainsboro; text-decoration:none">My Schedule</a>
-                    <a href="#" class="d-inline-block mx-2" style="color:gainsboro; text-decoration:none">Shopping Cart</a>
+                    <a href="#" class="d-inline-block mx-2">Class Search</a>
+                    <a href="#" class="d-inline-block mx-2">Course Catalog</a>
+                    <a href="#" class="d-inline-block mx-2">My Schedule</a>
+                    <a href="#" class="d-inline-block mx-2">Shopping Cart</a>
                 </div>
                 {% if user.is_authenticated %}
-                    <div class="d-inline-block float-end pt-3 me-4">
+                    <div class="d-inline-block float-end me-4"
+                    style="margin-top:1%">
                         <img src="{{user.socialaccount_set.all.0.extra_data.picture}}" 
                         alt="Welcome, {{user.socialaccount_set.all.0.extra_data.given_name}}"
-                        style="height: 5%; border-radius: 50%;"/>
+                        style="height: 50%; border-radius: 50%; cursor:pointer;"
+                        class="position-relative" id="profile"/>
                     </div>
                 {% else %}
-                <div class="d-inline-block float-end pt-3 mt-1 me-5">
+                <div class="d-inline-block float-end pt-3 mt-1 me-5 position-relative">
                     <a href="/accounts/google/login/?process=login" class="text-end"
-                    style="color:gainsboro; text-decoration:none">Sign In</a>
+                    style="color:gainsboro; text-decoration:none; cursor:pointerr;">Sign In</a>
                 </div>
                 {% endif %}
             </div>

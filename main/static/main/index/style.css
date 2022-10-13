@@ -1,0 +1,12 @@
+div a:hover{
+    color:lightgray;
+    text-decoration: underline;
+}
+a:active{
+    color:blue;
+}
+
+div a{
+    color: gainsboro;
+    text-decoration: none;
+}
