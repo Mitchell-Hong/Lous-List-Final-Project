@@ -8,6 +8,8 @@ app_name = 'main'
 urlpatterns = [
     # the path for the /main/ route
     path('', views.index, name='index'),
+    path('editprofile/', views.editprofile, name='editprofile'),
+
 ]
 
 urlpatterns += staticfiles_urlpatterns()
