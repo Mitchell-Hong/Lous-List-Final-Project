@@ -1,9 +1,11 @@
 from django.shortcuts import render, get_object_or_404
 from django.http import HttpResponseRedirect, HttpResponse
 from django.views import generic
-from django.urls import reverse
+from django.urls import reverse, path
 from .forms import UserForm
 from .models import myUser
+# this is used for making HTTP requests from an external API with django
+import requests
 
 # Create your views here.
 # simple display of what is shown at /main/ route
@@ -35,3 +37,15 @@ def editprofile(request):
                 # this is what we want so we have no hardcoded URLS
                 return HttpResponseRedirect(reverse('main:index'))     
         return render(request, 'main/editprofile.html', context)
+
+
+def coursecatalog(request):
+    url = 'http://luthers-list.herokuapp.com/api/deptlist/'
+    response = requests.get(url)
+    data = response.json()      # data is a list of departments {"subject": abbrev}
+    departments = []
+    for i in data:
+        tempDepartment = i["subject"]
+        departments.append(tempDepartment)
+        
+    return HttpResponse(departments)

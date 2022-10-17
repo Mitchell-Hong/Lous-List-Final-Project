@@ -9,6 +9,10 @@ urlpatterns = [
     # the path for the /main/ route
     path('', views.index, name='index'),
     path('editprofile/', views.editprofile, name='editprofile'),
+    
+
+    # these paths are used to get the data from the API
+    path('coursecatalog/', views.coursecatalog, name='coursecatalog'),
 
 ]
 
