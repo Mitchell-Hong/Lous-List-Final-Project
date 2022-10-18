@@ -16,3 +16,5 @@ django-allauth
 whitenoise
 # Python library that helps make HTTP requests for API calls
 requests
+
+importlib-metadata

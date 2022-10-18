@@ -1,1 +1,19 @@
-{% extends index.html %}
+{% extends 'main/index.html' %}
+<html>
+{% block content %}
+<body>
+    <div class="container">
+        <div class="center-text">
+            <div class="center-text">
+                <h1>List of Departments</h1>
+                <ul>
+                    {% for dep in department_results.all %}
+                        <li>{{ dep.abbreviation }}</li>
+                    {% endfor %}
+                </ul>
+            </div>
+        </div>
+    </div>
+</body>
+{% endblock %}
+</html>
