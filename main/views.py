@@ -1,11 +1,12 @@
-from django.shortcuts import render, get_object_or_404
+from django.shortcuts import render
 from django.http import HttpResponseRedirect, HttpResponse
 from django.views import generic
-from django.urls import reverse, path
+from django.urls import reverse
 from .forms import UserForm
 from .models import myUser
-# this is used for making HTTP requests from an external API with django
 import requests
+
+# allows for HTTP requests from the API
 
 # Create your views here.
 # simple display of what is shown at /main/ route
