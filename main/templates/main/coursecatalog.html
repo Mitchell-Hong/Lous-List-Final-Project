@@ -6,7 +6,7 @@
                 <h1>List of Departments</h1>
                 <ul>
                     {% for dep in department_results.all %}
-                        <li>{{ dep.abbreviation }}</li>
+                        <li><a href="{{ dep.abbreviation }}" style = "color: blue">{{ dep.abbreviation }}</a></li></li>
                     {% endfor %}
                 </ul>
             </div>
