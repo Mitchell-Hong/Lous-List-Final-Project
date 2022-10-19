@@ -1,10 +1,8 @@
 {% extends 'main/index.html' %}
 <html>
-{% block content %}
-<body>
-    <div class="container">
-        <div class="center-text">
-            <div class="center-text">
+    {% block content %}
+        <body>
+            <div class="container">
                 <h1>List of Departments</h1>
                 <ul>
                     {% for dep in department_results.all %}
@@ -12,8 +10,6 @@
                     {% endfor %}
                 </ul>
             </div>
-        </div>
-    </div>
-</body>
-{% endblock %}
+        </body>
+    {% endblock %}
 </html>
