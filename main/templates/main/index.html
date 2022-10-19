@@ -28,9 +28,9 @@
                 </div>
                 {% if user.is_authenticated %}
                     <div class="d-inline-block float-end me-4 dropdown position-relative">
-                        <button class="btn dropdown-toggle position-relative mt-2" type="button" id="dropdownMenuButton1" 
+                        <button class="btn dropdown-toggle position-relative mt-2" type="button" id="dropdownMenuButton1"
                         data-bs-toggle="dropdown" aria-expanded="false" style="height: 70%; cursor:pointer;">
-                            <img src="{{user.socialaccount_set.all.0.extra_data.picture}}" 
+                            <img src="{{user.socialaccount_set.all.0.extra_data.picture}}"
                             alt="Welcome, {{user.socialaccount_set.all.0.extra_data.given_name}}"
                             class="position-relative" id="profile"
                             style="height: 100%; border-radius: 50%;"/>
