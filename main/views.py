@@ -48,11 +48,44 @@ def editprofile(request):
                 form.save()
                 # reverse looks through all URLs defined in project and returns the one specified
                 # this is what we want so we have no hardcoded URLS
-                return HttpResponseRedirect(reverse('main:index'))
+                return HttpResponseRedirect(reverse('main:coursecatalog'))
         return render(request, 'main/editprofile.html', context)
 
-
+# view for the course catalog tab has a list of departments that user can click on to choose
 def coursecatalog(request):
     departments = department.objects.all() # data is a list of departments {"subject": abbrev}
-    context = { 'department_results' : departments }
+    context = { 
+        'department_results' : departments,
+        # tab tells the HTML what the depict as the active tab
+        'tab' : 'coursecatalog',
+         }
     return render(request,'main/coursecatalog.html', context)
+
+# dynamic routing based on which department the user clicked a list of all classes that belong to that department appear
+def deptclasses(request, dept):
+    url = 'http://luthers-list.herokuapp.com/api/dept/' + dept + '/'
+    response = requests.get(url)
+    data = response.json()
+
+    return HttpResponse(data)
+
+# class search dummy implementation for now
+def searchclass(request):
+    context = {
+        'tab' : 'searchclass',
+    }
+    return render(request,'main/searchclass.html', context)
+
+# myschedule dummy implementation for now
+def myschedule(request):
+    context = {
+        'tab' : 'myschedule',
+    }
+    return render(request,'main/myschedule.html', context)
+
+# shopping cart dummy implementation for now
+def shoppingcart(request):
+    context = {
+        'tab' : 'shoppingcart',
+    }
+    return render(request,'main/shoppingcart.html', context)

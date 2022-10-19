@@ -10,9 +10,15 @@ urlpatterns = [
     path('', views.index, name='index'),
     path('editprofile/', views.editprofile, name='editprofile'),
 
-
-    # these paths are used to get the data from the API
     path('coursecatalog/', views.coursecatalog, name='coursecatalog'),
+    path('coursecatalog/<str:dept>', views.deptclasses, name='deptclasses'),
+
+    path('searchclass/', views.searchclass, name='searchclass'),
+
+    path('myschedule/', views.myschedule, name='myschedule'),
+
+    path('shoppingcart/', views.shoppingcart, name='shoppingcart'),
+
 
 ]
 
