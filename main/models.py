@@ -48,6 +48,13 @@ class course(models.Model):
     waitlist = models.IntegerField()
     waitlistMax = models.IntegerField()
 
+    # meeting information
+    meeting_days = models.CharField(max_length=50)
+    start_time = models.CharField(max_length=100)
+    end_time = models.CharField(max_length=100)
+    room_location = models.CharField(max_length=50)
+
+
     def __str__(self):
         dep =  self.department
         num = self.courseNumber

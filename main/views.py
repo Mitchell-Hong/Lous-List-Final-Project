@@ -1,9 +1,10 @@
+from tracemalloc import start
 from django.shortcuts import render
 from django.http import HttpResponseRedirect, HttpResponse
 from django.views import generic
 from django.urls import reverse
 from .forms import UserForm
-from .models import myUser, department
+from .models import myUser, department, course
 # this is used for making HTTP requests from an external API with django
 import requests
 
@@ -54,11 +55,11 @@ def editprofile(request):
 # view for the course catalog tab has a list of departments that user can click on to choose
 def coursecatalog(request):
     departments = department.objects.all() # data is a list of departments {"subject": abbrev}
-    context = { 
+    context = {
         'department_results' : departments,
         # tab tells the HTML what the depict as the active tab
         'tab' : 'coursecatalog',
-         }
+    }
     return render(request,'main/coursecatalog.html', context)
 
 # dynamic routing based on which department the user clicked a list of all classes that belong to that department appear
@@ -66,7 +67,15 @@ def deptclasses(request, dept):
     url = 'http://luthers-list.herokuapp.com/api/dept/' + dept + '/'
     response = requests.get(url)
     data = response.json()
-
+    for entry in data:
+        courses = course(department = dept, courseNumber = entry['course_number'], description = entry['description'],
+        instructorName = entry['instructor']['name'], instructorEmail = entry['instructor']['email'], semesterCode = entry['semester_code'],
+        courseSection = entry['course_section'], credits = entry['units'], lectureType = entry['component'],
+        classCapacity = entry['class_capacity'], classEnrollment = entry['enrollment_total'],
+        classSpotsOpen = entry['enrollment_available'], waitlist = entry['wait_list'], waitlistMax = entry['wait_cap'],
+        meeting_days = entry['meetings']['days'], start_time = entry['meetings']['start_time'],
+        end_time = entry['meetings']['end_time'], room_location = entry['meetings']['facility_description'])
+        courses.save()
     return HttpResponse(data)
 
 # class search dummy implementation for now
