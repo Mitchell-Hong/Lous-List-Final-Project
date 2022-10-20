@@ -64,6 +64,8 @@ STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
 
 ROOT_URLCONF = 'newLousList.urls'
 
+DATA_UPLOAD_MAX_NUMBER_FIELDS = 10240 
+
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',

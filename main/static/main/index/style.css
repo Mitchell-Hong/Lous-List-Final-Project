@@ -10,7 +10,7 @@ div a:hover{
     text-decoration: underline;
 }
 a:active{
-    color:blue;
+    color:rgb(163, 163, 163);
 }
 /* All a tags inside of a div in general */
 div a{
@@ -20,4 +20,9 @@ div a{
 /* Accesses any object with the ID "dropdownMenuButton1" */
 #dropdownMenuButton1 {
     box-shadow: none;
+}
+
+.col{
+    background-color: lightsteelblue;
+    border: 1px solid black;
 }
