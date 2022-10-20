@@ -2,7 +2,9 @@
 {% load static %}
 
 <link rel="stylesheet" href="{% static 'main/index/style.css'%}?{% now "U" %}">
-
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Overpass:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
 <html lang="en">
     <head>
         <meta charset="UTF-8">
@@ -13,30 +15,31 @@
         {% bootstrap_javascript %}
     </head>
     <body>
-        <div class="mx-auto bg-gradient" class="tab"
-        style="width: 100%; height: 8.5%; background-color:darkslateblue">
+        <div nav="mx-auto bg-gradient" class="tab"
+        style="width: 100%; height: 8.5%; background-color:#ed874e">
             {% load static %}
-            <div class="d-inline-block position-relative">
+            <div>
+                <!-- <a href="/main/" --> 
                 <img src="{% static "main/images/uvaLogo.png" %}" class="d-inline-block ms-2 pb-2" alt="UVA" />
-                <h4 class="text-center d-inline-block pt-3 ms-2 me-5" style="color:gainsboro">Lou's List 2.0</h4>
+                <h4 class="text-center d-inline-block pt-3 ms-2 me-5" style="color:rgb(255, 255, 255)">Lou's List 2.0</h4>
 
-                <a href="/main/coursecatalog/" class="d-inline-block mx-2" 
-                {% if tab == 'coursecatalog' %}style="color: rgb(160, 160, 160); font-size:15px;"{% endif %}>
+                <a href="/main/coursecatalog/" class="a_hover" 
+                {% if tab == 'coursecatalog' %}style="selected"{% endif %}>
                 Course Catalog</a>
                 
-                <a href="/main/searchclass/" class="d-inline-block mx-2"
-                {% if tab == 'searchclass' %}style="color: rgb(160, 160, 160); font-size:15px;"{% endif %}>
+                <a href="/main/searchclass/" class="a_hover"
+                {% if tab == 'searchclass' %}style="selected"{% endif %}>
                 Class Search</a>
                 
-                <a href="/main/myschedule/" class="d-inline-block mx-2"
-                {% if tab == 'myschedule' %}style="color: rgb(160, 160, 160); font-size:15px;"{% endif %}>
+                <a href="/main/myschedule/" class="a_hover"
+                {% if tab == 'myschedule' %}style="selected"{% endif %}>
                 My Schedule</a>
 
-                <a href="/main/shoppingcart/" class="d-inline-block mx-2"
-                {% if tab == 'shoppingcart' %}style="color: rgb(160, 160, 160); font-size:15px;"{% endif %}>
+                <a href="/main/shoppingcart/" class="a_hover"
+                {% if tab == 'shoppingcart' %}style="selected"{% endif %}>
                 Shopping Cart</a>
 
-            </div>
+            </nav>
             {% if user.is_authenticated %}
                 <div class="d-inline-block float-end me-4 dropdown position-relative">
                     <button class="btn dropdown-toggle position-relative mt-2" type="button" id="dropdownMenuButton1" 
@@ -58,8 +61,8 @@
                 </div>
             {% else %}
             <div class="d-inline-block float-end pt-3 mt-1 me-5 position-relative">
-                <a href="{% provider_login_url 'google' %}" class="text-end"
-                style="color:gainsboro; text-decoration:none; cursor:pointerr;">Sign In</a>
+                <a href="{% provider_login_url 'google' %}" class="a_hover"
+                style=" position:relative; text-decoration:none; cursor:pointer;">Sign In</a>
             </div>
             {% endif %}
         </div>
