@@ -83,6 +83,7 @@ def deptclasses(request, dept):
     #     data = response.json()
     #     for entry in data:
     #         try :
+                # Checks to see if the entry is already found in the database --- a valid meetings entry
     #             if (len(entry['meetings']) > 0):
     #                 courses = course.objects.get(department = department.objects.get(abbreviation = dept), courseNumber = entry['course_number'], description = entry['description'],
     #                 instructorName = entry['instructor']['name'], instructorEmail = entry['instructor']['email'], semesterCode = entry['semester_code'],
@@ -92,6 +93,7 @@ def deptclasses(request, dept):
     #                 meeting_days = entry['meetings'][0]['days'], start_time = entry['meetings'][0]['start_time'],
     #                 end_time = entry['meetings'][0]['end_time'], room_location = entry['meetings'][0]['facility_description'])
     #             else :
+                    # Checks to see if the entry is already found in the database --- a non valid meetings entry
     #                 courses = course.objects.get(department = department.objects.get(abbreviation = dept), courseNumber = entry['course_number'], description = entry['description'],
     #                 instructorName = entry['instructor']['name'], instructorEmail = entry['instructor']['email'], semesterCode = entry['semester_code'],
     #                 courseSection = entry['course_section'], credits = entry['units'], lectureType = entry['component'],
@@ -111,6 +113,7 @@ def deptclasses(request, dept):
     #                 end_time = entry['meetings'][0]['end_time'], room_location = entry['meetings'][0]['facility_description'])
     #                 courses.save()
     #             else :
+                # Code that inserts a new course into the database. This checks to see if the meetings does not have a valid entry
     #                 courses = course(department = department.objects.get(abbreviation = dept), courseNumber = entry['course_number'], description = entry['description'],
     #                 instructorName = entry['instructor']['name'], instructorEmail = entry['instructor']['email'], semesterCode = entry['semester_code'],
     #                 courseSection = entry['course_section'], credits = entry['units'], lectureType = entry['component'],
