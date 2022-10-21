@@ -73,52 +73,52 @@ def deptclasses(request, dept):
     return HttpResponse(data)
     '''
     CODE TO LOAD IN COURSE DATA FOR EACH DEPARTMENT
-    may not have this Heroku 
+    may not have this Heroku
     '''
-    #departments = department.objects.all()
-    # for deps in departments:
-    #     dept = deps.abbreviation
-    #     url = 'http://luthers-list.herokuapp.com/api/dept/' + dept + '/'
-    #     response = requests.get(url)
-    #     data = response.json()
-    #     for entry in data:
-    #         try :
-    #             if (len(entry['meetings']) > 0):
-    #                 courses = course.objects.get(department = department.objects.get(abbreviation = dept), courseNumber = entry['course_number'], description = entry['description'],
-    #                 instructorName = entry['instructor']['name'], instructorEmail = entry['instructor']['email'], semesterCode = entry['semester_code'],
-    #                 courseSection = entry['course_section'], credits = entry['units'], lectureType = entry['component'],
-    #                 classCapacity = entry['class_capacity'], classEnrollment = entry['enrollment_total'],
-    #                 classSpotsOpen = entry['enrollment_available'], waitlist = entry['wait_list'], waitlistMax = entry['wait_cap'],
-    #                 meeting_days = entry['meetings'][0]['days'], start_time = entry['meetings'][0]['start_time'],
-    #                 end_time = entry['meetings'][0]['end_time'], room_location = entry['meetings'][0]['facility_description'])
-    #             else :
-    #                 courses = course.objects.get(department = department.objects.get(abbreviation = dept), courseNumber = entry['course_number'], description = entry['description'],
-    #                 instructorName = entry['instructor']['name'], instructorEmail = entry['instructor']['email'], semesterCode = entry['semester_code'],
-    #                 courseSection = entry['course_section'], credits = entry['units'], lectureType = entry['component'],
-    #                 classCapacity = entry['class_capacity'], classEnrollment = entry['enrollment_total'],
-    #                 classSpotsOpen = entry['enrollment_available'], waitlist = entry['wait_list'], waitlistMax = entry['wait_cap'],
-    #                 meeting_days = "", start_time = "",
-    #                 end_time = "", room_location = "")
-    #         except :
-    #             if (len(entry['meetings']) > 0):
-    #                 courses = course(department = department.objects.get(abbreviation = dept), courseNumber = entry['course_number'], description = entry['description'],
-    #                 instructorName = entry['instructor']['name'], instructorEmail = entry['instructor']['email'], semesterCode = entry['semester_code'],
-    #                 courseSection = entry['course_section'], credits = entry['units'], lectureType = entry['component'],
-    #                 classCapacity = entry['class_capacity'], classEnrollment = entry['enrollment_total'],
-    #                 classSpotsOpen = entry['enrollment_available'], waitlist = entry['wait_list'], waitlistMax = entry['wait_cap'],
-    #                 meeting_days = entry['meetings'][0]['days'], start_time = entry['meetings'][0]['start_time'],
-    #                 end_time = entry['meetings'][0]['end_time'], room_location = entry['meetings'][0]['facility_description'])
-    #                 courses.save()
-    #             else :
-    #                 courses = course(department = department.objects.get(abbreviation = dept), courseNumber = entry['course_number'], description = entry['description'],
-    #                 instructorName = entry['instructor']['name'], instructorEmail = entry['instructor']['email'], semesterCode = entry['semester_code'],
-    #                 courseSection = entry['course_section'], credits = entry['units'], lectureType = entry['component'],
-    #                 classCapacity = entry['class_capacity'], classEnrollment = entry['enrollment_total'],
-    #                 classSpotsOpen = entry['enrollment_available'], waitlist = entry['wait_list'], waitlistMax = entry['wait_cap'],
-    #                 meeting_days = "", start_time = "",
-    #                 end_time = "", room_location = "")
-    #                 courses.save()
-    #return HttpResponse(data)
+    departments = department.objects.all()
+    for deps in departments:
+        dept = deps.abbreviation
+        url = 'http://luthers-list.herokuapp.com/api/dept/' + dept + '/'
+        response = requests.get(url)
+        data = response.json()
+        for entry in data:
+            try :
+                if (len(entry['meetings']) > 0):
+                    courses = course.objects.get(department = department.objects.get(abbreviation = dept), courseNumber = entry['course_number'], description = entry['description'],
+                    instructorName = entry['instructor']['name'], instructorEmail = entry['instructor']['email'], semesterCode = entry['semester_code'],
+                    courseSection = entry['course_section'], credits = entry['units'], lectureType = entry['component'],
+                    classCapacity = entry['class_capacity'], classEnrollment = entry['enrollment_total'],
+                    classSpotsOpen = entry['enrollment_available'], waitlist = entry['wait_list'], waitlistMax = entry['wait_cap'],
+                    meeting_days = entry['meetings'][0]['days'], start_time = entry['meetings'][0]['start_time'],
+                    end_time = entry['meetings'][0]['end_time'], room_location = entry['meetings'][0]['facility_description'])
+                else :
+                    courses = course.objects.get(department = department.objects.get(abbreviation = dept), courseNumber = entry['course_number'], description = entry['description'],
+                    instructorName = entry['instructor']['name'], instructorEmail = entry['instructor']['email'], semesterCode = entry['semester_code'],
+                    courseSection = entry['course_section'], credits = entry['units'], lectureType = entry['component'],
+                    classCapacity = entry['class_capacity'], classEnrollment = entry['enrollment_total'],
+                    classSpotsOpen = entry['enrollment_available'], waitlist = entry['wait_list'], waitlistMax = entry['wait_cap'],
+                    meeting_days = "", start_time = "",
+                    end_time = "", room_location = "")
+            except :
+                if (len(entry['meetings']) > 0):
+                    courses = course(department = department.objects.get(abbreviation = dept), courseNumber = entry['course_number'], description = entry['description'],
+                    instructorName = entry['instructor']['name'], instructorEmail = entry['instructor']['email'], semesterCode = entry['semester_code'],
+                    courseSection = entry['course_section'], credits = entry['units'], lectureType = entry['component'],
+                    classCapacity = entry['class_capacity'], classEnrollment = entry['enrollment_total'],
+                    classSpotsOpen = entry['enrollment_available'], waitlist = entry['wait_list'], waitlistMax = entry['wait_cap'],
+                    meeting_days = entry['meetings'][0]['days'], start_time = entry['meetings'][0]['start_time'],
+                    end_time = entry['meetings'][0]['end_time'], room_location = entry['meetings'][0]['facility_description'])
+                    courses.save()
+                else :
+                    courses = course(department = department.objects.get(abbreviation = dept), courseNumber = entry['course_number'], description = entry['description'],
+                    instructorName = entry['instructor']['name'], instructorEmail = entry['instructor']['email'], semesterCode = entry['semester_code'],
+                    courseSection = entry['course_section'], credits = entry['units'], lectureType = entry['component'],
+                    classCapacity = entry['class_capacity'], classEnrollment = entry['enrollment_total'],
+                    classSpotsOpen = entry['enrollment_available'], waitlist = entry['wait_list'], waitlistMax = entry['wait_cap'],
+                    meeting_days = "", start_time = "",
+                    end_time = "", room_location = "")
+                    courses.save()
+    return HttpResponse(data)
 
 # class search dummy implementation for now
 def searchclass(request):
