@@ -100,6 +100,7 @@ def deptclasses(request, dept):
     #                 meeting_days = "", start_time = "",
     #                 end_time = "", room_location = "")
     #         except :
+                # Code that inserts a new course into the database. This checks to see if the meetings has a valid entry
     #             if (len(entry['meetings']) > 0):
     #                 courses = course(department = department.objects.get(abbreviation = dept), courseNumber = entry['course_number'], description = entry['description'],
     #                 instructorName = entry['instructor']['name'], instructorEmail = entry['instructor']['email'], semesterCode = entry['semester_code'],
