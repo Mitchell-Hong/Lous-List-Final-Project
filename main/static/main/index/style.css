@@ -19,8 +19,21 @@
     --font-family: "Overpass", Arial, Helvetica, sans-serif;
 }
 
+body{
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body.night{
+    background: var(--invert-bg-color);
+}
+
+.night .header_moon {
+    color: var(--invert-text-color);
+  }
+
 .a_hover{
-    color:rgb(255, 255, 255);
+    color:white;
     display: inline-flex;
     position: relative;
     transition: .3s;
@@ -70,4 +83,13 @@ div a{
     border: 1px solid black;
 }
 
-/*     font-family: "Overpass", Arial; */
+.header_moon {
+    display: inline-block;
+    align-items: center;
+    /* margin-left: 450px; */
+    margin-left: 200 px;
+    font-size: 24px;
+    color: var(--white-color);
+    cursor: pointer;
+    transition: .3s;
+  }

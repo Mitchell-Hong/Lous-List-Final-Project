@@ -1,6 +1,8 @@
 {% load socialaccount %}
 {% load static %}
 
+<title>CourSelect</title>
+<link href='https://unpkg.com/boxicons@2.1.1/css/boxicons.min.css' rel='stylesheet'>
 <link rel="stylesheet" href="{% static 'main/index/style.css'%}?{% now "U" %}">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -39,7 +41,10 @@
                 {% if tab == 'shoppingcart' %}style="selected"{% endif %}>
                 Shopping Cart</a>
 
-            </nav>
+                <div class="header_moon">
+                    <i class='bx bx-moon'></i>
+                  </div>
+
             {% if user.is_authenticated %}
                 <div class="d-inline-block float-end me-4 dropdown position-relative">
                     <button class="btn dropdown-toggle position-relative mt-2" type="button" id="dropdownMenuButton1" 
@@ -69,6 +74,13 @@
         {% comment %} The above code is the navbar and then below we can add the content for each page inside block content tag {% endcomment %}
         {% block content %}
         {% endblock content %}
-    </body>
+        </nav>
 
+    <div>
+        <h1>Hello this a test</h1>
+    </div>
+        <script src="main/index/script.js">
+        </script>
+
+    </body>
 </html>
