@@ -67,10 +67,12 @@ def coursecatalog(request):
 
 # dynamic routing based on which department the user clicked a list of all classes that belong to that department appear
 def deptclasses(request, dept):
-    url = 'http://luthers-list.herokuapp.com/api/dept/' + dept + '/'
-    response = requests.get(url)
-    data = response.json()
-    return HttpResponse(data)
+    courses = course.objects.filter(department = department.objects.get(abbreviation = dept))
+    context = {
+        'course_list' : courses,
+        'tab' : 'course_list'
+    }
+    return render(request, 'main/classesList.html', context)
     '''
     CODE TO LOAD IN COURSE DATA FOR EACH DEPARTMENT
     may not have this Heroku
