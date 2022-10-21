@@ -16,16 +16,19 @@ def index(request):
     return render(request, 'main/index.html')
 
 def editprofile(request):
+    '''
+    CODE TO LOAD IN DEPARTMENT DATA
+    '''
     # fetching the data and storing it once in DB for users when they are filling out intro form
-    url = 'http://luthers-list.herokuapp.com/api/deptlist/'
-    response = requests.get(url)
-    data = response.json()
-    for i in data:
-        try:
-            deps = department.objects.get(abbreviation=i['subject'])
-        except:
-            deps = department(abbreviation = i['subject'])
-            deps.save()
+    # url = 'http://luthers-list.herokuapp.com/api/deptlist/'
+    # response = requests.get(url)
+    # data = response.json()
+    # for i in data:
+    #     try:
+    #         deps = department.objects.get(abbreviation=i['subject'])
+    #     except:
+    #         deps = department(abbreviation = i['subject'])
+    #         deps.save()
 
     # request.user.id gives and id to each user, request.user will be the name of the user
     # https://docs.djangoproject.com/en/4.1/ref/contrib/auth/ info about user fields
@@ -70,6 +73,7 @@ def deptclasses(request, dept):
     return HttpResponse(data)
     '''
     CODE TO LOAD IN COURSE DATA FOR EACH DEPARTMENT
+    may not have this Heroku 
     '''
     #departments = department.objects.all()
     # for deps in departments:
