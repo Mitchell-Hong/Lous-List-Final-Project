@@ -67,15 +67,18 @@ def coursecatalog(request):
 
 # dynamic routing based on which department the user clicked a list of all classes that belong to that department appear
 def deptclasses(request, dept):
-    url = 'http://luthers-list.herokuapp.com/api/dept/' + dept + '/'
-    response = requests.get(url)
-    data = response.json()
-    return HttpResponse(data)
+    courses = course.objects.filter(department = department.objects.get(abbreviation = dept))
+    context = {
+        'course_list' : courses,
+        'tab' : 'course_list'
+    }
+    return render(request, 'main/classesList.html', context)
     '''
     CODE TO LOAD IN COURSE DATA FOR EACH DEPARTMENT
     LEAVE COMMENTED OUT MAY USE IN THE FUTURE BUT HEROKU CANNOT SUPPORT THIS MUCH DATA (9000 CLASSES)
+    may not have this Heroku
     '''
-    #departments = department.objects.all()
+    # departments = department.objects.all()
     # for deps in departments:
     #     dept = deps.abbreviation
     #     url = 'http://luthers-list.herokuapp.com/api/dept/' + dept + '/'
@@ -83,6 +86,7 @@ def deptclasses(request, dept):
     #     data = response.json()
     #     for entry in data:
     #         try :
+                # Checks to see if the entry is already found in the database --- a valid meetings entry
     #             if (len(entry['meetings']) > 0):
     #                 courses = course.objects.get(department = department.objects.get(abbreviation = dept), courseNumber = entry['course_number'], description = entry['description'],
     #                 instructorName = entry['instructor']['name'], instructorEmail = entry['instructor']['email'], semesterCode = entry['semester_code'],
@@ -92,6 +96,7 @@ def deptclasses(request, dept):
     #                 meeting_days = entry['meetings'][0]['days'], start_time = entry['meetings'][0]['start_time'],
     #                 end_time = entry['meetings'][0]['end_time'], room_location = entry['meetings'][0]['facility_description'])
     #             else :
+                    # Checks to see if the entry is already found in the database --- a non valid meetings entry
     #                 courses = course.objects.get(department = department.objects.get(abbreviation = dept), courseNumber = entry['course_number'], description = entry['description'],
     #                 instructorName = entry['instructor']['name'], instructorEmail = entry['instructor']['email'], semesterCode = entry['semester_code'],
     #                 courseSection = entry['course_section'], credits = entry['units'], lectureType = entry['component'],
@@ -100,6 +105,7 @@ def deptclasses(request, dept):
     #                 meeting_days = "", start_time = "",
     #                 end_time = "", room_location = "")
     #         except :
+                # Code that inserts a new course into the database. This checks to see if the meetings has a valid entry
     #             if (len(entry['meetings']) > 0):
     #                 courses = course(department = department.objects.get(abbreviation = dept), courseNumber = entry['course_number'], description = entry['description'],
     #                 instructorName = entry['instructor']['name'], instructorEmail = entry['instructor']['email'], semesterCode = entry['semester_code'],
@@ -110,6 +116,7 @@ def deptclasses(request, dept):
     #                 end_time = entry['meetings'][0]['end_time'], room_location = entry['meetings'][0]['facility_description'])
     #                 courses.save()
     #             else :
+                # Code that inserts a new course into the database. This checks to see if the meetings does not have a valid entry
     #                 courses = course(department = department.objects.get(abbreviation = dept), courseNumber = entry['course_number'], description = entry['description'],
     #                 instructorName = entry['instructor']['name'], instructorEmail = entry['instructor']['email'], semesterCode = entry['semester_code'],
     #                 courseSection = entry['course_section'], credits = entry['units'], lectureType = entry['component'],
@@ -118,7 +125,7 @@ def deptclasses(request, dept):
     #                 meeting_days = "", start_time = "",
     #                 end_time = "", room_location = "")
     #                 courses.save()
-    #return HttpResponse(data)
+    # return HttpResponse(data)
 
 # class search dummy implementation for now
 def searchclass(request):
