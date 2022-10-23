@@ -1,16 +1,41 @@
-from django.test import TestCase
+from django.test import RequestFactory, TestCase
+from django.urls import reverse
+from main.models import myUser, department, course
+from .views import editprofile
 
 # Create your tests here.
 class URLTest(TestCase):
     def test_main_page_url(self):
         response = self.client.get('/main/')
         self.assertTrue(response.status_code == 200)
+
     def test_fake_url(self):
         response = self.client.get('/fake/')
         self.assertFalse(response.status_code == 200)
-        
+
+    def test_edit_profile_url(self):
+        response = self.client.get('/main/editprofile/')
+        self.assertTrue(response.status_code == 200)
+
+    def test_course_catalog_url(self):
+        response = self.client.get('/main/coursecatalog/')
+        self.assertTrue(response.status_code == 200)
+
+    def test_search_class_url(self):
+        response = self.client.get('/main/searchclass/')
+        self.assertTrue(response.status_code == 200)
+
+    def test_my_schedule_url(self):
+        response = self.client.get('/main/myschedule/')
+        self.assertTrue(response.status_code == 200)
+
+    def test_shopping_cart_url(self):
+        response = self.client.get('/main/shoppingcart/')
+        self.assertTrue(response.status_code == 200)
+
 class UserTestCase(TestCase):
     def setUp(self, id=0, name="", email="", summary="", major="", graduationYear=0):
+        self.factory = RequestFactory()
         return myUser.objects.create(id = id,name=name,email=email,summary=summary,major=major,graduationYear=graduationYear)
 
     def test_user_creation(self):
