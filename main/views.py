@@ -73,7 +73,7 @@ def deptclasses(request, dept):
     return HttpResponse(data)
     '''
     CODE TO LOAD IN COURSE DATA FOR EACH DEPARTMENT
-    may not have this Heroku 
+    LEAVE COMMENTED OUT MAY USE IN THE FUTURE BUT HEROKU CANNOT SUPPORT THIS MUCH DATA (9000 CLASSES)
     '''
     #departments = department.objects.all()
     # for deps in departments:
