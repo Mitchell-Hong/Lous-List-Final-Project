@@ -70,60 +70,12 @@ def deptclasses(request, dept):
     url = 'http://luthers-list.herokuapp.com/api/dept/' + dept + '/'
     response = requests.get(url)
     courses = response.json()
-    return render(request, 'main/classesList.html', {'course_list':courses})
-    '''
-    CODE TO LOAD IN COURSE DATA FOR EACH DEPARTMENT
-    LEAVE COMMENTED OUT MAY USE IN THE FUTURE BUT HEROKU CANNOT SUPPORT THIS MUCH DATA (9000 CLASSES)
-    may not have this Heroku
-    '''
-    # departments = department.objects.all()
-    # for deps in departments:
-    #     dept = deps.abbreviation
-    #     url = 'http://luthers-list.herokuapp.com/api/dept/' + dept + '/'
-    #     response = requests.get(url)
-    #     data = response.json()
-    #     for entry in data:
-    #         try :
-                # Checks to see if the entry is already found in the database --- a valid meetings entry
-    #             if (len(entry['meetings']) > 0):
-    #                 courses = course.objects.get(department = department.objects.get(abbreviation = dept), courseNumber = entry['course_number'], description = entry['description'],
-    #                 instructorName = entry['instructor']['name'], instructorEmail = entry['instructor']['email'], semesterCode = entry['semester_code'],
-    #                 courseSection = entry['course_section'], credits = entry['units'], lectureType = entry['component'],
-    #                 classCapacity = entry['class_capacity'], classEnrollment = entry['enrollment_total'],
-    #                 classSpotsOpen = entry['enrollment_available'], waitlist = entry['wait_list'], waitlistMax = entry['wait_cap'],
-    #                 meeting_days = entry['meetings'][0]['days'], start_time = entry['meetings'][0]['start_time'],
-    #                 end_time = entry['meetings'][0]['end_time'], room_location = entry['meetings'][0]['facility_description'])
-    #             else :
-                    # Checks to see if the entry is already found in the database --- a non valid meetings entry
-    #                 courses = course.objects.get(department = department.objects.get(abbreviation = dept), courseNumber = entry['course_number'], description = entry['description'],
-    #                 instructorName = entry['instructor']['name'], instructorEmail = entry['instructor']['email'], semesterCode = entry['semester_code'],
-    #                 courseSection = entry['course_section'], credits = entry['units'], lectureType = entry['component'],
-    #                 classCapacity = entry['class_capacity'], classEnrollment = entry['enrollment_total'],
-    #                 classSpotsOpen = entry['enrollment_available'], waitlist = entry['wait_list'], waitlistMax = entry['wait_cap'],
-    #                 meeting_days = "", start_time = "",
-    #                 end_time = "", room_location = "")
-    #         except :
-                # Code that inserts a new course into the database. This checks to see if the meetings has a valid entry
-    #             if (len(entry['meetings']) > 0):
-    #                 courses = course(department = department.objects.get(abbreviation = dept), courseNumber = entry['course_number'], description = entry['description'],
-    #                 instructorName = entry['instructor']['name'], instructorEmail = entry['instructor']['email'], semesterCode = entry['semester_code'],
-    #                 courseSection = entry['course_section'], credits = entry['units'], lectureType = entry['component'],
-    #                 classCapacity = entry['class_capacity'], classEnrollment = entry['enrollment_total'],
-    #                 classSpotsOpen = entry['enrollment_available'], waitlist = entry['wait_list'], waitlistMax = entry['wait_cap'],
-    #                 meeting_days = entry['meetings'][0]['days'], start_time = entry['meetings'][0]['start_time'],
-    #                 end_time = entry['meetings'][0]['end_time'], room_location = entry['meetings'][0]['facility_description'])
-    #                 courses.save()
-    #             else :
-                # Code that inserts a new course into the database. This checks to see if the meetings does not have a valid entry
-    #                 courses = course(department = department.objects.get(abbreviation = dept), courseNumber = entry['course_number'], description = entry['description'],
-    #                 instructorName = entry['instructor']['name'], instructorEmail = entry['instructor']['email'], semesterCode = entry['semester_code'],
-    #                 courseSection = entry['course_section'], credits = entry['units'], lectureType = entry['component'],
-    #                 classCapacity = entry['class_capacity'], classEnrollment = entry['enrollment_total'],
-    #                 classSpotsOpen = entry['enrollment_available'], waitlist = entry['wait_list'], waitlistMax = entry['wait_cap'],
-    #                 meeting_days = "", start_time = "",
-    #                 end_time = "", room_location = "")
-    #                 courses.save()
-    # return HttpResponse(data)
+    courseNoDuplicates = [*set(courses)]
+    context = {
+        'course_list': courses,
+        'course_list_noDup': courseNoDuplicates,
+    }
+    return render(request, 'main/classesList.html', context)
 
 # class search dummy implementation for now
 def searchclass(request):
