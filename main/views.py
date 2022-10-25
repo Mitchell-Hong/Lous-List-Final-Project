@@ -73,7 +73,7 @@ def deptclasses(request, dept):
         'tab' : 'course_list'
     }
     return render(request, 'main/classesList.html', context)
-    '''
+    '''-
     CODE TO LOAD IN COURSE DATA FOR EACH DEPARTMENT
     may not have this Heroku
     '''
