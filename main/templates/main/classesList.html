@@ -2,10 +2,18 @@
 <html>
     {% block content %}
         <body>
-            <ul style="list-style-type: none;">
-                {% for class in course_list %}
-                    <li style="color: black">{{ class.subject }} {{ class.catalog_number }}</li>
-                {% endfor %}
-            </ul>
+            <div class="container mt-5">
+                <ul style="list-style-type: none;">
+                    {% for class in course_list %}
+                        {% if forloop.first %}<div class="row">{% endif %}
+                            <div class="col">
+                                <li><a href="{{ class.subject }}{{ class.catalog_number }}" style="color: black">{{ class.subject }}{{ class.catalog_number }}</a></li></li>
+                            </div>
+                        {% if forloop.counter|divisibleby:4 %}</div><div class="row">{% endif %}
+                        {% if forloop.last %}</div>{% endif %}
+                    {% endfor %}
+                </ul>
+            </div>
         </body>
     {% endblock %}
+</html>
