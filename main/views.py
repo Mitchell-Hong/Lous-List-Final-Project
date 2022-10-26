@@ -41,7 +41,7 @@ def editprofile(request):
     # if the user has not logged in yet then create a new user
     except:
         # users have id, name, email, summary, major, graduationYear
-        newUser = myUser(id=request.user.id, name=str(request.user), summary='', major='', graduationYear='')
+        newUser = myUser(id=request.user.id, name=str(request.user.first_name + " " + request.user.last_name), summary='', major='', graduationYear='')
         # beauty of this is our users will have the same ID as the socialaccount -> request.user
         form = UserForm()
         context = {'form':form}
@@ -98,3 +98,12 @@ def shoppingcart(request):
         'tab' : 'shoppingcart',
     }
     return render(request,'main/shoppingcart.html', context)
+
+# profile view which allows the user to see their profile info they entered at login as well as edit it
+# only time they can hit this link is when they have already logged in WILL HAVE AN ID
+def profile(request):    
+    theUser = myUser.objects.get(id=request.user.id)
+    context = {
+        'theUser' : theUser,
+    }
+    return render(request, 'main/profile.html', context)

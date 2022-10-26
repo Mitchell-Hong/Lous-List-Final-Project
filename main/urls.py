@@ -8,16 +8,21 @@ app_name = 'main'
 urlpatterns = [
     # the path for the /main/ route
     path('', views.index, name='index'),
+    # the route users see when they first sign in for additional info
     path('editprofile/', views.editprofile, name='editprofile'),
-
+    # a list of all the departments that UVA has to offer
     path('coursecatalog/', views.coursecatalog, name='coursecatalog'),
+    # based on which department the user clicks on it displays that departments courses
     path('coursecatalog/<str:dept>', views.deptclasses, name='deptclasses'),
-
+    # dummy link for when it comes time do the class search page
     path('searchclass/', views.searchclass, name='searchclass'),
-
+    # dummy link but will display individual users schedules for the courses they have selected so far
     path('myschedule/', views.myschedule, name='myschedule'),
-
+    # shows users what are all the courses they have added to their shopping cart they can then choose from those to move to their schedule
     path('shoppingcart/', views.shoppingcart, name='shoppingcart'),
+    # profile route that will show the user their current profile and also give them the option to edit stuff
+    path('profile/', views.profile, name='profile'),
+    
 
 
 ]

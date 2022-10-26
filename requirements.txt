@@ -18,5 +18,7 @@ whitenoise
 requests
 
 importlib-metadata
-
+# allows us to do math on data in DJango templates
 django-mathfilters
+# allows us to have an image field within models (for profile photos)
+Pillow
