@@ -1,6 +1,6 @@
 from tracemalloc import start
 from django.shortcuts import render
-from django.http import HttpResponseRedirect, HttpResponse
+from django.http import HttpResponseRedirect, HttpResponse, HttpResponseNotFound
 from django.views import generic
 from django.urls import reverse
 from .forms import UserForm
@@ -16,46 +16,30 @@ def index(request):
     return render(request, 'main/index.html')
 
 def editprofile(request):
-    '''
-    CODE TO LOAD IN DEPARTMENT DATA
-    '''
-    # fetching the data and storing it once in DB for users when they are filling out intro form
-    # url = 'http://luthers-list.herokuapp.com/api/deptlist/'
-    # response = requests.get(url)
-    # data = response.json()
-    # for i in data:
-    #     try:
-    #         deps = department.objects.get(abbreviation=i['subject'])
-    #     except:
-    #         deps = department(abbreviation = i['subject'])
-    #         deps.save()
-
-    # request.user.id gives and id to each user, request.user will be the name of the user
-    # https://docs.djangoproject.com/en/4.1/ref/contrib/auth/ info about user fields
-
-    # try and get the model from the database if it exists then this user has signed in before
-    # do not make him fill out the form again just redirect to main
-    try:
-        newUser = myUser.objects.get(id=request.user.id)
-        return HttpResponseRedirect(reverse('main:index'))
-    # if the user has not logged in yet then create a new user
-    except:
-        # users have id, name, email, summary, major, graduationYear
-        if(request.user.is_authenticated):
-            newUser = myUser(id=request.user.id, name=str(request.user.first_name + " " + request.user.last_name), summary='', major='', graduationYear='')
-            # beauty of this is our users will have the same ID as the socialaccount -> request.user
-            form = UserForm()
-            context = {'form':form}
-            if request.POST:
-                # form but we have some of the info filled out
-                form = UserForm(request.POST, instance=newUser)
-                if form.is_valid():
-                    form.save()
-                    # reverse looks through all URLs defined in project and returns the one specified
-                    # this is what we want so we have no hardcoded URLS
-                    return HttpResponseRedirect(reverse('main:coursecatalog'))
-            return render(request, 'main/editprofile.html', context)
-        return HttpResponseRedirect(reverse('main:index'))
+    if(request.user.is_authenticated):
+        try:
+            newUser = myUser.objects.get(id=request.user.id)
+            return HttpResponseRedirect(reverse('main:index'))
+        # if the user has not logged in yet then create a new user
+        except:
+            # users have id, name, email, summary, major, graduationYear
+                newUser = myUser(id=request.user.id, name=str(request.user.first_name + " " + request.user.last_name), summary='', major='', graduationYear='')
+                # beauty of this is our users will have the same ID as the socialaccount -> request.user
+                form = UserForm()
+                context = {
+                    'form': form,
+                }
+                if request.POST:
+                    # form but we have some of the info filled out
+                    form = UserForm(request.POST, instance=newUser)
+                    if form.is_valid():
+                        form.save()
+                        # reverse looks through all URLs defined in project and returns the one specified
+                        # this is what we want so we have no hardcoded URLS
+                        return HttpResponseRedirect(reverse('main:coursecatalog'))
+                return render(request, 'main/editprofile.html', context)
+    else:
+        return HttpResponseNotFound('<h1>Page not found</h1>')
         
 
 # view for the course catalog tab has a list of departments that user can click on to choose
@@ -110,3 +94,23 @@ def profile(request):
         'theUser' : theUser,
     }
     return render(request, 'main/profile.html', context)
+
+
+
+
+    '''
+    CODE TO LOAD IN DEPARTMENT DATA
+    '''
+    # fetching the data and storing it once in DB for users when they are filling out intro form
+    # url = 'http://luthers-list.herokuapp.com/api/deptlist/'
+    # response = requests.get(url)
+    # data = response.json()
+    # for i in data:
+    #     try:
+    #         deps = department.objects.get(abbreviation=i['subject'])
+    #     except:
+    #         deps = department(abbreviation = i['subject'])
+    #         deps.save()
+
+    # request.user.id gives and id to each user, request.user will be the name of the user
+    # https://docs.djangoproject.com/en/4.1/ref/contrib/auth/ info about user fields

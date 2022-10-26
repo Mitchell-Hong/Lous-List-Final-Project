@@ -13,10 +13,6 @@ class URLTest(TestCase):
         response = self.client.get('/fake/')
         self.assertFalse(response.status_code == 200)
 
-    def test_edit_profile_url(self):
-        response = self.client.get('/main/editprofile/')
-        self.assertTrue(response.status_code == 200)
-
     def test_course_catalog_url(self):
         response = self.client.get('/main/coursecatalog/')
         self.assertTrue(response.status_code == 200)

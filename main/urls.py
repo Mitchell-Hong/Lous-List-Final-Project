@@ -22,7 +22,7 @@ urlpatterns = [
     path('shoppingcart/', views.shoppingcart, name='shoppingcart'),
     # profile route that will show the user their current profile and also give them the option to edit stuff
     path('profile/', views.profile, name='profile'),
-    
+
 
 
 ]
