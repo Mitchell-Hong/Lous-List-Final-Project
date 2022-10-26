@@ -55,6 +55,8 @@ def editprofile(request):
                     # this is what we want so we have no hardcoded URLS
                     return HttpResponseRedirect(reverse('main:coursecatalog'))
             return render(request, 'main/editprofile.html', context)
+        return HttpResponseRedirect(reverse('main:index'))
+        
 
 # view for the course catalog tab has a list of departments that user can click on to choose
 def coursecatalog(request):
