@@ -18,3 +18,5 @@ whitenoise
 requests
 
 importlib-metadata
+
+django-mathfilters

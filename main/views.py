@@ -70,10 +70,11 @@ def deptclasses(request, dept):
     url = 'http://luthers-list.herokuapp.com/api/dept/' + dept + '/'
     response = requests.get(url)
     courses = response.json()
-    courseNoDuplicates = [*set(courses)]
+    coursesNoDup = { each['catalog_number'] : each for each in courses }.values()
+
     context = {
         'course_list': courses,
-        'course_list_noDup': courseNoDuplicates,
+        'course_list_nodup':coursesNoDup,
     }
     return render(request, 'main/classesList.html', context)
 
