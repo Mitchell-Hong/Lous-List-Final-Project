@@ -96,6 +96,21 @@ def profile(request):
     return render(request, 'main/profile.html', context)
 
 
+def edit(request):
+    newUser = myUser.objects.get(id=request.user.id)
+    form = UserForm(instance=newUser)
+    context={'form':form}
+    if request.POST:
+        # form but we have some of the info filled out
+        form = UserForm(request.POST, instance=newUser)
+        if form.is_valid():
+            form.save()
+            # reverse looks through all URLs defined in project and returns the one specified
+            # this is what we want so we have no hardcoded URLS
+            return HttpResponseRedirect(reverse('main:coursecatalog'))
+    return render(request, 'main/editprofileloggedin.html', context)
+
+
 
 
     '''
