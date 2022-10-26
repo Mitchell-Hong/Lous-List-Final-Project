@@ -3,7 +3,7 @@ from django.shortcuts import render
 from django.http import HttpResponseRedirect, HttpResponse, HttpResponseNotFound
 from django.views import generic
 from django.urls import reverse
-from .forms import UserForm
+from .forms import UserForm, searchclassForm
 from .models import myUser, department, course
 # this is used for making HTTP requests from an external API with django
 import requests
@@ -40,7 +40,7 @@ def editprofile(request):
                 return render(request, 'main/editprofile.html', context)
     else:
         return HttpResponseNotFound('<h1>Page not found</h1>')
-        
+
 
 # view for the course catalog tab has a list of departments that user can click on to choose
 def coursecatalog(request):
@@ -67,8 +67,14 @@ def deptclasses(request, dept):
 
 # class search dummy implementation for now
 def searchclass(request):
+    dep_form = searchclassForm()
+    if request.method == 'POST' :
+        dep_form = searchclassForm(request.POST)
+        if dep_form.is_valid():
+            cleanData = dep_form.cleaned_data
+            selectedDep = cleanData.get('department')
     context = {
-        'tab' : 'searchclass',
+        'dep_form' : dep_form,
     }
     return render(request,'main/searchclass.html', context)
 
@@ -88,7 +94,7 @@ def shoppingcart(request):
 
 # profile view which allows the user to see their profile info they entered at login as well as edit it
 # only time they can hit this link is when they have already logged in WILL HAVE AN ID
-def profile(request):    
+def profile(request):
     theUser = myUser.objects.get(id=request.user.id)
     context = {
         'theUser' : theUser,
