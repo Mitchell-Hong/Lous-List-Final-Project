@@ -41,19 +41,20 @@ def editprofile(request):
     # if the user has not logged in yet then create a new user
     except:
         # users have id, name, email, summary, major, graduationYear
-        newUser = myUser(id=request.user.id, name=str(request.user.first_name + " " + request.user.last_name), summary='', major='', graduationYear='')
-        # beauty of this is our users will have the same ID as the socialaccount -> request.user
-        form = UserForm()
-        context = {'form':form}
-        if request.POST:
-            # form but we have some of the info filled out
-            form = UserForm(request.POST, instance=newUser)
-            if form.is_valid():
-                form.save()
-                # reverse looks through all URLs defined in project and returns the one specified
-                # this is what we want so we have no hardcoded URLS
-                return HttpResponseRedirect(reverse('main:coursecatalog'))
-        return render(request, 'main/editprofile.html', context)
+        if(request.user.is_authenticated):
+            newUser = myUser(id=request.user.id, name=str(request.user.first_name + " " + request.user.last_name), summary='', major='', graduationYear='')
+            # beauty of this is our users will have the same ID as the socialaccount -> request.user
+            form = UserForm()
+            context = {'form':form}
+            if request.POST:
+                # form but we have some of the info filled out
+                form = UserForm(request.POST, instance=newUser)
+                if form.is_valid():
+                    form.save()
+                    # reverse looks through all URLs defined in project and returns the one specified
+                    # this is what we want so we have no hardcoded URLS
+                    return HttpResponseRedirect(reverse('main:coursecatalog'))
+            return render(request, 'main/editprofile.html', context)
 
 # view for the course catalog tab has a list of departments that user can click on to choose
 def coursecatalog(request):
