@@ -116,9 +116,6 @@ def edit(request):
             return HttpResponseRedirect(reverse('main:coursecatalog'))
     return render(request, 'main/editprofileloggedin.html', context)
 
-
-
-
     '''
     CODE TO LOAD IN DEPARTMENT DATA
     '''
