@@ -111,6 +111,16 @@ def edit(request):
     return render(request, 'main/editprofileloggedin.html', context)
 
 
+def friends(request):
+    theUser = myUser.objects.get(id=request.user.id)
+    input = request.GET.get('friendsearch')
+    shownUsers = myUser.objects.all()
+    context = {
+        'theUser' : theUser,
+        'shownUsers' : shownUsers,
+    }
+    return render(request, 'main/friends.html', context)
+
 
 
     '''

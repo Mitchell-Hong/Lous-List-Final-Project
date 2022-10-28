@@ -24,7 +24,8 @@ urlpatterns = [
     path('profile/', views.profile, name='profile'),
     # profile that takes the user to a separate form once logged in to edit or update their profile
     path('profile/edit/', views.edit, name='edit'),
-
+    # route that allows users to see how many friends they have as well as add new ones
+    path('friends/', views.friends, name='friends'),
 
 
 ]

@@ -1,0 +1,15 @@
+{% extends 'main/index.html' %}
+    {% block content%}
+    <div class="w-75 border border-dark border-2 rounded-2 mx-auto mt-5">
+        <h2>Find Your Friends:</h2>
+        <input class='w-75 d-block mx-auto p-2 rounded-2' 
+        name='friendsearch' type='text' placeholder='Search by first or last name...' />
+
+        <ul style="list-style-type: none">
+            {% for i in shownUsers %}
+                <li>{{i.name}} - Class of {{i.graduationYear}}, Major: {{i.major}}</li>
+            {% endfor %}
+        </ul>
+    </div>
+
+    {% endblock content %}
