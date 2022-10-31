@@ -26,7 +26,8 @@ urlpatterns = [
     path('profile/edit/', views.edit, name='edit'),
     # route that allows users to see how many friends they have as well as add new ones
     path('friends/', views.friends, name='friends'),
-
+    # page that allows users to accept or reject friend requests
+    path('friendrequests/', views.friendrequests, name='friendrequests')
 
 ]
 
