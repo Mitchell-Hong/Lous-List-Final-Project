@@ -88,8 +88,9 @@ def shoppingcart(request):
 
 # profile view which allows the user to see their profile info they entered at login as well as edit it
 # only time they can hit this link is when they have already logged in WILL HAVE AN ID
-def profile(request):    
-    theUser = myUser.objects.get(id=request.user.id)
+def profile(request, user_id):    
+    theUser = myUser.objects.get(id=user_id)
+    print(theUser)
     context = {
         'theUser' : theUser,
     }
@@ -113,8 +114,11 @@ def edit(request):
 
 def friends(request):
     theUser = myUser.objects.get(id=request.user.id)
-    input = request.GET.get('friendsearch')
     shownUsers = myUser.objects.all()
+    input = request.GET.get('friendsearch', None)
+    if input:
+        # filter on a specific item inside the model then __ some form of filtering in python
+        shownUsers = myUser.objects.filter(name__icontains=input)
     context = {
         'theUser' : theUser,
         'shownUsers' : shownUsers,

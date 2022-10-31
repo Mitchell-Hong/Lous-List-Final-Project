@@ -1,15 +1,27 @@
 {% extends 'main/index.html' %}
     {% block content%}
     <div class="w-75 border border-dark border-2 rounded-2 mx-auto mt-5">
-        <h2>Find Your Friends:</h2>
-        <input class='w-75 d-block mx-auto p-2 rounded-2' 
-        name='friendsearch' type='text' placeholder='Search by first or last name...' />
+        <h2 class='ms-2 mt-2 mb-3'>Find Your Friends:</h2>
+
+        <form class='friendsearch' method="GET">
+            <div class='input-group w-75 mx-auto'>
+                <input class='p-2 rounded-2 form-control' 
+                name='friendsearch' type='text' placeholder='Search by first or last name...' />
+                <button type="submit" class="btn btn-primary">
+                    Search
+                </button>
+                <button type="submit" class="btn btn-info">
+                    See Default
+                </button>
+            </div>
+        </form>
 
         <ul style="list-style-type: none">
             {% for i in shownUsers %}
-                <li>{{i.name}} - Class of {{i.graduationYear}}, Major: {{i.major}}</li>
+                <li><a href="/main/profile/{{i.id}}/" style="color:blue;">
+                    {{i.name}} - Class of {{i.graduationYear}}, Major: {{i.major}}
+                </a></li>
             {% endfor %}
         </ul>
     </div>
-
     {% endblock content %}

@@ -20,8 +20,8 @@ urlpatterns = [
     path('myschedule/', views.myschedule, name='myschedule'),
     # shows users what are all the courses they have added to their shopping cart they can then choose from those to move to their schedule
     path('shoppingcart/', views.shoppingcart, name='shoppingcart'),
-    # profile route that will show the user their current profile and also give them the option to edit stuff
-    path('profile/', views.profile, name='profile'),
+    # profile route that will show the user theirs and other profiles (they can edit theirs)
+    path('profile/<int:user_id>/', views.profile, name='profile'),
     # profile that takes the user to a separate form once logged in to edit or update their profile
     path('profile/edit/', views.edit, name='edit'),
     # route that allows users to see how many friends they have as well as add new ones

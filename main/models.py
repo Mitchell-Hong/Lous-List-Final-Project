@@ -25,6 +25,9 @@ class myUser(models.Model):
         return self.name
 
 class Friend_Request(models.Model):
+    # foreign key allows tables to be easily linked together
+    # the related name field basically allows us to specify the instance of each of the models
+    # django will do this by default if we do not, but in this case it is useful for us to do
     from_user = models.ForeignKey(myUser, related_name='from_user', on_delete=models.CASCADE)
     to_user = models.ForeignKey(myUser, related_name='to_user', on_delete=models.CASCADE)
 
