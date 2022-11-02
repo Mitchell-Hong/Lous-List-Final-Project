@@ -1,0 +1,131 @@
+{% extends 'main/index.html' %}
+{% block content %}
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        {% load bootstrap5 %}
+        {% bootstrap_css %}
+        {% bootstrap_javascript %}
+    </head>
+    <style>
+        .dropbtn {
+            background-color: #E67E22;
+            color: white;
+            padding: 20px;
+            font-size: 16px;
+            border: none;
+            cursor: pointer;
+        }
+
+        .dropbtn:hover, .dropbtn:focus {
+
+        }
+
+        #myInput {
+            box-sizing: border-box;
+            background-image: url('searchicon.png');
+            background-position: 14px 12px;
+            background-repeat: no-repeat;
+            font-size: 16px;
+            padding: 14px 20px 12px 45px;
+            border: none;
+            border-bottom: 1px solid #ddd;
+        }
+
+        #myInput:focus {outline: 3px solid #ddd;}
+
+        .dropdownMenu {
+            position: relative;
+            display: inline-block;
+            text-align: center;
+        }
+
+        .dropdownMenu-content {
+            display: none;
+            position: absolute;
+            background-color: #f6f6f6;
+            min-width: 230px;
+            overflow: auto;
+            border: 1px solid #ddd;
+            z-index: 1;
+        }
+
+        .dropdownMenu-content a {
+            color: black;
+            padding: 12px 16px;
+            text-decoration: none;
+            display: block;
+        }
+
+        .dropdownMenu a:hover {background-color: #ddd;}
+
+        .show {display: block;}
+        </style>
+        <body>
+        <center>
+        <h2>Select a Department</h2>
+
+        <div class="dropdownMenu">
+            <button onclick="showDeps()" class="dropbtn">DEPARTMENTS</button>
+            <div id="DepDropdown" class="dropdownMenu-content">
+                <input type="text" placeholder="Search.." id="depInput" onkeyup="filterFunction()">
+                {% for dep in department_results.all %}
+                    <a href="{{ dep.abbreviation }}" style="color: black">{{ dep.abbreviation }}</a>
+                {% endfor %}
+            </div>
+        </div>
+    </center>
+
+        <script>
+        /* When the user clicks on the button,
+        toggle between hiding and showing the dropdown content
+        From: https://www.w3schools.com/howto/howto_js_dropdown.asp
+        */
+        function showDeps() {
+            document.getElementById("DepDropdown").classList.toggle("show");
+        }
+
+        /* This filters the departments based on their alphabetical order
+        From: https://www.w3schools.com/howto/howto_js_dropdown.asp
+        */
+        function filterFunction() {
+            var input, filter, ul, li, a, i;
+            input = document.getElementById("depInput");
+            filter = input.value.toUpperCase();
+            div = document.getElementById("DepDropdown");
+            a = div.getElementsByTagName("a");
+            for (i = 0; i < a.length; i++) {
+            txtValue = a[i].textContent || a[i].innerText;
+            if (txtValue.toUpperCase().indexOf(filter) > -1) {
+                a[i].style.display = "";
+            } else {
+                a[i].style.display = "none";
+            }
+        }
+        }
+          // Close the dropdown menu if the user clicks outside of it
+          // From: https://www.w3schools.com/howto/howto_js_dropdown.asp
+        window.onclick = function closeDeps(event) {
+            if (!event.target.matches('.dropbtn')) {
+                var dropdowns = document.getElementsByClassName("dropdownMenu-content");
+                var i;
+                for (i = 0; i < dropdowns.length; i++) {
+                    var openDropdown = dropdowns[i];
+                    if (openDropdown.classList.contains('show')) {
+                        openDropdown.classList.remove('show');
+                    }
+                }
+            }
+        }
+
+        // Dont close if user is clicking the search box
+        document.getElementById("depInput").addEventListener('click', function (event) {
+            event.stopPropagation();
+        });
+
+        </script>
+        {% endblock content %}
+    </body>
+</html>
