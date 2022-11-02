@@ -3,7 +3,7 @@ from django.shortcuts import render
 from django.http import HttpResponseRedirect, HttpResponse, HttpResponseNotFound
 from django.views import generic
 from django.urls import reverse
-from .forms import UserForm
+from .forms import UserForm, searchclassForm
 from .models import Friend_Request, myUser, department, course
 # this is used for making HTTP requests from an external API with django
 import requests
