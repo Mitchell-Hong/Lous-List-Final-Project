@@ -17,33 +17,7 @@ def index(request):
         'theUser':request.user.id
     }
     return render(request, 'main/index.html', context)
-
-def editprofile(request):
-    if(request.user.is_authenticated):
-        try:
-            newUser = myUser.objects.get(id=request.user.id)
-            return HttpResponseRedirect(reverse('main:index'))
-        # if the user has not logged in yet then create a new user
-        except:
-            # users have id, name, email, summary, major, graduationYear
-                newUser = myUser(id=request.user.id, name=str(request.user.first_name + " " + request.user.last_name), summary='', major='', graduationYear='')
-                # beauty of this is our users will have the same ID as the socialaccount -> request.user
-                form = UserForm()
-                context = {
-                    'form': form,
-                }
-                if request.POST:
-                    # form but we have some of the info filled out
-                    form = UserForm(request.POST, instance=newUser)
-                    if form.is_valid():
-                        form.save()
-                        # reverse looks through all URLs defined in project and returns the one specified
-                        # this is what we want so we have no hardcoded URLS
-                        return HttpResponseRedirect(reverse('main:coursecatalog'))
-                return render(request, 'main/editprofile.html', context)
-    else:
-        return HttpResponseNotFound('<h1>Page not found</h1>')
-        
+       
 
 # view for the course catalog tab has a list of departments that user can click on to choose
 def coursecatalog(request):
@@ -89,6 +63,14 @@ def shoppingcart(request):
     }
     return render(request,'main/shoppingcart.html', context)
 
+
+
+
+
+## ALL RELATED TO THE FRIENDS SYSTEM (PROFILE, EDITING, SEEING FRIENDS ETC)
+
+
+
 # profile view which allows the user to see their profile info they entered at login as well as edit it
 # only time they can hit this link is when they have already logged in WILL HAVE AN ID
 def profile(request, user_id):
@@ -109,6 +91,36 @@ def profile(request, user_id):
     }
     return render(request, 'main/profile.html', context)
 
+
+
+def editprofile(request):
+    if(request.user.is_authenticated):
+        try:
+            newUser = myUser.objects.get(id=request.user.id)
+            return HttpResponseRedirect(reverse('main:index'))
+        # if the user has not logged in yet then create a new user
+        except:
+            # users have id, name, email, summary, major, graduationYear
+                newUser = myUser(id=request.user.id, name=str(request.user.first_name + " " + request.user.last_name), summary='', major='', graduationYear='')
+                # beauty of this is our users will have the same ID as the socialaccount -> request.user
+                form = UserForm()
+                context = {
+                    'form': form,
+                }
+                if request.POST:
+                    # form but we have some of the info filled out
+                    form = UserForm(request.POST, instance=newUser)
+                    if form.is_valid():
+                        form.save()
+                        # reverse looks through all URLs defined in project and returns the one specified
+                        # this is what we want so we have no hardcoded URLS
+                        return HttpResponseRedirect(reverse('main:coursecatalog'))
+                return render(request, 'main/editprofile.html', context)
+    else:
+        return HttpResponseNotFound('<h1>Page not found</h1>')
+
+
+# this displays all of the active friend requests and allows users to accept or delete them
 def friendrequests(request):
     friend_requests = Friend_Request.objects.filter(to_user_id=request.user.id)
     context = {
@@ -116,6 +128,14 @@ def friendrequests(request):
     }
     return render(request, 'main/friendrequests.html', context)
 
+# this is the link that is hit if the user decides to delete the friend request
+def deleterequest(request, fromUserID):
+    activeUser = myUser.objects.get(id=request.user.id)
+    return HttpResponseRedirect(reverse('main:friendrequests'))
+
+
+# allows the user to edit his profile (the button to get here can only be viewed on the HTML
+# profile where the user is looking at his own profile)
 def edit(request):
     newUser = myUser.objects.get(id=request.user.id)
     form = UserForm(instance=newUser)
@@ -131,7 +151,8 @@ def edit(request):
     return render(request, 'main/editprofileloggedin.html', context)
 
 
-def friends(request):
+# allows the user to search for other users on the app by name
+def friendsearch(request):
     theUser = myUser.objects.get(id=request.user.id)
     shownUsers = myUser.objects.all()
     input = request.GET.get('friendsearch', None)
@@ -143,6 +164,10 @@ def friends(request):
         'shownUsers' : shownUsers,
     }
     return render(request, 'main/friends.html', context)
+
+
+
+
 
 
 
