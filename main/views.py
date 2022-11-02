@@ -3,8 +3,8 @@ from django.shortcuts import render
 from django.http import HttpResponseRedirect, HttpResponse, HttpResponseNotFound
 from django.views import generic
 from django.urls import reverse
-from .forms import UserForm, searchclassForm
-from .models import myUser, department, course
+from .forms import UserForm
+from .models import Friend_Request, myUser, department, course
 # this is used for making HTTP requests from an external API with django
 import requests
 
@@ -13,7 +13,10 @@ import requests
 # Create your views here.
 # simple display of what is shown at /main/ route
 def index(request):
-    return render(request, 'main/index.html')
+    context = {
+        'theUser':request.user.id
+    }
+    return render(request, 'main/index.html', context)
 
 def editprofile(request):
     if(request.user.is_authenticated):
@@ -94,13 +97,30 @@ def shoppingcart(request):
 
 # profile view which allows the user to see their profile info they entered at login as well as edit it
 # only time they can hit this link is when they have already logged in WILL HAVE AN ID
-def profile(request):
-    theUser = myUser.objects.get(id=request.user.id)
+def profile(request, user_id):
+    # profile of the individual the user is looking at
+    theUser = myUser.objects.get(id=user_id)
+    messageSent = ''
+    if request.method == 'POST':
+        from_user = myUser.objects.get(id=request.user.id)
+        to_user = theUser
+        friend_request, created = Friend_Request.objects.get_or_create(from_user=from_user, to_user=to_user)
+
+        if created:
+            messageSent = 'Friend Request was sent!'
+
     context = {
         'theUser' : theUser,
+        'messageSent' : messageSent
     }
     return render(request, 'main/profile.html', context)
 
+def friendrequests(request):
+    friend_requests = Friend_Request.objects.filter(to_user_id=request.user.id)
+    context = {
+        'friend_requests': friend_requests
+    }
+    return render(request, 'main/friendrequests.html', context)
 
 def edit(request):
     newUser = myUser.objects.get(id=request.user.id)
@@ -115,6 +135,22 @@ def edit(request):
             # this is what we want so we have no hardcoded URLS
             return HttpResponseRedirect(reverse('main:coursecatalog'))
     return render(request, 'main/editprofileloggedin.html', context)
+
+
+def friends(request):
+    theUser = myUser.objects.get(id=request.user.id)
+    shownUsers = myUser.objects.all()
+    input = request.GET.get('friendsearch', None)
+    if input:
+        # filter on a specific item inside the model then __ some form of filtering in python
+        shownUsers = myUser.objects.filter(name__icontains=input)
+    context = {
+        'theUser' : theUser,
+        'shownUsers' : shownUsers,
+    }
+    return render(request, 'main/friends.html', context)
+
+
 
     '''
     CODE TO LOAD IN DEPARTMENT DATA
