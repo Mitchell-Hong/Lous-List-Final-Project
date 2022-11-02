@@ -17,7 +17,6 @@ def index(request):
         'theUser':request.user.id
     }
     return render(request, 'main/index.html', context)
-       
 
 # view for the course catalog tab has a list of departments that user can click on to choose
 def coursecatalog(request):
@@ -43,11 +42,23 @@ def deptclasses(request, dept):
     return render(request, 'main/classesList.html', context)
 
 # class search dummy implementation for now
-def searchclass(request):
+def searchclassDepartment(request):
+    departments = department.objects.all() # data is a list of departments {"subject": abbrev}
     context = {
-        'tab' : 'searchclass',
+        'department_results' : departments,
+        # tab tells the HTML what the depict as the active tab
+        'tab' : 'coursecatalog',
     }
-    return render(request,'main/searchclass.html', context)
+    return render(request,'main/searchclassDepartment.html', context)
+
+def searchclassFilter(request, filteredDepartment):
+    departments = department.objects.filter(abbreviation = filteredDepartment) # data
+    context = {
+        'filtered_departments' : departments,
+        # tab tells the HTML what the depict as the active tab
+        'tab' : 'coursecatalog',
+    }
+    return render(request,'main/searchclassFilter.html', context)
 
 # myschedule dummy implementation for now
 def myschedule(request):
@@ -74,14 +85,14 @@ def shoppingcart(request):
 # profile view which allows the user to see their profile info they entered at login as well as edit it
 # only time they can hit this link is when they have already logged in WILL HAVE AN ID
 def profile(request, user_id):
-    # profile of the individual the user is looking at    
+    # profile of the individual the user is looking at
     theUser = myUser.objects.get(id=user_id)
     messageSent = ''
     if request.method == 'POST':
         from_user = myUser.objects.get(id=request.user.id)
         to_user = theUser
         friend_request, created = Friend_Request.objects.get_or_create(from_user=from_user, to_user=to_user)
-    
+
         if created:
             messageSent = 'Friend Request was sent!'
 
