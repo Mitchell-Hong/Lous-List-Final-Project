@@ -69,17 +69,23 @@ def deptclasses(request, dept):
     return render(request, 'main/classesList.html', context)
 
 # class search dummy implementation for now
-def searchclass(request):
-    dep_form = searchclassForm()
-    if request.method == 'POST' :
-        dep_form = searchclassForm(request.POST)
-        if dep_form.is_valid():
-            cleanData = dep_form.cleaned_data
-            selectedDep = cleanData.get('department')
+def searchclassDepartment(request):
+    departments = department.objects.all() # data is a list of departments {"subject": abbrev}
     context = {
-        'dep_form' : dep_form,
+        'department_results' : departments,
+        # tab tells the HTML what the depict as the active tab
+        'tab' : 'coursecatalog',
     }
-    return render(request,'main/searchclass.html', context)
+    return render(request,'main/searchclassDepartment.html', context)
+
+def searchclassFilter(request, filteredDepartment):
+    departments = department.objects.filter(abbreviation = filteredDepartment) # data
+    context = {
+        'filtered_departments' : departments,
+        # tab tells the HTML what the depict as the active tab
+        'tab' : 'coursecatalog',
+    }
+    return render(request,'main/searchclassFilter.html', context)
 
 # myschedule dummy implementation for now
 def myschedule(request):
