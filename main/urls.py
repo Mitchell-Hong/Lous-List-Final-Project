@@ -24,15 +24,19 @@ urlpatterns = [
     path('profile/<int:user_id>/', views.profile, name='profile'),
     # profile that takes the user to a separate form once logged in to edit or update their profile
     path('profile/edit/', views.edit, name='edit'),
+    
+    
     # route that allows users to see how many friends they have as well as add new ones
     path('friendsearch/', views.friendsearch, name='friendsearch'),
     # page that allows users to accept or reject friend requests
     path('friendrequests/', views.friendrequests, name='friendrequests'),
+    # page that allows users to see a list of users who they are friends with
+    path('friends/<int:user_id>/', views.friends, name='friends'),
 
     # path that triggers a view which deletes the friend request if the user declines it
     path('friendrequests/delete/<int:fromUserID>/', views.deleterequest, name='deleterequest'),
     # path for if the user accepts the incoming friend request
-    #path('friendrequests/accept/<int:fromUserID>/', views.acceptrequest, name='acceptrequest'),
+    path('friendrequests/accept/<int:fromUserID>/', views.acceptrequest, name='acceptrequest'),
 
 
 
