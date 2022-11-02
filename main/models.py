@@ -14,7 +14,6 @@ class myUser(models.Model):
     graduationYear = models.IntegerField()
 
     # followed friends tutorial at https://medium.com/analytics-vidhya/add-friends-with-689a2fa4e41d
-    friends = models.ManyToManyField("myUser", blank=True)
     numFriends = models.SmallIntegerField(default=0)
     # schedule fields so that we can build a schedule for each user
     schedule = models.TextField(max_length=500, default="")
@@ -22,6 +21,10 @@ class myUser(models.Model):
 
     def __str__(self):
         return self.name
+
+class FriendList(models.Model):
+    user = models.OneToOneField(myUser, related_name='user', on_delete=models.CASCADE)
+    friends = models.ManyToManyField(myUser, default='', blank=True, related_name='friends')
 
 class Friend_Request(models.Model):
     # foreign key allows tables to be easily linked together
