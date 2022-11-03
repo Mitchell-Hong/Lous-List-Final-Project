@@ -1,0 +1,46 @@
+<!--
+    https://www.w3schools.com/howto/howto_css_dropdown.asp = siting how to make a dropdown menu
+    https://www.w3schools.com/howto/howto_js_dropdown.asp = How to make to drop down menu clickable
+-->
+{% extends 'main/index.html' %}
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        {% load bootstrap5 %}
+        {% bootstrap_css %}
+        {% bootstrap_javascript %}
+    </head>
+    {% block content %}
+    <form name="depSelect" method="GET">
+            <select name="depSelect" onchange="this.form.submit()">
+                <option selected="selected" disabled>Departments</option>
+                {% for dep in department_results %}
+                    <option value="{{dep.abbreviation}}">{{dep.abbreviation}}</option>
+                {% endfor %}
+            </select>
+    </form>
+    <form name="otherFields" method="GET">
+            <select name = "instructor" {%if noDepartment%} disabled {%endif%}>
+                <option selected="selected"> Instructor</option>
+                {% for instructor in instructors %}
+                    <option value="{{instructor}}">{{instructor}}</option>
+                {% endfor %}
+            </select>
+            <select name = "classType" {%if noDepartment%} disabled {%endif%}>
+                <option selected="selected"> Class Type</option>
+                <option value="LEC">Lecture</option>
+                <option value="LAB">LAB</option>
+            </select>
+            <select name = "credits" {%if noDepartment%} disabled {%endif%}>
+                <option selected="selected"> Credits</option>
+                <option value="1">1</option>
+                <option value="2">2</option>
+                <option value="3">3</option>
+            </select>
+            <input type="submit" value="Select">
+    </form>
+    {% endblock content %}
+    </body>
+</html>
