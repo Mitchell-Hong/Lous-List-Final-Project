@@ -17,7 +17,7 @@
         </form>
 
         <ul style="list-style-type: none">
-            {% for i in shownUsers %}
+            {% for i in shownUsers|slice:":10" %}
                 <li><a href="/main/profile/{{i.id}}/" style="color:blue;">
                     {{i.name}} - Class of {{i.graduationYear}}, Major: {{i.major}}
                 </a></li>
