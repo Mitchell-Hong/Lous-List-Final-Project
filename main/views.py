@@ -127,7 +127,7 @@ def edit(request):
             return HttpResponseRedirect(reverse('main:coursecatalog'))
     return render(request, 'main/editprofileloggedin.html', context)
 
-
+# when the user signs in for the first time they will fill out our custom form
 def editprofile(request):
     if(request.user.is_authenticated):
         try:
