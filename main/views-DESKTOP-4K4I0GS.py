@@ -4,7 +4,7 @@ from django.http import HttpResponseRedirect, HttpResponse, HttpResponseNotFound
 from django.views import generic
 from django.urls import reverse
 from .forms import UserForm
-from .models import Friend_Request, FriendList, myUser, department, course
+from .models import Friend_Request, myUser, department, course
 # this is used for making HTTP requests from an external API with django
 import requests
 
@@ -42,31 +42,23 @@ def deptclasses(request, dept):
     return render(request, 'main/classesList.html', context)
 
 # class search dummy implementation for now
-def searchclass(request):
+def searchclassDepartment(request):
     departments = department.objects.all() # data is a list of departments {"subject": abbrev}
-    noDep = True
-    Instructors = []
-    classTypes = []
-    input = request.GET.get('depSelect', None)
-    filteredInstructor = request.GET.get('instructor', None)
-    filteredClassType = request.GET.get('classType', None)
-    filteredCredits = request.GET.get('credits', None)
-    if input:
-        noDep = False
-        url = 'http://luthers-list.herokuapp.com/api/dept/' + input + '/'
-        response = requests.get(url)
-        courses = response.json()
-        coursesNoDup = { each['catalog_number'] : each for each in courses }.values()
-        for i in coursesNoDup:
-            Instructors.append(i['instructor']['name'])
     context = {
         'department_results' : departments,
-        'instructors': Instructors,
-        'noDepartment': noDep,
         # tab tells the HTML what the depict as the active tab
         'tab' : 'coursecatalog',
     }
-    return render(request,'main/searchclass.html', context)
+    return render(request,'main/searchclassDepartment.html', context)
+
+def searchclassFilter(request, filteredDepartment):
+    departments = department.objects.filter(abbreviation = filteredDepartment) # data
+    context = {
+        'filtered_departments' : departments,
+        # tab tells the HTML what the depict as the active tab
+        'tab' : 'coursecatalog',
+    }
+    return render(request,'main/searchclassFilter.html', context)
 
 # myschedule dummy implementation for now
 def myschedule(request):
@@ -111,22 +103,6 @@ def profile(request, user_id):
     return render(request, 'main/profile.html', context)
 
 
-# allows the user to edit his profile (the button to get here can only be viewed on the HTML
-# profile where the user is looking at his own profile)
-def edit(request):
-    activeUser = myUser.objects.get(id=request.user.id)
-    form = UserForm(instance=activeUser)
-    context={'form':form}
-    if request.POST:
-        # form but we have some of the info filled out
-        form = UserForm(request.POST, instance=activeUser)
-        if form.is_valid():
-            form.save()
-            # reverse looks through all URLs defined in project and returns the one specified
-            # this is what we want so we have no hardcoded URLS
-            return HttpResponseRedirect(reverse('main:coursecatalog'))
-    return render(request, 'main/editprofileloggedin.html', context)
-
 
 def editprofile(request):
     if(request.user.is_authenticated):
@@ -155,10 +131,6 @@ def editprofile(request):
         return HttpResponseNotFound('<h1>Page not found</h1>')
 
 
-
-################   FRIENDS VIEWS AND LOGIC     ################################
-
-
 # this displays all of the active friend requests and allows users to accept or delete them
 def friendrequests(request):
     friend_requests = Friend_Request.objects.filter(to_user_id=request.user.id)
@@ -169,71 +141,40 @@ def friendrequests(request):
 
 # this is the link that is hit if the user decides to delete the friend request
 def deleterequest(request, fromUserID):
-    # activeUser is the person who is checking their friend requests
     activeUser = myUser.objects.get(id=request.user.id)
-    # from user is the person who sent the friend request
-    fromUser = myUser.objects.get(id=fromUserID)
-    # go and get the specific friend request since we know it exists and then delete it
-    friendRequest = Friend_Request.objects.get(from_user=fromUser, to_user=activeUser)
-    friendRequest.delete()
-    # return to the same page where hopefully that friend request has been deleted
     return HttpResponseRedirect(reverse('main:friendrequests'))
 
 
-def acceptrequest(request, fromUserID):
-    # activeUser is the person who is checking their friend requests
-    activeUser = myUser.objects.get(id=request.user.id)
-    # from user is the person who sent the friend request
-    fromUser = myUser.objects.get(id=fromUserID)
-    # go and get the specific friend request since we know it exists and then delete it
-    friendRequest = Friend_Request.objects.get(from_user=fromUser, to_user=activeUser)
-
-    # see whether or not each user has an exisiting friends list or if one needs to be made
-    friendListActiveUser, createdActive = FriendList.objects.get_or_create(user=activeUser)
-    friendListFromUser, createdFrom = FriendList.objects.get_or_create(user=fromUser)
-
-    # add the fromUser to the activeUsers friends list AND VICE VERSA
-    friendListActiveUser.friends.add(fromUser)
-    friendListFromUser.friends.add(activeUser)
-    # increment the number of friends each user has
-    fromUser.numFriends = fromUser.numFriends + 1
-    activeUser.numFriends = activeUser.numFriends + 1
-    fromUser.save()
-    activeUser.save()
-
-    # delete the friend request since it has been processed
-    friendRequest.delete()
-    return HttpResponseRedirect(reverse('main:friendrequests'))
-
-
-def friends(request, user_id):
-
-    theUser = myUser.objects.get(id=user_id)
-    # we are basically checking whether or not the user has friends since you cannot call .all()
-    # on a "None". Essentially trying to find all on a null object does not work
-    has_friend = FriendList.objects.filter(user=theUser).first()
-    allFriends = []
-    if has_friend:
-        allFriends = has_friend.friends.all()
-    # passing all the friends that a user has into context so they can go to the front end
-    context = {
-        'allFriends': allFriends,
-    }
-
-    return render(request, 'main/friends.html', context)
+# allows the user to edit his profile (the button to get here can only be viewed on the HTML
+# profile where the user is looking at his own profile)
+def edit(request):
+    newUser = myUser.objects.get(id=request.user.id)
+    form = UserForm(instance=newUser)
+    context={'form':form}
+    if request.POST:
+        # form but we have some of the info filled out
+        form = UserForm(request.POST, instance=newUser)
+        if form.is_valid():
+            form.save()
+            # reverse looks through all URLs defined in project and returns the one specified
+            # this is what we want so we have no hardcoded URLS
+            return HttpResponseRedirect(reverse('main:coursecatalog'))
+    return render(request, 'main/editprofileloggedin.html', context)
 
 
 # allows the user to search for other users on the app by name
 def friendsearch(request):
+    theUser = myUser.objects.get(id=request.user.id)
     shownUsers = myUser.objects.all()
     input = request.GET.get('friendsearch', None)
     if input:
         # filter on a specific item inside the model then __ some form of filtering in python
         shownUsers = myUser.objects.filter(name__icontains=input)
     context = {
+        'theUser' : theUser,
         'shownUsers' : shownUsers,
     }
-    return render(request, 'main/friendsearch.html', context)
+    return render(request, 'main/friends.html', context)
 
 
 
