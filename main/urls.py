@@ -27,7 +27,7 @@ urlpatterns = [
 
 
     # route that allows users to see how many friends they have as well as add new ones
-    path('friendsearch/', views.friendsearch, name='friendsearch'),
+    path('addfriend/', views.addfriend, name='addfriend'),
     # page that allows users to accept or reject friend requests
     path('friendrequests/', views.friendrequests, name='friendrequests'),
     # page that allows users to see a list of users who they are friends with

@@ -95,18 +95,40 @@ def shoppingcart(request):
 def profile(request, user_id):
     # profile of the individual the user is looking at
     theUser = myUser.objects.get(id=user_id)
+    
+    # boolean value that determines whether or not the users are friends by default is False
+    isFriend = False
+    # get a list of all the friends of the user currently using the website
+    has_friend = FriendList.objects.filter(user=request.user.id).first()
+    allFriends = []
+    if has_friend:
+        allFriends = has_friend.friends.all()   
+        if theUser in allFriends:
+            isFriend = True
+
+    # only able to send a Friend Request to people who you are not already friends with therefore
+    # a friendRequest can either be already sent and you will get a message telling you that
+    # or it will be created and sent for the first time and the message will alert you of that
     messageSent = ''
     if request.method == 'POST':
         from_user = myUser.objects.get(id=request.user.id)
         to_user = theUser
         friend_request, created = Friend_Request.objects.get_or_create(from_user=from_user, to_user=to_user)
 
+        # if the friend request was created for the first time alerts the user that it was sent
         if created:
             messageSent = 'Friend Request was sent!'
+        else:
+            messageSent = 'Friend Request has already been sent!'
 
+    # theUser passes along ifno about the user profile we are looking at, message sent is just
+    # alerting the user to assure them their request was sent
+    # isFriend is a boolean value (can only see a user's email and schedule if you are friends with
+    # them and you cannot send someone a FriendRequest if you are already friend with them)
     context = {
         'theUser' : theUser,
-        'messageSent' : messageSent
+        'messageSent' : messageSent,
+        'isFriend': isFriend,
     }
     return render(request, 'main/profile.html', context)
 
@@ -223,17 +245,26 @@ def friends(request, user_id):
     return render(request, 'main/friends.html', context)
 
 
-# allows the user to search for other users on the app by name
-def friendsearch(request):
-    shownUsers = myUser.objects.all()
+# allows the user to search for other users on the app by name (corresponds to addfriend/ path)
+def addfriend(request):
+    # do not allow users to find ppl they are already friends with on this page
+    has_friend = FriendList.objects.filter(user=request.user.id).first()
+    allFriends = []
+    if has_friend:
+        allFriends = has_friend.friends.all()
+
+    # list of all the Users on the site so far (only show the top ten results on front end)
+    # exlcudes the user himself as well as all people he is already friends with
+    shownUsers = myUser.objects.all().exclude(id=request.user.id).exclude(id__in=allFriends)
+    # the user input provided to search for their friends
     input = request.GET.get('friendsearch', None)
     if input:
         # filter on a specific item inside the model then __ some form of filtering in python
-        shownUsers = myUser.objects.filter(name__icontains=input)
+        shownUsers = myUser.objects.filter(name__icontains=input).exclude(id=request.user.id)
     context = {
         'shownUsers' : shownUsers,
     }
-    return render(request, 'main/friendsearch.html', context)
+    return render(request, 'main/addfriend.html', context)
 
 
 
