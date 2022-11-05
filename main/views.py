@@ -46,27 +46,66 @@ def searchclass(request):
     departments = department.objects.all() # data is a list of departments {"subject": abbrev}
     noDep = True
     Instructors = []
-    classTypes = []
+    courses = []
+    filteredClass = []
+    # These will check for what the user inputed
+    fi = False
+    fct = False
+    fc = False
     input = request.GET.get('depSelect', None)
-    filteredInstructor = request.GET.get('instructor', None)
-    filteredClassType = request.GET.get('classType', None)
-    filteredCredits = request.GET.get('credits', None)
     if input:
         noDep = False
         url = 'http://luthers-list.herokuapp.com/api/dept/' + input + '/'
         response = requests.get(url)
         courses = response.json()
         coursesNoDup = { each['catalog_number'] : each for each in courses }.values()
-        for i in coursesNoDup:
-            Instructors.append(i['instructor']['name'])
+        filteredInstructor = request.GET.get('instructor', None)
+        if (filteredInstructor != "none"):
+            fi = True
+        filteredClassType = request.GET.get('classType', None)
+        if (filteredClassType != "none"):
+            fct = True
+        filteredCredits = request.GET.get('credits', None)
+        if (filteredCredits != "none"):
+            fc = True
+        filteredCredits = request.GET.get('credits', None)
+        for course in coursesNoDup:
+            Instructors.append(course['instructor']['name'])
+            # Checking for various combination of input that the user can enter -- some are less practical such as searching by credits but it is included nonetheless
+            if (fi and fct and fc):
+                if ((course['instructor']['name'] == filteredInstructor) and (course['component'] == filteredClassType)
+                and (course['units'] == filteredCredits)) :
+                    filteredClass.append(course)
+            elif (fi and fct):
+                if ((course['instructor']['name'] == filteredInstructor) and (course['component'] == filteredClassType)) :
+                    filteredClass.append(course)
+            elif (fi and fc):
+                if ((course['instructor']['name'] == filteredInstructor) and (course['units'] == filteredCredits)) :
+                    filteredClass.append(course)
+            elif (fct and fc):
+                if ((course['component'] == filteredClassType) and (course['units'] == filteredCredits)) :
+                    filteredClass.append(course)
+            elif (fi):
+                if ((course['instructor']['name'] == filteredInstructor)):
+                    filteredClass.append(course)
+            elif (fct):
+                if ((course['component'] == filteredClassType)):
+                    filteredClass.append(course)
+            elif (fc):
+                if ((course['units'] == filteredCredits)):
+                    filteredClass.append(course)
     context = {
         'department_results' : departments,
         'instructors': Instructors,
         'noDepartment': noDep,
+        'course_list': courses,
+        'course_list_nodup':filteredClass,
+        'department': input,
         # tab tells the HTML what the depict as the active tab
         'tab' : 'coursecatalog',
     }
     return render(request,'main/searchclass.html', context)
+
 
 # myschedule dummy implementation for now
 def myschedule(request):
@@ -95,14 +134,14 @@ def shoppingcart(request):
 def profile(request, user_id):
     # profile of the individual the user is looking at
     theUser = myUser.objects.get(id=user_id)
-    
+
     # boolean value that determines whether or not the users are friends by default is False
     isFriend = False
     # get a list of all the friends of the user currently using the website
     has_friend = FriendList.objects.filter(user=request.user.id).first()
     allFriends = []
     if has_friend:
-        allFriends = has_friend.friends.all()   
+        allFriends = has_friend.friends.all()
         if theUser in allFriends:
             isFriend = True
 
