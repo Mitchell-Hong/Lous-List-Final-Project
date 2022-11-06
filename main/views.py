@@ -146,7 +146,8 @@ def edit(request):
             form.save()
             # reverse looks through all URLs defined in project and returns the one specified
             # this is what we want so we have no hardcoded URLS
-            return HttpResponseRedirect(reverse('main:coursecatalog'))
+            # comma is needed in order for it not to be an iterable very weird
+            return HttpResponseRedirect(reverse('main:profile', args=(request.user.id,)))
     return render(request, 'main/editprofileloggedin.html', context)
 
 # when the user signs in for the first time they will fill out our custom form
