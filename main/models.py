@@ -17,7 +17,7 @@ class myUser(models.Model):
     numFriends = models.SmallIntegerField(default=0)
     # schedule fields so that we can build a schedule for each user
     schedule = models.TextField(max_length=500, default="")
-    shoppingcart = models.TextField(max_length=500, default="")
+    # shoppingcart = models.TextField(max_length=500, default="")
 
     def __str__(self):
         return self.name
@@ -32,6 +32,7 @@ class Friend_Request(models.Model):
     # django will do this by default if we do not, but in this case it is useful for us to do
     from_user = models.ForeignKey(myUser, related_name='from_user', on_delete=models.CASCADE)
     to_user = models.ForeignKey(myUser, related_name='to_user', on_delete=models.CASCADE)
+
 
 class department(models.Model):
     abbreviation = models.CharField(max_length=10)
@@ -78,3 +79,7 @@ class course(models.Model):
         num = self.courseNumber
         return str(dep) + " " + str(num)
 
+
+class ShoppingCart(models.Model):
+    user = models.OneToOneField(myUser, on_delete=models.CASCADE)
+    courses = models.ManyToManyField(course, related_name = 'courses')
