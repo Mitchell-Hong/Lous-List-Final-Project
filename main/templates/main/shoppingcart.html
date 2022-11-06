@@ -1,1 +1,10 @@
 {% extends 'main/index.html' %}
+
+{% block content %}
+<ul>
+    {% for course in courses_in_cart %}
+        <li>{{course.department.abbreviation}} {{course.courseNumber}}</li>
+    {% endfor %}
+</ul>
+
+{% endblock content %}

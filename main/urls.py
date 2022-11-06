@@ -14,16 +14,29 @@ urlpatterns = [
     path('coursecatalog/', views.coursecatalog, name='coursecatalog'),
     # based on which department the user clicks on it displays that departments courses
     path('coursecatalog/<str:dept>', views.deptclasses, name='deptclasses'),
-    # dummy link for when it comes time do the class search page
+    # First step in class search -- will query for department
     path('searchclass/', views.searchclass, name='searchclass'),
     # dummy link but will display individual users schedules for the courses they have selected so far
     path('myschedule/', views.myschedule, name='myschedule'),
     # shows users what are all the courses they have added to their shopping cart they can then choose from those to move to their schedule
     path('shoppingcart/', views.shoppingcart, name='shoppingcart'),
-    # profile route that will show the user their current profile and also give them the option to edit stuff
-    path('profile/', views.profile, name='profile'),
+    # profile route that will show the user theirs and other profiles (they can edit theirs)
+    path('profile/<int:user_id>/', views.profile, name='profile'),
     # profile that takes the user to a separate form once logged in to edit or update their profile
     path('profile/edit/', views.edit, name='edit'),
+
+
+    # route that allows users to see how many friends they have as well as add new ones
+    path('addfriend/', views.addfriend, name='addfriend'),
+    # page that allows users to accept or reject friend requests
+    path('friendrequests/', views.friendrequests, name='friendrequests'),
+    # page that allows users to see a list of users who they are friends with
+    path('friends/<int:user_id>/', views.friends, name='friends'),
+
+    # path that triggers a view which deletes the friend request if the user declines it
+    path('friendrequests/delete/<int:fromUserID>/', views.deleterequest, name='deleterequest'),
+    # path for if the user accepts the incoming friend request
+    path('friendrequests/accept/<int:fromUserID>/', views.acceptrequest, name='acceptrequest'),
 
 
 
