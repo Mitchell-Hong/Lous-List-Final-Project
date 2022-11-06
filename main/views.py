@@ -4,7 +4,7 @@ from django.http import HttpResponseRedirect, HttpResponse, HttpResponseNotFound
 from django.views import generic
 from django.urls import reverse
 from .forms import UserForm
-from .models import Friend_Request, FriendList, myUser, department, course
+from .models import Friend_Request, FriendList, myUser, department, course, ShoppingCart
 # this is used for making HTTP requests from an external API with django
 import requests
 
@@ -114,10 +114,11 @@ def myschedule(request):
     }
     return render(request,'main/myschedule.html', context)
 
-# shopping cart dummy implementation for now
+
 def shoppingcart(request):
+    courses_in_cart = ShoppingCart.objects
     context = {
-        'tab' : 'shoppingcart',
+        'courses_in_cart' : 'courses_in_cart',
     }
     return render(request,'main/shoppingcart.html', context)
 
