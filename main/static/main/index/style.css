@@ -18,6 +18,54 @@
     --square-color: #EB5F0C;
     --font-family: "Overpass", Arial, Helvetica, sans-serif;
 }
+.container {
+    max-width: 1500px;
+    padding:  10px;
+    width: 100%;
+    margin: 0 auto;
+}
+.container_flex {
+    max-width: 1100px;
+    padding:  10px;
+    width: 100%;
+    margin: 0 auto;
+    display: flex;
+  }
+
+
+.header_moon {
+    display: inline-flex;
+    align-items: center;
+    font-size: 24px;
+    color: var(--white-color);
+    cursor: pointer;
+    transition: .3s;
+  }
+
+
+.a_hover{
+    color:white;
+    display: inline-flex;
+    position: relative;
+    transition: .3s;
+    font-family: "Overpass", Arial, Helvetica, sans-serif;
+    font-size: 16px;
+    font-weight: 400;
+    width: 10%;
+}
+
+.a_hover:after {
+    display: inline-flex;
+    content: '';
+    position: absolute;
+    left: 0;
+    bottom: -10px;
+    width: 0;
+    height: 4px;
+    background: var(--primary-color);
+    border-radius: 2px;
+    transition: .3s;
+  }
 
 body{
     padding: 0;
@@ -32,29 +80,6 @@ body.night{
     color: var(--invert-text-color);
   }
 
-.a_hover{
-    color:white;
-    display: inline-flex;
-    position: relative;
-    transition: .3s;
-    font-family: "Overpass", Arial, Helvetica, sans-serif;
-    font-size: 16px;
-    font-weight: 400;
-    width: 10%;
-    float: center;
-}
-
-.a_hover:after {
-    content: '';
-    position: absolute;
-    left: 0;
-    bottom: -10px;
-    width: 0;
-    height: 4px;
-    background: var(--primary-color);
-    border-radius: 2px;
-    transition: .3s;
-  }
 
 .selected {
     font-family: "Overpass", Arial, Helvetica, sans-serif;
@@ -83,13 +108,3 @@ div a{
     border: 1px solid black;
 }
 
-.header_moon {
-    display: inline-block;
-    align-items: center;
-    /* margin-left: 450px; */
-    margin-left: 200 px;
-    font-size: 24px;
-    color: var(--white-color);
-    cursor: pointer;
-    transition: .3s;
-  }

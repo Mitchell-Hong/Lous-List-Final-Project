@@ -16,8 +16,9 @@
         {% bootstrap_css %}
         {% bootstrap_javascript %}
     </head>
-    <header class="bg-gradient"
-        style="width: 100%; height: 8.5%; background-color:#ed874e;">
+    <body>
+        <header class="bg-gradient"
+        style="width: 100%; height: 8.5%; background-color:#ed874e; position: sticky; top: 0px">
             {% load static %}
             <div>
                 <!-- <a href="/main/" --> 
@@ -40,7 +41,7 @@
                 {% if tab == 'shoppingcart' %}style="selected"{% endif %}>
                 Shopping Cart</a>
 
-                <div class="header_moon">
+                <div class="header_moon" style= "margin-left: 450px;">
                     <i class='bx bx-moon'></i>
                   </div>
 
@@ -73,6 +74,35 @@
         </div>
     </header>
         {% comment %} The above code is the navbar and then below we can add the content for each page inside block content tag {% endcomment %}
-    {% block content %}
-    {% endblock content %}
+        {% block content %}
+        {% endblock content %}
+</header>
+
+    <script src="main/index/script.js">
+    </script>
+    <!-- <script>
+        if (localStorage.getItem('theme') == 'dark') {
+            setDarkMode();
+
+            if (document.getElementById('moon').checked) {
+                localStorage.setItem('moon', true)
+            }
+        }
+
+        function setDarkMode() {
+            let isDark = document.body.classList.toggle('night');
+
+            if (isDark) {
+                setDarkMode.checked = true;
+                localStorage.setItem('theme' , 'night');
+                document.getElementById('moon').setAttribute('checked', 'checked');
+            } else {
+                setDarkMode.checked = true;
+                localStorage.removeItem('theme', 'night');
+            }
+        }
+        
+    </script> -->
+
+    </body>
 </html>
