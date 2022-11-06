@@ -17,52 +17,36 @@
         {% bootstrap_javascript %}
     </head>
     <body>
-        <div class="d-flex flex-column flex-shrink-0 p-3 text-white " 
-        style="width: 200 px; background-color:#ed874e">
+        <header class="bg-gradient"
+        style="width: 100%; height: 8.5%; background-color:#ed874e; position: sticky; top: 0px">
             {% load static %}
             <div>
                 <!-- <a href="/main/" --> 
                 <img src="{% static "main/images/uvaLogo.png" %}" class="d-inline-block ms-2 pb-2" alt="UVA" />
                 <h4 class="text-center d-inline-block pt-3 ms-2 me-5" style="color:rgb(240, 240, 240)">CourSelect</h4>
-                <div class="header_moon">
-                    <i class='bx bx-moon'></i>
-                  </div>
-                <hr>
-                <ul class ="nav nav-pills flex-column mb-auto">
-                </ul>
-                <li>
+
                 <a href="/main/coursecatalog/" class="a_hover" 
                 {% if tab == 'coursecatalog' %}style="selected"{% endif %}>
                 Course Catalog</a>
-                </li>
-
-                <li>
-                    <a href="/main/searchclass/" class="a_hover"
-                        <svg class ="bi me-2" width="16" height="16"> 
-                        <i class='bx bx-search'></i>
-                        </svg>
-                            {% if tab == 'searchclass' %}style="selected"{% endif %}
-                            Class Search
-                    </a>
-                </li>
-
-                <li>
+                
+                <a href="/main/searchclass/" class="a_hover"
+                {% if tab == 'searchclass' %}style="selected"{% endif %}>
+                Class Search</a>
+                
                 <a href="/main/myschedule/" class="a_hover"
                 {% if tab == 'myschedule' %}style="selected"{% endif %}>
                 My Schedule</a>
-                </li>
-                
-                <li>
+
                 <a href="/main/shoppingcart/" class="a_hover"
                 {% if tab == 'shoppingcart' %}style="selected"{% endif %}>
                 Shopping Cart</a>
-                </li>
-            <hr>
-            <div class ="dropdown">
-                
-            </div>
+
+                <div class="header_moon" style= "margin-left: 450px;">
+                    <i class='bx bx-moon'></i>
+                  </div>
+
             {% if user.is_authenticated %}
-                <div class="d-flex align-items-center text-white text-decoration-none">
+                <div class="d-inline-block float-end me-4 dropdown position-relative">
                     <button class="btn dropdown-toggle position-relative mt-2" type="button" id="dropdownMenuButton1" 
                     data-bs-toggle="dropdown" aria-expanded="false" style="height: 70%; cursor:pointer;">
                         <img src="{{user.socialaccount_set.all.0.extra_data.picture}}" 
@@ -82,7 +66,7 @@
                     </ul>
                 </div>
             {% else %}
-            <div class="d-flex align-items-center text-white text-decoration-none">
+            <div class="d-inline-block float-end pt-3 mt-1 me-5 position-relative">
                 <a href="{% provider_login_url 'google' %}" class="a_hover"
                 style=" position:relative; text-decoration:none; cursor:pointer; width:100%">Sign In</a>
             </div>
@@ -92,6 +76,33 @@
         {% comment %} The above code is the navbar and then below we can add the content for each page inside block content tag {% endcomment %}
         {% block content %}
         {% endblock content %}
-    </div>
+</header>
+
+    <script src="main/index/script.js">
+    </script>
+    <!-- <script>
+        if (localStorage.getItem('theme') == 'dark') {
+            setDarkMode();
+
+            if (document.getElementById('moon').checked) {
+                localStorage.setItem('moon', true)
+            }
+        }
+
+        function setDarkMode() {
+            let isDark = document.body.classList.toggle('night');
+
+            if (isDark) {
+                setDarkMode.checked = true;
+                localStorage.setItem('theme' , 'night');
+                document.getElementById('moon').setAttribute('checked', 'checked');
+            } else {
+                setDarkMode.checked = true;
+                localStorage.removeItem('theme', 'night');
+            }
+        }
+        
+    </script> -->
+
     </body>
 </html>
