@@ -52,9 +52,14 @@ def searchclass(request):
     fi = False
     fct = False
     fc = False
+    # sending important data to the front end for select boxes and to filter out stuff
+    instructorChosen = ''
+    classTypeChosen = ''
+    creditsChosen = ''
     input = request.GET.get('depSelect', None)
     if input:
         noDep = False
+
         url = 'http://luthers-list.herokuapp.com/api/dept/' + input + '/'
         response = requests.get(url)
         courses = response.json()
@@ -62,15 +67,22 @@ def searchclass(request):
         filteredInstructor = request.GET.get('instructor', None)
         if (filteredInstructor != "none"):
             fi = True
+            instructorChosen = filteredInstructor
+
         filteredClassType = request.GET.get('classType', None)
         if (filteredClassType != "none"):
             fct = True
+            classTypeChosen = filteredClassType
+
         filteredCredits = request.GET.get('credits', None)
         if (filteredCredits != "none"):
             fc = True
-        filteredCredits = request.GET.get('credits', None)
-        for course in coursesNoDup:
-            Instructors.append(course['instructor']['name'])
+            creditsChosen = filteredCredits
+
+        for course in courses:
+            # preventing duplicate professors
+            if (course['instructor']['name'] not in Instructors):
+                Instructors.append(course['instructor']['name'])
             # Checking for various combination of input that the user can enter -- some are less practical such as searching by credits but it is included nonetheless
             if (fi and fct and fc):
                 if ((course['instructor']['name'] == filteredInstructor) and (course['component'] == filteredClassType)
@@ -79,21 +91,32 @@ def searchclass(request):
             elif (fi and fct):
                 if ((course['instructor']['name'] == filteredInstructor) and (course['component'] == filteredClassType)) :
                     filteredClass.append(course)
+                    
             elif (fi and fc):
                 if ((course['instructor']['name'] == filteredInstructor) and (course['units'] == filteredCredits)) :
                     filteredClass.append(course)
+                    
+
             elif (fct and fc):
                 if ((course['component'] == filteredClassType) and (course['units'] == filteredCredits)) :
                     filteredClass.append(course)
+                    
+
             elif (fi):
                 if ((course['instructor']['name'] == filteredInstructor)):
                     filteredClass.append(course)
+
             elif (fct):
                 if ((course['component'] == filteredClassType)):
                     filteredClass.append(course)
+                    
+
             elif (fc):
                 if ((course['units'] == filteredCredits)):
                     filteredClass.append(course)
+        # sort all the instructors alphabetically so it is easier to find them
+        Instructors.sort()           
+
     context = {
         'department_results' : departments,
         'instructors': Instructors,
@@ -101,6 +124,11 @@ def searchclass(request):
         'course_list': courses,
         'course_list_nodup':filteredClass,
         'department': input,
+        # passing extra data to help us filter stuff
+        'instructorChosen': instructorChosen,
+        'classTypeChosen':classTypeChosen,
+        'creditsChosen': creditsChosen,
+
         # tab tells the HTML what the depict as the active tab
         'tab' : 'coursecatalog',
     }
@@ -116,9 +144,7 @@ def myschedule(request):
 
 
 def shoppingcart(request):
-    courses_in_cart = ShoppingCart.objects
     context = {
-        'courses_in_cart' : 'courses_in_cart',
     }
     return render(request,'main/shoppingcart.html', context)
 
