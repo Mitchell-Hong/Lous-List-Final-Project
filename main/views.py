@@ -48,6 +48,7 @@ def searchclass(request):
     Instructors = []
     courses = []
     filteredClass = []
+    filteredNoDup = []
     # These will check for what the user inputed
     fi = False
     fct = False
