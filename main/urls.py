@@ -39,6 +39,9 @@ urlpatterns = [
     path('friendrequests/accept/<int:fromUserID>/', views.acceptrequest, name='acceptrequest'),
 
 
+    # paths for the schedule and shopping cart behavior
+    path('coursecatalog/addclass/<str:dept>/<int:course_id>/', views.addclass, name='addclass'),
+
 
 ]
 

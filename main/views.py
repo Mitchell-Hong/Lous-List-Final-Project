@@ -35,9 +35,16 @@ def deptclasses(request, dept):
     courses = response.json()
     coursesNoDup = { each['catalog_number'] : each for each in courses }.values()
 
+    # displaying to the user what items are in their shopping cart
+    has_class = ShoppingCart.objects.filter(activeUser=request.user.id).first()
+    classesInCart = []
+    if has_class:
+        classesInCart = has_class.courses.all()
+
     context = {
         'course_list': courses,
         'course_list_nodup':coursesNoDup,
+        'classesInCart':classesInCart,
     }
     return render(request, 'main/classesList.html', context)
 
@@ -339,7 +346,37 @@ def addfriend(request):
 
 ####################   VIEWS DEALING WITH SHOPPING CART / SCHEDULE   ########################
 
+def addclass(request, dept, course_id):
+    # get all courses from that department since we cannot store them in model due to heroku max
+    # number of rows with free version
+    url = 'http://luthers-list.herokuapp.com/api/dept/' + dept + '/'
+    response = requests.get(url)
+    courses = response.json()
 
+    # only add classes to model when people need them for their schedule bc Heroku cant support all classes 
+    addedClass = list(filter(lambda course: course['course_number'] == course_id, courses))
+    print(addedClass[0])
+    newCourse, courseCreated = course.objects.get_or_create(
+        courseNumber=addedClass[0]['course_number'],
+        department=addedClass[0]['subject'], 
+        instructorName=addedClass[0]['instructor']['name'], instructorEmail=addedClass[0]['instructor']['email'],
+        courseSection=addedClass[0]['course_section'], semesterCode=addedClass[0]['semester_code'],
+        description=addedClass[0]['description'], 
+        credits=addedClass[0]['units'], catalogNumber=addedClass[0]['catalog_number'],
+        lectureType=addedClass[0]['component'], 
+        meeting_days=addedClass[0]['meetings'][0]['days'],
+        start_time=addedClass[0]['meetings'][0]['start_time'],
+        end_time=addedClass[0]['meetings'][0]['end_time'],
+        room_location=addedClass[0]['meetings'][0]['facility_description'],
+    )
+
+    # activeUser is the person who is checking their friend requests
+    activeUser = myUser.objects.get(id=request.user.id)
+
+    # seeing if they have a shopping cart already
+    shoppingCartActiveUser, created = ShoppingCart.objects.get_or_create(activeUser=activeUser)
+    shoppingCartActiveUser.courses.add(newCourse)
+    return HttpResponseRedirect(reverse('main:deptclasses', args=(dept,)))
 
 
 

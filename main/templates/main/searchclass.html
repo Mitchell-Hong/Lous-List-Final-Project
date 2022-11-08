@@ -51,12 +51,12 @@
                     <div style="background-color:slateblue" class="d-inline-block py-1 fs-4 px-3 flex-fill">{{ class.description }}</div>
                 </li>
                 {% for classinfo in course_list %}
-                <div class='ps-2'
-                    style="background-color: {% if forloop.counter|divisibleby:2 %}lightcyan
-                    {% else %} rgb(255, 221, 153) {% endif %}; width: 85%;">
                     {% comment %} this is one section of the class therefore we are going to print some info about it {% endcomment %}
                     {% if classinfo.catalog_number == class.catalog_number %}
-                        <div class="d-inline">{{ classinfo.course_number  }}</div>  
+                    <div class='ps-2 py-1'
+                        style="background-color: {% if forloop.counter|divisibleby:2 %}lightcyan
+                        {% else %} rgb(255, 221, 153) {% endif %}; width:85%;">
+                        <div class="d-inline">{{ classinfo.course_number  }}</div> 
                         <div class="d-inline">{{ classinfo.instructor.name  }}</div>  
                         <div class="d-inline">{{ classinfo.enrollment_total }}/{{ classinfo.class_capacity }}</div> 
                         <div class="d-inline">{{ classinfo.meetings.days  }}</div>
@@ -66,8 +66,12 @@
                         <div class="d-inline">{{ classinfo.meetings.0.facility_description  }}</div>
                         <div class="d-inline">{{ classinfo.component        }}</div>
                         <div class="d-inline">({{ classinfo.units            }} Credits)</div>
+
+                        <div class='float-end'>
+                            <a href="#" class='text-success me-3' id="addCourse">Add to Cart</a>
+                        </div>
+                    </div>
                     {% endif %}
-                </div>
                 {% endfor %}
             {% endfor %}
             </ul>
