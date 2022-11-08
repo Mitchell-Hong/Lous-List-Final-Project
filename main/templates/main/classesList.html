@@ -20,6 +20,7 @@
                     {% else %} rgb(255, 221, 153) {% endif %}; width:85%;">
                         {% comment %} this is one section of the class therefore we are going to print some info about it {% endcomment %}
                         {% if classinfo.catalog_number == class.catalog_number %}
+                            <div class="d-inline">{{ classinfo.course_number  }}</div> 
                             <div class="d-inline">{{ classinfo.instructor.name  }}</div>  
                             <div class="d-inline">{{ classinfo.enrollment_total }}/{{ classinfo.class_capacity }}</div> 
                             <div class="d-inline">{{ classinfo.meetings.days  }}</div>

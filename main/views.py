@@ -115,7 +115,8 @@ def searchclass(request):
                 if ((course['units'] == filteredCredits)):
                     filteredClass.append(course)
         # sort all the instructors alphabetically so it is easier to find them
-        Instructors.sort()           
+        Instructors.sort()
+        print(filteredClass)       
 
     context = {
         'department_results' : departments,
@@ -336,6 +337,11 @@ def addfriend(request):
 
 
 ####################   VIEWS DEALING WITH SHOPPING CART / SCHEDULE   ########################
+
+
+
+
+
 
 
 
