@@ -5,19 +5,19 @@
 <html>
     {% block content %}
     <body>
-        <div class="d-flex">
-            <div class="container mt-5">
+        <div class="d-flex ms-3 me-5">
+            <div class="mt-4 flex-fill">
                 <ul style="list-style-type: none;">
                 {% for class in course_list_nodup %}
-                    <li class="my-2 d-flex w-75" style="background-color:rgb(230, 230, 230)">
+                    <li class="my-2 d-flex" style="background-color:rgb(230, 230, 230); width: 85%;">
                         <a href="https://thecourseforum.com/course/{{ class.subject }}/{{ class.catalog_number }}/" 
                         title="View TCForum" style="background-color:lightskyblue; color:black;" class="py-1 px-2 fs-4 me-0 d-inline-block">{{ class.subject }}{{ class.catalog_number }}</a>
                         <div style="background-color:slateblue" class="d-inline-block py-1 fs-4 px-3 flex-fill">{{ class.description }}</div>
                     </li>
                     {% for classinfo in course_list %}
-                    <div class='ps-2 w-75'
+                    <div class='ps-2'
                     style="background-color: {% if forloop.counter|divisibleby:2 %}lightcyan
-                    {% else %} rgb(255, 221, 153) {% endif %}">
+                    {% else %} rgb(255, 221, 153) {% endif %}; width:85%;">
                         {% comment %} this is one section of the class therefore we are going to print some info about it {% endcomment %}
                         {% if classinfo.catalog_number == class.catalog_number %}
                             <div class="d-inline">{{ classinfo.instructor.name  }}</div>  
@@ -36,9 +36,9 @@
                 </ul>
             </div>
 
-            <div class="mt-5 me-5" id='shoppingCart'>
-                <div class='text-white px-3 py-1 fw-bold' style='background-color:darkblue'>Shopping Cart</div>
-                <div class='border border-1 border-secondary'>
+            <div class='mt-4 me-5' style="width:15%;" id='shoppingCart'>
+                <div class='text-white text-center px-3 py-1 fw-bold mt-2' style='background-color:darkblue'>Shopping Cart</div>
+                <div class='border border-1 border-secondary'></div>
             </div>
         </div>
     </body>

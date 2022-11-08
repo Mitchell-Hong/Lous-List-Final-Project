@@ -335,7 +335,7 @@ def addfriend(request):
 
 
 
-
+####################   VIEWS DEALING WITH SHOPPING CART / SCHEDULE   ########################
 
 
 
