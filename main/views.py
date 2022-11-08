@@ -39,7 +39,7 @@ def deptclasses(request, dept):
     has_class = ShoppingCart.objects.filter(activeUser=request.user.id).first()
     classesInCart = []
     if has_class:
-        classesInCart = has_class.courses.all()
+        classesInCart = has_class.coursesInCart.all()
 
     context = {
         'course_list': courses,
@@ -375,7 +375,7 @@ def addclass(request, dept, course_id):
 
     # seeing if they have a shopping cart already
     shoppingCartActiveUser, created = ShoppingCart.objects.get_or_create(activeUser=activeUser)
-    shoppingCartActiveUser.courses.add(newCourse)
+    shoppingCartActiveUser.coursesInCart.add(newCourse)
     return HttpResponseRedirect(reverse('main:deptclasses', args=(dept,)))
 
 
