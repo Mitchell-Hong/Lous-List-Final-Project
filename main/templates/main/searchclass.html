@@ -56,24 +56,16 @@
                     {% else %} rgb(255, 221, 153) {% endif %}; width: 85%;">
                     {% comment %} this is one section of the class therefore we are going to print some info about it {% endcomment %}
                     {% if classinfo.catalog_number == class.catalog_number %}
-
-                        {% comment %} dependent on whether the search criteria matches display or not {% endcomment %}
-                        {% if instructorChosen == classinfo.instructor.name or instructorChosen == "" %}
-                            {% if classTypeChosen == classinfo.component or classTypeChosen == "" %}
-                                {% if creditsChosen == classinfo.units or creditsChosen == "" %}
-                                    <div class="d-inline">{{ classinfo.course_number  }}</div>  
-                                    <div class="d-inline">{{ classinfo.instructor.name  }}</div>  
-                                    <div class="d-inline">{{ classinfo.enrollment_total }}/{{ classinfo.class_capacity }}</div> 
-                                    <div class="d-inline">{{ classinfo.meetings.days  }}</div>
-                                    {% comment %} #array access in django template with .index {% endcomment %}
-                                    <div class="d-inline">{{ classinfo.meetings.0.days  }}</div>
-                                    <div class="d-inline">{{ classinfo.meetings.0.start_time|slice:":5"  }} - {{ classinfo.meetings.0.end_time|slice:":5"  }}</div>
-                                    <div class="d-inline">{{ classinfo.meetings.0.facility_description  }}</div>
-                                    <div class="d-inline">{{ classinfo.component        }}</div>
-                                    <div class="d-inline">({{ classinfo.units            }} Credits)</div>
-                                {% endif %}
-                            {% endif %} 
-                        {% endif %}
+                        <div class="d-inline">{{ classinfo.course_number  }}</div>  
+                        <div class="d-inline">{{ classinfo.instructor.name  }}</div>  
+                        <div class="d-inline">{{ classinfo.enrollment_total }}/{{ classinfo.class_capacity }}</div> 
+                        <div class="d-inline">{{ classinfo.meetings.days  }}</div>
+                        {% comment %} #array access in django template with .index {% endcomment %}
+                        <div class="d-inline">{{ classinfo.meetings.0.days  }}</div>
+                        <div class="d-inline">{{ classinfo.meetings.0.start_time|slice:":5"  }} - {{ classinfo.meetings.0.end_time|slice:":5"  }}</div>
+                        <div class="d-inline">{{ classinfo.meetings.0.facility_description  }}</div>
+                        <div class="d-inline">{{ classinfo.component        }}</div>
+                        <div class="d-inline">({{ classinfo.units            }} Credits)</div>
                     {% endif %}
                 </div>
                 {% endfor %}

@@ -63,7 +63,6 @@ def searchclass(request):
         url = 'http://luthers-list.herokuapp.com/api/dept/' + input + '/'
         response = requests.get(url)
         courses = response.json()
-        coursesNoDup = { each['catalog_number'] : each for each in courses }.values()
         filteredInstructor = request.GET.get('instructor', None)
         if (filteredInstructor != "none"):
             fi = True
@@ -116,14 +115,15 @@ def searchclass(request):
                     filteredClass.append(course)
         # sort all the instructors alphabetically so it is easier to find them
         Instructors.sort()
-        print(filteredClass)       
+        # ensure no duplicate filtered classes
+        filteredNoDup = { each['catalog_number'] : each for each in filteredClass }.values()       
 
     context = {
         'department_results' : departments,
         'instructors': Instructors,
         'noDepartment': noDep,
-        'course_list': courses,
-        'course_list_nodup':filteredClass,
+        'course_list': filteredClass,
+        'course_list_nodup': filteredNoDup,
         'department': input,
         # passing extra data to help us filter stuff
         'instructorChosen': instructorChosen,
