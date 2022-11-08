@@ -77,4 +77,4 @@ class course(models.Model):
 
 class ShoppingCart(models.Model):
     activeUser = models.OneToOneField(myUser, related_name='activeUser', on_delete=models.CASCADE)
-    courses = models.ManyToManyField(course, default='', blank=True, related_name = 'courses')
+    courses = models.ManyToManyField(course, default='', blank=True, related_name='courses')
