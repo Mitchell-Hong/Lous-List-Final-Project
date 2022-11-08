@@ -28,8 +28,9 @@
             </select>
             <select name = "classType" {%if noDepartment%} disabled {%endif%}>
                 <option selected="selected" value = "none"> Class Type</option>
+                <option value="LAB">Lab</option>
                 <option value="LEC">Lecture</option>
-                <option value="LAB">LAB</option>
+                <option value="IND">Independent Study</option>
             </select>
             <select name = "credits" {%if noDepartment%} disabled {%endif%}>
                 <option selected="selected" value = "none"> Credits</option>
