@@ -75,15 +75,40 @@
     </header>
         {% comment %} The above code is the navbar and then below we can add the content for each page inside block content tag {% endcomment %}
         {% block content %}
-        <div class="intro_title">
-            Welcome to CourSelect!
+        <div class="page_intro intro">
+            <div class="intro_container container">
+              <div class="intro_body">
+                <div class="intro_content">
+                  <h1 class="intro_title"> <b>Welcome to </b> <span>Cour</span><span1>Select</span1></h1>
+                  <h1 class="intro_position">A UVA Course Builder <br>for <b>students</b>, by <b>students</b></h1>
+                  <br1>
+                
+                  <div class="typewriter">   
+                    <div class = "static" > Pick Your <br1>
+                    <span>Perfect</span> Class in </div>
+                    <ul class="types">
+                        <li><span1>Science</span1></li>
+                        <li><span1>Math</span1></li>
+                        <li><span1>Business</span1></li>
+                        <li><span1>English</span1></li>
+                        <li><span1>History</span1></li>
+                    </ul>
+                </div>  
+            </div> 
+            </h1> 
+    
+                  <div class="intro_btn">
+                    <a href="/main/searchclass/" title="" class="btn"> Search <i class='bx bx-right-arrow-alt' ></i></a>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
         {% endblock content %}
 </header>
-
-    <!-- <script src="main/index/script.js">
-    </script> -->
-<script>
+     <script src="index/script.js">
+    </script>
+<!-- <script>
     if (localStorage.getItem('theme') == 'dark') {
             setDarkMode();
 
@@ -104,7 +129,7 @@
                 localStorage.removeItem('theme', 'night');
             }
         }
-</script>
+</script> -->
 
     </body>
 </html>

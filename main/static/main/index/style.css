@@ -155,6 +155,124 @@ div a{
     background-color: lightsteelblue;
     border: 1px solid black;
 }
+/* INTRO BODY */
+.intro {
+    min-height: calc(80vh - 80px);
+    display: flex;
+    align-items: center;
+    margin-top: 50px;
+  }
+
+.intro_title span {
+    color: var(--primary-color);
+    transition: .3s;
+    font-weight: 800;
+  }
+.intro_title span1 {
+    color: #3F88C5;
+    transition: .3s;
+    font-weight: 800;
+  }
+
+  .intro_position {
+    display: block;
+    font-weight: 500;
+    font-size: 36px;
+    color: var(--text-color);
+    margin-bottom: 25px;
+    margin-left: 25px;
+  }
+
+  .intro_text {
+    font-size: 16px;
+    line-height: 1.3;
+    color: var(--text-color);
+    margin-bottom: 30px;
+    transition: .3s;
+  }
+  .intro_btn {
+    display: flex;
+    justify-content: relative;
+    color: #d95e16;
+  }
+
+br1 {
+    display: block;
+    margin: -20px 0;
+}
+  /* Typewriter effect CODE: https://www.codeply.com/go/orizmNWvT3/css-only-typing-animation-with-multiple-words */
+.typewriter {
+    display: flex;
+}
+
+.typewriter .static {
+    color: #2B3137;
+    font-size: 48px;
+    font-weight: 500;
+    margin-left: 25px;
+    margin-right: -20px;
+}
+.typewriter span {
+    color: #3F88C5;
+    font-weight: 800;
+}
+
+.typewriter span1 {
+    color: #EB5F0C;
+    font-weight: 800;
+}
+
+.typewriter .types{
+    line-height: 90px;
+    height: 80px;
+    overflow: hidden; 
+    margin-top: 43px;
+}
+
+.types li{
+    list-style: none;
+    font-weight: 800;
+    font-size: 48px;
+    position:relative;
+    top: 0;
+    animation: slide 15s steps(5)
+    infinite;
+    }
+
+.types li {
+    position: relative;
+}
+
+.types li::after{
+    content: "";
+    position:absolute;
+    font-size: 36px;
+    height: 100%;
+    width: 100%;
+    animation: typing 3s steps(10) 
+    infinite;
+    border-left: 3px solid #d95e16;
+    left: 0;
+    background: white;
+    }
+
+  /* The typing effect */
+  @keyframes typing {
+    40%,
+    60% {
+        left: calc(100% + 30px);
+    }
+    100%{
+        left: 0;
+    }
+  }
+
+  @keyframes slide{
+    100%{
+        top: -450px;
+    }
+  }
+
 
 #addCourse:hover {
     text-decoration: underline;
