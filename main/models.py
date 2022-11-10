@@ -43,10 +43,10 @@ class department(models.Model):
 
 
 class course(models.Model):
+    # MUST BE NAMED ID DO NOT CHANGE
+    id = models.IntegerField(primary_key=True)
     # course info CS 1110 Intro to Python
     department = models.CharField(max_length=30)
-    # unique courseID
-    courseNumber = models.IntegerField(primary_key=True)
     description = models.CharField(max_length=100)
     catalogNumber = models.CharField(max_length=10, default="")
 
@@ -59,6 +59,13 @@ class course(models.Model):
     courseSection = models.CharField(max_length=30)
     credits = models.CharField(max_length=30)
     lectureType = models.CharField(max_length=30)
+
+    # all numbers related to waitlist and remaining class seats
+    classCapacity = models.IntegerField(default=0)
+    classEnrollment = models.IntegerField(default=0)
+    classSpotsOpen = models.IntegerField(default=0)
+    waitlist = models.IntegerField(default=0)
+    waitlistMax = models.IntegerField(default=0)
 
     # meeting information
     meeting_days = models.CharField(max_length=100, default = "")
@@ -76,5 +83,5 @@ class course(models.Model):
 
 
 class ShoppingCart(models.Model):
-    activeUser = models.OneToOneField(myUser, related_name='activeUser', on_delete=models.CASCADE)
+    activeUser = models.ForeignKey(myUser, related_name='activeUser', on_delete=models.CASCADE)
     coursesInCart = models.ManyToManyField(course, default='', blank=True, related_name='coursesInCart')
