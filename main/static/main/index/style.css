@@ -202,12 +202,7 @@ div a{
     color: var(--text-color);
     margin-bottom: 30px;
     transition: .3s;
-  }
-.intro_btn {
-    display: flex;
-    justify-content: relative;
-    color: #d95e16;
-  }
+  } 
 
 .intro_content{
     max-width: 60%;
@@ -344,7 +339,7 @@ br1 {
     position: absolute;
     z-index: 10;
     top: 60%;
-    left: 66%;
+    left: 65.8%;
   }
   
   .intro_img .btn:active{
