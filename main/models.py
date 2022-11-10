@@ -60,6 +60,13 @@ class course(models.Model):
     credits = models.CharField(max_length=30)
     lectureType = models.CharField(max_length=30)
 
+    # all numbers related to waitlist and remaining class seats
+    classCapacity = models.IntegerField(default=0)
+    classEnrollment = models.IntegerField(default=0)
+    classSpotsOpen = models.IntegerField(default=0)
+    waitlist = models.IntegerField(default=0)
+    waitlistMax = models.IntegerField(default=0)
+
     # meeting information
     meeting_days = models.CharField(max_length=100, default = "")
     start_time = models.CharField(max_length=100, default = "")

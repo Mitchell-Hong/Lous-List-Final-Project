@@ -368,6 +368,9 @@ def addclass(request, dept, course_id):
         start_time=addedClass[0]['meetings'][0]['start_time'],
         end_time=addedClass[0]['meetings'][0]['end_time'],
         room_location=addedClass[0]['meetings'][0]['facility_description'],
+        classCapacity=addedClass[0]['class_capacity'],classEnrollment=addedClass[0]['enrollment_total'],
+        classSpotsOpen=addedClass[0]['enrollment_available'],waitlist=addedClass[0]['wait_list'],
+        waitlistMax=addedClass[0]['wait_cap'],
     )
 
     # activeUser is the person who is checking their friend requests
