@@ -83,5 +83,5 @@ class course(models.Model):
 
 
 class ShoppingCart(models.Model):
-    activeUser = models.OneToOneField(myUser, related_name='activeUser', on_delete=models.CASCADE)
+    activeUser = models.ForeignKey(myUser, related_name='activeUser', on_delete=models.CASCADE)
     coursesInCart = models.ManyToManyField(course, default='', blank=True, related_name='coursesInCart')
