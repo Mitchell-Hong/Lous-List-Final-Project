@@ -27,7 +27,7 @@ urlpatterns = [
 
 
     # route that allows users to see how many friends they have as well as add new ones
-    path('friendsearch/', views.friendsearch, name='friendsearch'),
+    path('addfriend/', views.addfriend, name='addfriend'),
     # page that allows users to accept or reject friend requests
     path('friendrequests/', views.friendrequests, name='friendrequests'),
     # page that allows users to see a list of users who they are friends with
@@ -38,6 +38,9 @@ urlpatterns = [
     # path for if the user accepts the incoming friend request
     path('friendrequests/accept/<int:fromUserID>/', views.acceptrequest, name='acceptrequest'),
 
+
+    # paths for the schedule and shopping cart behavior
+    path('coursecatalog/addclass/<str:dept>/<int:course_id>/', views.addclass, name='addclass'),
 
 
 ]

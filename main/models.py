@@ -17,7 +17,7 @@ class myUser(models.Model):
     numFriends = models.SmallIntegerField(default=0)
     # schedule fields so that we can build a schedule for each user
     schedule = models.TextField(max_length=500, default="")
-    shoppingcart = models.TextField(max_length=500, default="")
+    # shoppingcart = models.TextField(max_length=500, default="")
 
     def __str__(self):
         return self.name
@@ -33,6 +33,7 @@ class Friend_Request(models.Model):
     from_user = models.ForeignKey(myUser, related_name='from_user', on_delete=models.CASCADE)
     to_user = models.ForeignKey(myUser, related_name='to_user', on_delete=models.CASCADE)
 
+
 class department(models.Model):
     abbreviation = models.CharField(max_length=10)
     departmentName = models.CharField(max_length=30)
@@ -42,27 +43,29 @@ class department(models.Model):
 
 
 class course(models.Model):
+    # MUST BE NAMED ID DO NOT CHANGE
+    id = models.IntegerField(primary_key=True)
     # course info CS 1110 Intro to Python
-    department = models.ForeignKey(department, on_delete=models.CASCADE)
-    courseNumber = models.IntegerField()
+    department = models.CharField(max_length=30)
     description = models.CharField(max_length=100)
+    catalogNumber = models.CharField(max_length=10, default="")
 
     # instructor name and email of who teaches the course
     instructorName = models.CharField(max_length=100)
-    instructorEmail = models.EmailField(max_length=100)
+    instructorEmail = models.EmailField(max_length=100, blank=True)
 
     # class info about which semester course is taught in, credits, section, and type of class
-    semesterCode = models.IntegerField()
+    semesterCode = models.IntegerField(blank=True)
     courseSection = models.CharField(max_length=30)
     credits = models.CharField(max_length=30)
     lectureType = models.CharField(max_length=30)
 
     # all numbers related to waitlist and remaining class seats
-    classCapacity = models.IntegerField()
-    classEnrollment = models.IntegerField()
-    classSpotsOpen = models.IntegerField()
-    waitlist = models.IntegerField()
-    waitlistMax = models.IntegerField()
+    classCapacity = models.IntegerField(default=0)
+    classEnrollment = models.IntegerField(default=0)
+    classSpotsOpen = models.IntegerField(default=0)
+    waitlist = models.IntegerField(default=0)
+    waitlistMax = models.IntegerField(default=0)
 
     # meeting information
     meeting_days = models.CharField(max_length=100, default = "")
@@ -78,3 +81,7 @@ class course(models.Model):
         num = self.courseNumber
         return str(dep) + " " + str(num)
 
+
+class ShoppingCart(models.Model):
+    activeUser = models.ForeignKey(myUser, related_name='activeUser', on_delete=models.CASCADE)
+    coursesInCart = models.ManyToManyField(course, default='', blank=True, related_name='coursesInCart')

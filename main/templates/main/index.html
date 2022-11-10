@@ -17,31 +17,31 @@
         {% bootstrap_javascript %}
     </head>
     <body>
-        <div nav="mx-auto bg-gradient" class="tab"
-        style="width: 100%; height: 8.5%; background-color:#ed874e">
+        <header class="bg-gradient"
+        style="width: 100%; height: 8.5%; background-color:#ed874e; position: sticky; top: 0px">
             {% load static %}
             <div>
                 <!-- <a href="/main/" --> 
-                <img src="{% static "main/images/uvaLogo.png" %}" class="d-inline-block ms-2 pb-2" alt="UVA" />
+                <a href="/main/"> <img src="{% static "main/images/uvaLogo.png" %}" class="d-inline-block ms-2 pb-2" alt="UVA" />
                 <h4 class="text-center d-inline-block pt-3 ms-2 me-5" style="color:rgb(240, 240, 240)">CourSelect</h4>
-
-                <a href="/main/coursecatalog/" class="a_hover" 
-                {% if tab == 'coursecatalog' %}style="selected"{% endif %}>
+                
+                <a href="/main/coursecatalog/" class="a_links" 
+                {% if tab == 'coursecatalog' %}style="selected"{% endif %}> <i class='bx bx-list-ul' style= "margin-top: 3px; margin-right: 5px;"></i>
                 Course Catalog</a>
                 
-                <a href="/main/searchclass/" class="a_hover"
-                {% if tab == 'searchclass' %}style="selected"{% endif %}>
+                <a href="/main/searchclass/" class="a_links"
+                {% if tab == 'searchclass' %}style="selected"{% endif %}> <i class='bx bx-search' style= "margin-top: 3px; margin-right: 5px;"></i>
                 Class Search</a>
                 
-                <a href="/main/myschedule/" class="a_hover"
-                {% if tab == 'myschedule' %}style="selected"{% endif %}>
+                <a href="/main/myschedule/" class="a_links"
+                {% if tab == 'myschedule' %}style="selected"{% endif %}> <i class='bx bx-calendar-edit' style= "margin-top: 3px; margin-right: 5px;"></i>
                 My Schedule</a>
 
-                <a href="/main/shoppingcart/" class="a_hover"
-                {% if tab == 'shoppingcart' %}style="selected"{% endif %}>
+                <a href="/main/shoppingcart/" class="a_links"
+                {% if tab == 'shoppingcart' %}style="selected"{% endif %}> <i class='bx bx-cart' style= "margin-top: 3px; margin-right: 5px;"></i>
                 Shopping Cart</a>
 
-                <div class="header_moon">
+                <div class="header_moon" style= "margin-left: 33%;" onclick="setDarkMode()" aria-label="Toggle Dark Mode">
                     <i class='bx bx-moon'></i>
                   </div>
 
@@ -58,7 +58,7 @@
                         <li><a class="disabled dropdown-item text-dark" href="#">Welcome, {{user.socialaccount_set.all.0.extra_data.given_name}}!</a></li>
                         <li><hr class="dropdown-divider"></li>
                         <li><a class="dropdown-item" href="/main/profile/{{user.id}}/">Profile</a></li>
-                        <li><a class="dropdown-item" href="/main/friendsearch/">Find Friends</a></li>
+                        <li><a class="dropdown-item" href="/main/addfriend/">Add Friends</a></li>
                         <li><a class="dropdown-item" href="/main/friendrequests/">Friend Requests</a></li>
                         <li><a class="dropdown-item" href="#">Settings</a></li>
                         <li><hr class="dropdown-divider"></li>
@@ -72,9 +72,64 @@
             </div>
             {% endif %}
         </div>
+    </header>
         {% comment %} The above code is the navbar and then below we can add the content for each page inside block content tag {% endcomment %}
         {% block content %}
+        <div class="page_intro intro">
+            <div class="intro_container container">
+              <div class="intro_body">
+                <div class="intro_content">
+                  <h1 class="intro_title"> <b>Welcome to </b> <br> <span>Cour</span><span1>Select</span1></h1>
+                  <h1 class="intro_position">A UVA Course Builder <br>for <b>students</b>, by <b>students</b></h1>
+                  <br1>
+                  <div class="typewriter">   
+                    <div class = "static" > Pick Your <br1>
+                    <span>Perfect</span> Class in </div>
+                    <ul class="types">
+                        <li><span1>Science</span1></li>
+                        <li><span1>Math</span1></li>
+                        <li><span1>Business</span1></li>
+                        <li><span1>English</span1></li>
+                        <li><span1>History</span1></li>
+                    </ul>
+                </div>   
+            </div>     
+            <div class = "intro_img">
+                <img src="/static/main/images/courselectHome.png">
+                <div>
+                    <a href="/main/searchclass/" title="" class="btn" style="color:white; font-weight:700;"> Search Class</i></a>
+                        </div>
+            </div>
+        </div> 
+        </div>
+        </div>
+        </div>
         {% endblock content %}
-        </nav>
+</header>
+     <!-- <script src="index/script.js">
+    </script> -->
+<script>
+    if (localStorage.getItem('theme') == 'dark') {
+            setDarkMode();
+
+            if (document.getElementById('moon').checked) {
+                localStorage.setItem('moon', true)
+            }
+        }
+
+        function setDarkMode() {
+            let isDark = document.body.classList.toggle('night');
+
+            if (isDark) {
+                setDarkMode.checked = true;
+                localStorage.setItem('theme' , 'night');
+                document.getElementById('moon').setAttribute('checked', 'checked');
+            } else {
+                setDarkMode.checked = true;
+                localStorage.removeItem('theme', 'night');
+            }
+        }
+</script>
+
     </body>
 </html>
