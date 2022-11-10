@@ -49,9 +49,9 @@ class DepartmentTestCase(TestCase):
         self.assertEqual(dep.__str__(),dep.abbreviation)
 
 class CourseTestCase(TestCase):
-    def setUp(self,courseNumber=1,description="desc",instructorName="Name",instructorEmail="Name@gmail.com",semesterCode=1,courseSection="a",credits="3",lectureType="In Person",classCapacity=20,classEnrollment=12,classSpotsOpen=8,waitlist=0,waitlistMax=5,meeting_days="Mon Wed Fri",start_time="9:00",end_time="9:50",room_location="Rice 130"):
+    def setUp(self,id=1,description="desc",instructorName="Name",instructorEmail="Name@gmail.com",semesterCode=1,courseSection="a",credits="3",lectureType="In Person",classCapacity=20,classEnrollment=12,classSpotsOpen=8,waitlist=0,waitlistMax=5,meeting_days="Mon Wed Fri",start_time="9:00",end_time="9:50",room_location="Rice 130"):
         dep = department.objects.create(abbreviation="CS",departmentName="Computer Science")
-        return course.objects.create(department=dep,courseNumber=courseNumber,description=description,instructorName=instructorName,instructorEmail=instructorEmail,semesterCode=semesterCode,courseSection=courseSection,credits=credits,lectureType=lectureType,classCapacity=classCapacity,classEnrollment=classEnrollment,classSpotsOpen=classSpotsOpen,waitlist=waitlist,waitlistMax=waitlistMax,meeting_days=meeting_days,start_time=start_time,end_time=end_time,room_location=room_location)
+        return course.objects.create(department=dep,id=id,description=description,instructorName=instructorName,instructorEmail=instructorEmail,semesterCode=semesterCode,courseSection=courseSection,credits=credits,lectureType=lectureType,classCapacity=classCapacity,classEnrollment=classEnrollment,classSpotsOpen=classSpotsOpen,waitlist=waitlist,waitlistMax=waitlistMax,meeting_days=meeting_days,start_time=start_time,end_time=end_time,room_location=room_location)
 
     def test_course_creation(self):
         c = self.setUp()
