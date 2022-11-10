@@ -13,6 +13,9 @@
         {% bootstrap_javascript %}
     </head>
     {% block content %}
+    <h1>
+        Course Search
+    </h1>
     <form name="depSelect" method="GET">
             <select name="depSelect" onchange="this.form.submit()">
                 <option selected="selected" disabled>Departments</option>
@@ -54,8 +57,8 @@
                     {% comment %} this is one section of the class therefore we are going to print some info about it {% endcomment %}
                     {% if classinfo.catalog_number == class.catalog_number %}
                     <div class='ps-2 py-1'
-                        style="background-color: {% if forloop.counter|divisibleby:2 %}lightcyan
-                        {% else %} rgb(255, 221, 153) {% endif %}; width:85%;">
+                        style="background-color: {% if forloop.counter|divisibleby:2 %} lightcyan
+                        {% else %} rgb(255, 221, 153) {% endif %}; width:85% ; ">
                         <div class="d-inline">{{ classinfo.course_number  }}</div> 
                         <div class="d-inline">{{ classinfo.instructor.name  }}</div>  
                         <div class="d-inline">{{ classinfo.enrollment_total }}/{{ classinfo.class_capacity }}</div> 
