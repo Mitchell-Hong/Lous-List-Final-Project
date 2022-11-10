@@ -331,7 +331,7 @@ br1 {
     background: var(--primary-color);
     box-shadow: 0 5px 0 #b74f13;
     border-radius: 30px;
-    padding: 5px 24px;
+    padding: 5px 16px;
     font-weight: 500;
     font-size: 16px;
     color: var(--text-color);
@@ -339,7 +339,7 @@ br1 {
     position: absolute;
     z-index: 10;
     top: 60%;
-    left: 65.8%;
+    left: 67.5%;
   }
   
   .intro_img .btn:active{
