@@ -58,6 +58,10 @@
     font-weight: 400;
     
 }
+.selected{
+    font-weight: 700;
+    margin-top: 10px;
+}
 /* animations */
 .a_links::after{
     opacity: 0;
@@ -115,6 +119,15 @@ body.night{
     transition: .3s;
   }
 
+.intro_title{
+    margin: 20px 20px 20px 20px;
+    font-size: 48px;
+}
+.night .intro_title{
+    color: (var(--invert-text-color));
+    font-size: 48px;
+}
+
 
 .selected {
     font-family: "Overpass", Arial, Helvetica, sans-serif;
@@ -142,4 +155,3 @@ div a{
     background-color: lightsteelblue;
     border: 1px solid black;
 }
-
