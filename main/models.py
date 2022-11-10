@@ -46,7 +46,7 @@ class course(models.Model):
     # course info CS 1110 Intro to Python
     department = models.CharField(max_length=30)
     # unique courseID
-    courseNumber = models.IntegerField(primary_key=True)
+    courseNumber = models.IntegerField(primary_key=True, unique=True, default="")
     description = models.CharField(max_length=100)
     catalogNumber = models.CharField(max_length=10, default="")
 
