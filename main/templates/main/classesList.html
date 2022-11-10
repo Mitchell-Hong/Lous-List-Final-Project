@@ -16,8 +16,8 @@
                     {% for classinfo in course_list %}
                         {% comment %} this is one section of the class therefore we are going to print some info about it {% endcomment %}
                         {% if classinfo.catalog_number == class.catalog_number %}
-                            <div class='ps-2 py-1'
-                                style="background-color: {% if forloop.counter|divisibleby:2 %}lightcyan
+                        <div class='ps-2 py-1'
+                            style="background-color: {% if forloop.counter|divisibleby:2 %}lightcyan
                                 {% else %} rgb(255, 221, 153) {% endif %}; width:85%;">
                                 <div class="d-inline">{{ classinfo.course_number  }}</div> 
                                 <div class="d-inline">{{ classinfo.instructor.name  }}</div>  
