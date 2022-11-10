@@ -355,9 +355,8 @@ def addclass(request, dept, course_id):
 
     # only add classes to model when people need them for their schedule bc Heroku cant support all classes 
     addedClass = list(filter(lambda course: course['course_number'] == course_id, courses))
-    print(addedClass[0])
     newCourse, courseCreated = course.objects.get_or_create(
-        courseNumber=addedClass[0]['course_number'],
+        id=addedClass[0]['course_number'],
         department=addedClass[0]['subject'], 
         instructorName=addedClass[0]['instructor']['name'], instructorEmail=addedClass[0]['instructor']['email'],
         courseSection=addedClass[0]['course_section'], semesterCode=addedClass[0]['semester_code'],
