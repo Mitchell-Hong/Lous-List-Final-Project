@@ -24,52 +24,68 @@
                 {% endfor %}
             </select>
             <select name = "instructor" {%if noDepartment%} disabled {%endif%}>
-                <option selected="selected" value = "none"> Instructor</option>
+                <option selected="selected" value="none"> Instructor</option>
                 {% for instructor in instructors %}
-                    <option value="{{instructor}}">{{instructor}}</option>
+                    <option value="{{instructor}}" {%if instructorChosen == instructor%} selected {%endif%}>{{instructor}}</option>
                 {% endfor %}
             </select>
             <select name = "classType" {%if noDepartment%} disabled {%endif%}>
                 <option selected="selected" value = "none"> Class Type</option>
-                <option value="LEC">Lecture</option>
-                <option value="LAB">LAB</option>
+                <option value="LAB" {%if classTypeChosen == "LAB" %} selected {%endif%} >Lab</option>
+                <option value="LEC" {%if classTypeChosen == "LEC" %} selected {%endif%} >Lecture</option>
+                <option value="IND" {%if classTypeChosen == "IND" %} selected {%endif%} >Independent Study</option>
             </select>
             <select name = "credits" {%if noDepartment%} disabled {%endif%}>
                 <option selected="selected" value = "none"> Credits</option>
-                <option value="1">1</option>
-                <option value="2">2</option>
-                <option value="3">3</option>
+                <option value="1" {%if creditsChosen == "1" %} selected {%endif%} >1</option>
+                <option value="2" {%if creditsChosen == "2" %} selected {%endif%} >2</option>
+                <option value="3" {%if creditsChosen == "3" %} selected {%endif%} >3</option>
             </select>
             <input type="submit" {%if noDepartment%} disabled {%endif%} name="submitbtn" value="Select">
     </form>
-    <div class="container mt-5">
-        <ul style="list-style-type: none;">
-        {% for class in course_list_nodup %}
-            <li class="my-3">
-                <a href="https://thecourseforum.com/course/{{ class.subject }}/{{ class.catalog_number }}/"
-                title="View TCForum" style="background-color:lightskyblue; color:black;" class="py-1 px-2 fs-4 me-0 d-inline-block">{{ class.subject }}{{ class.catalog_number }}</a>
-                <div style="background-color:slateblue" class="d-inline-block py-1 fs-4 px-3 w-50">{{ class.description }}</div>
-            </li>
-            {% for classinfo in course_list %}
-            <div>
-                {% comment %} this is one section of the class therefore we are going to print some info about it {% endcomment %}
-                {% if classinfo.catalog_number == class.catalog_number %}
-                    <div class="d-inline">{{ classinfo.course_number    }}</div>
-                    <div class="d-inline">{{ classinfo.course_section   }}</div>
-                    <div class="d-inline">{{ classinfo.component        }}</div>
-                    <div class="d-inline">{{ classinfo.units            }} Credits</div>
-                    <div class="d-inline">{{ classinfo.enrollment_total }}/{{ classinfo.class_capacity }}</div>
-                    <div class="d-inline">{{ classinfo.instructor.name  }}</div>
-                    <div class="d-inline">{{ classinfo.meetings.days  }}</div>
-                    {% comment %} #array access in django template with .index {% endcomment %}
-                    <div class="d-inline">{{ classinfo.meetings.0.days  }}</div>
-                    <div class="d-inline">{{ classinfo.meetings.0.start_time|slice:":5"  }} - {{ classinfo.meetings.0.end_time|slice:":5"  }}</div>
-                    <div class="d-inline">{{ classinfo.meetings.0.facility_description  }}</div>
-                {% endif %}
-            </div>
+
+    <div class="d-flex ms-3 me-5">
+        <div class="mt-4 flex-fill">
+            <ul style="list-style-type: none;">
+            {% for class in course_list_nodup %}
+                <li class="my-2 d-flex" style="background-color:rgb(230, 230, 230); width: 85%;">
+                    <a href="https://thecourseforum.com/course/{{ class.subject }}/{{ class.catalog_number }}/"
+                    title="View TCForum" style="background-color:lightskyblue; color:black;" class="py-1 px-2 fs-4 me-0 d-inline-block">{{ class.subject }}{{ class.catalog_number }}</a>
+                    <div style="background-color:slateblue" class="d-inline-block py-1 fs-4 px-3 flex-fill">{{ class.description }}</div>
+                </li>
+                {% for classinfo in course_list %}
+                    {% comment %} this is one section of the class therefore we are going to print some info about it {% endcomment %}
+                    {% if classinfo.catalog_number == class.catalog_number %}
+                    <div class='ps-2 py-1'
+                        style="background-color: {% if forloop.counter|divisibleby:2 %}lightcyan
+                        {% else %} rgb(255, 221, 153) {% endif %}; width:85%;">
+                        <div class="d-inline">{{ classinfo.course_number  }}</div> 
+                        <div class="d-inline">{{ classinfo.instructor.name  }}</div>  
+                        <div class="d-inline">{{ classinfo.enrollment_total }}/{{ classinfo.class_capacity }}</div> 
+                        <div class="d-inline">{{ classinfo.meetings.days  }}</div>
+                        {% comment %} #array access in django template with .index {% endcomment %}
+                        <div class="d-inline">{{ classinfo.meetings.0.days  }}</div>
+                        <div class="d-inline">{{ classinfo.meetings.0.start_time|slice:":5"  }} - {{ classinfo.meetings.0.end_time|slice:":5"  }}</div>
+                        <div class="d-inline">{{ classinfo.meetings.0.facility_description  }}</div>
+                        <div class="d-inline">{{ classinfo.component        }}</div>
+                        <div class="d-inline">({{ classinfo.units            }} Credits)</div>
+
+                        <div class='float-end'>
+                            <a href="#" class='text-success me-3' id="addCourse">Add to Cart</a>
+                        </div>
+                    </div>
+                    {% endif %}
+                {% endfor %}
             {% endfor %}
-        {% endfor %}
-        </ul>
+            </ul>
+        </div>
+
+        {% if course_list_nodup %}
+        <div class='mt-4 me-5' style="width:15%;" id='shoppingCart'>
+            <div class='text-white text-center px-3 py-1 fw-bold mt-2' style='background-color:darkblue'>Shopping Cart</div>
+            <div class='border border-1 border-secondary'></div>
+        </div>
+        {% endif %}
     </div>
     {% endblock content %}
     </body>

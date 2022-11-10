@@ -44,26 +44,21 @@ class department(models.Model):
 
 class course(models.Model):
     # course info CS 1110 Intro to Python
-    department = models.ForeignKey(department, on_delete=models.CASCADE)
-    courseNumber = models.IntegerField()
+    department = models.CharField(max_length=30)
+    # unique courseID
+    courseNumber = models.IntegerField(primary_key=True)
     description = models.CharField(max_length=100)
+    catalogNumber = models.CharField(max_length=10, default="")
 
     # instructor name and email of who teaches the course
     instructorName = models.CharField(max_length=100)
-    instructorEmail = models.EmailField(max_length=100)
+    instructorEmail = models.EmailField(max_length=100, blank=True)
 
     # class info about which semester course is taught in, credits, section, and type of class
-    semesterCode = models.IntegerField()
+    semesterCode = models.IntegerField(blank=True)
     courseSection = models.CharField(max_length=30)
     credits = models.CharField(max_length=30)
     lectureType = models.CharField(max_length=30)
-
-    # all numbers related to waitlist and remaining class seats
-    classCapacity = models.IntegerField()
-    classEnrollment = models.IntegerField()
-    classSpotsOpen = models.IntegerField()
-    waitlist = models.IntegerField()
-    waitlistMax = models.IntegerField()
 
     # meeting information
     meeting_days = models.CharField(max_length=100, default = "")
@@ -81,5 +76,5 @@ class course(models.Model):
 
 
 class ShoppingCart(models.Model):
-    user = models.OneToOneField(myUser, on_delete=models.CASCADE)
-    courses = models.ManyToManyField(course, related_name = 'courses')
+    activeUser = models.OneToOneField(myUser, related_name='activeUser', on_delete=models.CASCADE)
+    coursesInCart = models.ManyToManyField(course, default='', blank=True, related_name='coursesInCart')

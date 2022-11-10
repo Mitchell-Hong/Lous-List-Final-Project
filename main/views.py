@@ -35,9 +35,16 @@ def deptclasses(request, dept):
     courses = response.json()
     coursesNoDup = { each['catalog_number'] : each for each in courses }.values()
 
+    # displaying to the user what items are in their shopping cart
+    has_class = ShoppingCart.objects.filter(activeUser=request.user.id).first()
+    classesInCart = []
+    if has_class:
+        classesInCart = has_class.coursesInCart.all()
+
     context = {
         'course_list': courses,
         'course_list_nodup':coursesNoDup,
+        'classesInCart':classesInCart,
     }
     return render(request, 'main/classesList.html', context)
 
@@ -48,29 +55,41 @@ def searchclass(request):
     Instructors = []
     courses = []
     filteredClass = []
+    filteredNoDup = []
     # These will check for what the user inputed
     fi = False
     fct = False
     fc = False
+    # sending important data to the front end for select boxes and to filter out stuff
+    instructorChosen = ''
+    classTypeChosen = ''
+    creditsChosen = ''
     input = request.GET.get('depSelect', None)
     if input:
         noDep = False
+
         url = 'http://luthers-list.herokuapp.com/api/dept/' + input + '/'
         response = requests.get(url)
         courses = response.json()
-        coursesNoDup = { each['catalog_number'] : each for each in courses }.values()
         filteredInstructor = request.GET.get('instructor', None)
         if (filteredInstructor != "none"):
             fi = True
+            instructorChosen = filteredInstructor
+
         filteredClassType = request.GET.get('classType', None)
         if (filteredClassType != "none"):
             fct = True
+            classTypeChosen = filteredClassType
+
         filteredCredits = request.GET.get('credits', None)
         if (filteredCredits != "none"):
             fc = True
-        filteredCredits = request.GET.get('credits', None)
-        for course in coursesNoDup:
-            Instructors.append(course['instructor']['name'])
+            creditsChosen = filteredCredits
+
+        for course in courses:
+            # preventing duplicate professors
+            if (course['instructor']['name'] not in Instructors):
+                Instructors.append(course['instructor']['name'])
             # Checking for various combination of input that the user can enter -- some are less practical such as searching by credits but it is included nonetheless
             if (fi and fct and fc):
                 if ((course['instructor']['name'] == filteredInstructor) and (course['component'] == filteredClassType)
@@ -79,28 +98,46 @@ def searchclass(request):
             elif (fi and fct):
                 if ((course['instructor']['name'] == filteredInstructor) and (course['component'] == filteredClassType)) :
                     filteredClass.append(course)
+                    
             elif (fi and fc):
                 if ((course['instructor']['name'] == filteredInstructor) and (course['units'] == filteredCredits)) :
                     filteredClass.append(course)
+                    
+
             elif (fct and fc):
                 if ((course['component'] == filteredClassType) and (course['units'] == filteredCredits)) :
                     filteredClass.append(course)
+                    
+
             elif (fi):
                 if ((course['instructor']['name'] == filteredInstructor)):
                     filteredClass.append(course)
+
             elif (fct):
                 if ((course['component'] == filteredClassType)):
                     filteredClass.append(course)
+                    
+
             elif (fc):
                 if ((course['units'] == filteredCredits)):
                     filteredClass.append(course)
+        # sort all the instructors alphabetically so it is easier to find them
+        Instructors.sort()
+        # ensure no duplicate filtered classes
+        filteredNoDup = { each['catalog_number'] : each for each in filteredClass }.values()       
+
     context = {
         'department_results' : departments,
         'instructors': Instructors,
         'noDepartment': noDep,
-        'course_list': courses,
-        'course_list_nodup':filteredClass,
+        'course_list': filteredClass,
+        'course_list_nodup': filteredNoDup,
         'department': input,
+        # passing extra data to help us filter stuff
+        'instructorChosen': instructorChosen,
+        'classTypeChosen':classTypeChosen,
+        'creditsChosen': creditsChosen,
+
         # tab tells the HTML what the depict as the active tab
         'tab' : 'coursecatalog',
     }
@@ -116,9 +153,7 @@ def myschedule(request):
 
 
 def shoppingcart(request):
-    courses_in_cart = ShoppingCart.objects
     context = {
-        'courses_in_cart' : 'courses_in_cart',
     }
     return render(request,'main/shoppingcart.html', context)
 
@@ -307,6 +342,41 @@ def addfriend(request):
     }
     return render(request, 'main/addfriend.html', context)
 
+
+
+####################   VIEWS DEALING WITH SHOPPING CART / SCHEDULE   ########################
+
+def addclass(request, dept, course_id):
+    # get all courses from that department since we cannot store them in model due to heroku max
+    # number of rows with free version
+    url = 'http://luthers-list.herokuapp.com/api/dept/' + dept + '/'
+    response = requests.get(url)
+    courses = response.json()
+
+    # only add classes to model when people need them for their schedule bc Heroku cant support all classes 
+    addedClass = list(filter(lambda course: course['course_number'] == course_id, courses))
+    print(addedClass[0])
+    newCourse, courseCreated = course.objects.get_or_create(
+        courseNumber=addedClass[0]['course_number'],
+        department=addedClass[0]['subject'], 
+        instructorName=addedClass[0]['instructor']['name'], instructorEmail=addedClass[0]['instructor']['email'],
+        courseSection=addedClass[0]['course_section'], semesterCode=addedClass[0]['semester_code'],
+        description=addedClass[0]['description'], 
+        credits=addedClass[0]['units'], catalogNumber=addedClass[0]['catalog_number'],
+        lectureType=addedClass[0]['component'], 
+        meeting_days=addedClass[0]['meetings'][0]['days'],
+        start_time=addedClass[0]['meetings'][0]['start_time'],
+        end_time=addedClass[0]['meetings'][0]['end_time'],
+        room_location=addedClass[0]['meetings'][0]['facility_description'],
+    )
+
+    # activeUser is the person who is checking their friend requests
+    activeUser = myUser.objects.get(id=request.user.id)
+
+    # seeing if they have a shopping cart already
+    shoppingCartActiveUser, created = ShoppingCart.objects.get_or_create(activeUser=activeUser)
+    shoppingCartActiveUser.coursesInCart.add(newCourse)
+    return HttpResponseRedirect(reverse('main:deptclasses', args=(dept,)))
 
 
 

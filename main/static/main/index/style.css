@@ -155,3 +155,8 @@ div a{
     background-color: lightsteelblue;
     border: 1px solid black;
 }
+
+#addCourse:hover {
+    text-decoration: underline;
+}
+
