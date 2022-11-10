@@ -44,7 +44,7 @@
                 <div class='text-white text-center px-3 py-1 fw-bold mt-2' style='background-color:darkblue'>Shopping Cart</div>
                 <div class='border border-1 border-secondary'>
                     {% for classAdded in classesInCart %}
-                        <div class='text-center'>{{classAdded.department}} {{classAdded.catalogNumber}} ({{classAdded.courseNumber}})</div>
+                        <div class='text-center'>{{classAdded.department}} {{classAdded.catalogNumber}} ({{classAdded.id}})</div>
                     {% comment %} If the list is empty {% endcomment %}
                     {% empty %}
                         <div class='p-2 text-center'>Your shopping cart is empty.</div>
