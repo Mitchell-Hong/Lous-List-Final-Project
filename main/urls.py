@@ -41,7 +41,7 @@ urlpatterns = [
 
     # paths for the schedule and shopping cart behavior
     path('coursecatalog/addclass/<str:dept>/<int:course_id>/', views.addclass, name='addclass'),
-
+    path('coursecatalog/removeclass/<str:dept>/<int:course_id>/', views.removeclass, name='removeclass'),
 
 ]
 

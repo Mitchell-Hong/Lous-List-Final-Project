@@ -372,7 +372,7 @@ def addclass(request, dept, course_id):
         waitlistMax=addedClass[0]['wait_cap'],
     )
 
-    # activeUser is the person who is checking their friend requests
+    # activeUser is the person who is adding courses to their cart
     activeUser = myUser.objects.get(id=request.user.id)
 
     # seeing if they have a shopping cart already
@@ -380,8 +380,14 @@ def addclass(request, dept, course_id):
     shoppingCartActiveUser.coursesInCart.add(newCourse)
     return HttpResponseRedirect(reverse('main:deptclasses', args=(dept,)))
 
-
-
+def removeclass(request, dept, course_id):
+    # activeUser is the person who is adding courses to their cart
+    activeUser = myUser.objects.get(id=request.user.id)
+    # seeing if they have a shopping cart already
+    shoppingCartActiveUser, created = ShoppingCart.objects.get_or_create(activeUser=activeUser)
+    courseDeleted = course.objects.get(department=dept, id=course_id)
+    shoppingCartActiveUser.coursesInCart.remove(courseDeleted)
+    return HttpResponseRedirect(reverse('main:deptclasses', args=(dept,)))
 
 
 
