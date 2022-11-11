@@ -121,6 +121,8 @@ def searchclass(request):
             elif (fc):
                 if ((course['units'] == filteredCredits)):
                     filteredClass.append(course)
+            else:
+                filteredClass.append(course)
         # sort all the instructors alphabetically so it is easier to find them
         Instructors.sort()
         # ensure no duplicate filtered classes
