@@ -71,17 +71,17 @@ def searchclass(request):
         url = 'http://luthers-list.herokuapp.com/api/dept/' + input + '/'
         response = requests.get(url)
         courses = response.json()
-        filteredInstructor = request.GET.get('instructor', None)
+        filteredInstructor = request.GET.get('instructor', "none")
         if (filteredInstructor != "none"):
             fi = True
             instructorChosen = filteredInstructor
 
-        filteredClassType = request.GET.get('classType', None)
+        filteredClassType = request.GET.get('classType', "none")
         if (filteredClassType != "none"):
             fct = True
             classTypeChosen = filteredClassType
 
-        filteredCredits = request.GET.get('credits', None)
+        filteredCredits = request.GET.get('credits', "none")
         if (filteredCredits != "none"):
             fc = True
             creditsChosen = filteredCredits
