@@ -78,6 +78,7 @@
                     {% endif %}
                 {% endfor %}
             {% endfor %}
+            {% if not course_list_nodup %} <h2> No courses found </h2> {%endif%}
             </ul>
         </div>
         {% if user.is_authenticated %}
