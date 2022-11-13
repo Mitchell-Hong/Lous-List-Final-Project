@@ -22,6 +22,19 @@
 .night h1{
     color: white;
 }
+.night h2{
+    color: white;
+}
+.night h3{
+    color: white;
+}
+.night h4{
+    color: white;
+}
+.night p{
+    color: white;
+}
+
 
 .container {
     max-width: 1500px;
@@ -352,4 +365,21 @@ br1 {
   }
   .intro_img .btn .bx {
     font-size: 24px;
+  }
+
+  .friendBorder {
+    border-radius: 0.2rem;
+    margin-top: 3rem;
+    margin-right: auto;
+    margin-left: auto;
+    width: 50%;
+    border-width: 5px;
+    border-color: var(--invert-bg-color);
+    border: 2px solid;
+    box-sizing: border-box;
+    display: block;
+  }
+  
+  .night .friendBorder {
+    border-color: white;
   }
