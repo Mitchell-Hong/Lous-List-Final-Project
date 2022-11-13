@@ -156,6 +156,10 @@ div a{
     box-shadow: none;
 }
 
+#removeClass:hover {
+    color:red;
+}
+
 .col{
     background-color: lightsteelblue;
     border: 1px solid black;

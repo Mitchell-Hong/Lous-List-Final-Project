@@ -72,13 +72,10 @@ class course(models.Model):
     start_time = models.CharField(max_length=100, default = "")
     end_time = models.CharField(max_length=100, default = "")
     room_location = models.CharField(max_length=100, default = "")
-    # def __str__(self):
-    #     return self.courseNumber
-
 
     def __str__(self):
         dep =  self.department
-        num = self.courseNumber
+        num = self.id
         return str(dep) + " " + str(num)
 
 

@@ -65,23 +65,30 @@ def searchclass(request):
     classTypeChosen = ''
     creditsChosen = ''
     input = request.GET.get('depSelect', None)
+
+    # displaying to the user what items are in their shopping cart
+    has_class = ShoppingCart.objects.filter(activeUser=request.user.id).first()
+    classesInCart = []
+    if has_class:
+        classesInCart = has_class.coursesInCart.all()
+
     if input:
         noDep = False
 
         url = 'http://luthers-list.herokuapp.com/api/dept/' + input + '/'
         response = requests.get(url)
         courses = response.json()
-        filteredInstructor = request.GET.get('instructor', None)
+        filteredInstructor = request.GET.get('instructor', "none")
         if (filteredInstructor != "none"):
             fi = True
             instructorChosen = filteredInstructor
 
-        filteredClassType = request.GET.get('classType', None)
+        filteredClassType = request.GET.get('classType', "none")
         if (filteredClassType != "none"):
             fct = True
             classTypeChosen = filteredClassType
 
-        filteredCredits = request.GET.get('credits', None)
+        filteredCredits = request.GET.get('credits', "none")
         if (filteredCredits != "none"):
             fc = True
             creditsChosen = filteredCredits
@@ -121,6 +128,8 @@ def searchclass(request):
             elif (fc):
                 if ((course['units'] == filteredCredits)):
                     filteredClass.append(course)
+            else:
+                filteredClass.append(course)
         # sort all the instructors alphabetically so it is easier to find them
         Instructors.sort()
         # ensure no duplicate filtered classes
@@ -137,6 +146,7 @@ def searchclass(request):
         'instructorChosen': instructorChosen,
         'classTypeChosen':classTypeChosen,
         'creditsChosen': creditsChosen,
+        'classesInCart':classesInCart,
 
         # tab tells the HTML what the depict as the active tab
         'tab' : 'coursecatalog',
@@ -346,7 +356,12 @@ def addfriend(request):
 
 ####################   VIEWS DEALING WITH SHOPPING CART / SCHEDULE   ########################
 
-def addclass(request, dept, course_id):
+
+# If the last parameter is 1 it is coming from the classList page, if it is 0 it is coming from the searchClass page
+# changes where the redirect goes to. If 1 send it back to the department page, however if it is 0, send it back to the default
+# classSearch page
+
+def addclass(request, dept, course_id, class_list):
     # get all courses from that department since we cannot store them in model due to heroku max
     # number of rows with free version
     url = 'http://luthers-list.herokuapp.com/api/dept/' + dept + '/'
@@ -372,17 +387,30 @@ def addclass(request, dept, course_id):
         waitlistMax=addedClass[0]['wait_cap'],
     )
 
-    # activeUser is the person who is checking their friend requests
+    # activeUser is the person who is adding courses to their cart
     activeUser = myUser.objects.get(id=request.user.id)
 
     # seeing if they have a shopping cart already
     shoppingCartActiveUser, created = ShoppingCart.objects.get_or_create(activeUser=activeUser)
     shoppingCartActiveUser.coursesInCart.add(newCourse)
-    return HttpResponseRedirect(reverse('main:deptclasses', args=(dept,)))
+    if(class_list):
+        return HttpResponseRedirect(reverse('main:deptclasses', args=(dept,)))
 
+    else:
+        return HttpResponseRedirect(reverse('main:searchclass'))
 
+def removeclass(request, dept, course_id, class_list):
+    # activeUser is the person who is adding courses to their cart
+    activeUser = myUser.objects.get(id=request.user.id)
+    # seeing if they have a shopping cart already
+    shoppingCartActiveUser, created = ShoppingCart.objects.get_or_create(activeUser=activeUser)
+    courseDeleted = course.objects.get(department=dept, id=course_id)
+    shoppingCartActiveUser.coursesInCart.remove(courseDeleted)
+    if(class_list):
+        return HttpResponseRedirect(reverse('main:deptclasses', args=(dept,)))
 
-
+    else:
+        return HttpResponseRedirect(reverse('main:searchclass'))
 
 
     '''

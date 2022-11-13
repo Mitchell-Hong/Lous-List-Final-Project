@@ -69,22 +69,32 @@
                         <div class="d-inline">{{ classinfo.meetings.0.facility_description  }}</div>
                         <div class="d-inline">{{ classinfo.component        }}</div>
                         <div class="d-inline">({{ classinfo.units            }} Credits)</div>
-
-                        <div class='float-end'>
-                            <a href="#" class='text-success me-3' id="addCourse">Add to Cart</a>
-                        </div>
+                        {% if user.is_authenticated %}
+                            <div class='float-end'>
+                                <a href="/main/coursecatalog/addclass/{{class.subject}}/{{classinfo.course_number}}/0/" class='text-success me-3' id="addCourse">Add to Cart</a>
+                            </div>
+                        {%endif%}
                     </div>
                     {% endif %}
                 {% endfor %}
             {% endfor %}
+            {% if not course_list_nodup and not noDepartment%} <h2> No courses found </h2> {%endif%}
             </ul>
         </div>
-
-        {% if course_list_nodup %}
-        <div class='mt-4 me-5' style="width:15%;" id='shoppingCart'>
-            <div class='text-white text-center px-3 py-1 fw-bold mt-2' style='background-color:darkblue'>Shopping Cart</div>
-            <div class='border border-1 border-secondary'></div>
-        </div>
+        {% if user.is_authenticated and course_list_nodup%}
+            <div class='mt-4 me-5' style="width:15%; height:10%; position:sticky; top:100px;" id='shoppingCart'>
+                <div class='text-white text-center px-3 py-1 fw-bold mt-2' style='background-color:darkblue;'>  <i class='bx bx-cart' style= "margin-top: 3px; margin-right: 5px;"></i>Shopping Cart</div>
+                    {% for classAdded in classesInCart %}
+                        <div class='text-center py-1' style="background-color:lightgray;">{{classAdded.department}} {{classAdded.catalogNumber}} ({{classAdded.id}})
+                        
+                        {% comment %} 0 means it is coming from the searchClass page {% endcomment %}
+                        <a href="/main/coursecatalog/removeclass/{{classAdded.department}}/{{classAdded.id}}/0/" class="float-end me-4 fw-bold" id="removeClass">X</a></div>
+                    {% comment %} If the list is empty {% endcomment %}
+                    {% empty %}
+                        <div class='p-2 text-center' style="background-color:lightgray;">Your shopping cart is empty.</div>
+                    {% endfor %}
+                </div>
+            </div>
         {% endif %}
     </div>
     {% endblock content %}
