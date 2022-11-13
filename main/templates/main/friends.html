@@ -2,7 +2,9 @@
     {% block content %}
     <ul>
         {% for friend in allFriends %}
+        <img src="{{user.socialaccount_set.all.0.extra_data.picture}}" 
             <li>{{friend.name}}</li>
+            <br>
         {% endfor %}
     </ul>
 

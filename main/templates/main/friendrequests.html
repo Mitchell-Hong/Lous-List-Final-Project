@@ -1,7 +1,7 @@
 {% extends 'main/index.html' %}
     {% block content %}
-    <div class='w-50 mx-auto border border-dark border-3 rounded-2 mt-5'>
-        <h2 class="mt-2 ms-2">Incoming Friend Requests:</h2>
+    <div class='friendBorder'>
+        <h1> Incoming Friend Requests:</h1>
         {% for request in friend_requests %}
             <div class='border border-muted border-3 py-2 px-1 rounded-3 mx-4 my-3 d-flex'>
                 <div class='flex-fill fw-bold'>{{request.from_user}}:</div>
