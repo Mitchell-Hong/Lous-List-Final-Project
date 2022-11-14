@@ -17,7 +17,7 @@
                                             <div class="d-inline">{{ classinfo.department  }}</div> 
                                             <div class="d-inline">{{ classinfo.catalogNumber  }} :</div> 
                                             <div class="d-inline">{{ classinfo.description  }} :</div> 
-                                            <div class="d-inline">{{ classinfo.start_time  }} - {{classinfo.end_time}}</div>  
+                                            <div class="d-inline">{{ classinfo.start_time|slice:":5"}} - {{classinfo.end_time|slice:":5"}}</div>  
                                             <a href="/main/myschedule/removefromschedule/{{classinfo.id}}" style="color: black" class="float-end me-4 fw-bold" id="removeFromSchedule">Put Back in Cart</a>
                                         </li>
                                         {%endfor%}
@@ -29,7 +29,7 @@
                 <div class='text-white text-center px-3 py-1 fw-bold mt-2' style='background-color:darkblue;'>  <i class='bx bx-cart' style= "margin-top: 3px; margin-right: 5px;"></i>Shopping Cart</div>
                     {% for classAdded in classesInCart %}
                         <div class='text-center py-1' style="background-color:lightgray;">{{classAdded.department}} {{classAdded.catalogNumber}} ({{classAdded.id}})
-                        <a href="/main/coursecatalog/removeclass/{{classAdded.department}}/{{classAdded.id}}/" class="float-end me-4 fw-bold" id="removeClass">X</a></div>
+                        <a href="/main/coursecatalog/removeclass/{{classAdded.department}}/{{classAdded.id}}/2" class="float-end me-4 fw-bold" id="removeClass">X</a></div>
                     {% comment %} If the list is empty {% endcomment %}
                     {% empty %}
                         <div class='p-2 text-center' style="background-color:lightgray;">Your shopping cart is empty.</div>

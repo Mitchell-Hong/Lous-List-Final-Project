@@ -441,10 +441,11 @@ def removeclass(request, dept, course_id, class_list):
     shoppingCartActiveUser, created = ShoppingCart.objects.get_or_create(activeUser=activeUser)
     courseDeleted = course.objects.get(department=dept, id=course_id)
     shoppingCartActiveUser.coursesInCart.remove(courseDeleted)
-    if(class_list):
+    if(class_list == 2):
+        return HttpResponseRedirect(reverse('main:myschedule'))
+    elif(class_list == 1):
         return HttpResponseRedirect(reverse('main:deptclasses', args=(dept,)))
-
-    else:
+    elif(class_list == 0):
         return HttpResponseRedirect(reverse('main:searchclass'))
 
 def addToSchedule(request):
