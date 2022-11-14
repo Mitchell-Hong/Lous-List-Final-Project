@@ -2,9 +2,10 @@ from tracemalloc import start
 from django.shortcuts import render
 from django.http import HttpResponseRedirect, HttpResponse, HttpResponseNotFound
 from django.views import generic
+import datetime
 from django.urls import reverse
 from .forms import UserForm
-from .models import Friend_Request, FriendList, myUser, department, course, ShoppingCart
+from .models import Friend_Request, FriendList, myUser, department, course, ShoppingCart, ClassSchedule
 # this is used for making HTTP requests from an external API with django
 import requests
 
@@ -156,10 +157,44 @@ def searchclass(request):
 
 # myschedule dummy implementation for now
 def myschedule(request):
+    # begin by assuming user is logged in, if not, variable is used in html to print appropriate message
+    no_user = False
+    courses = []
+    classesInCart= []
+    try:
+        activeUser = myUser.objects.get(id=request.user.id)
+
+        scheduleActiveUser, created = ClassSchedule.objects.get_or_create(scheduleUser=activeUser)
+        cartActiveUser, created = ShoppingCart.objects.get_or_create(activeUser=activeUser)
+
+        courses = scheduleFormatter(scheduleActiveUser.coursesInSchedule.all())
+        classesInCart = cartActiveUser.coursesInCart.all()
+    except:
+        no_user = True        
+
     context = {
-        'tab' : 'myschedule',
+        'schedule_courses' : courses,
+        'classesInCart' : classesInCart,
+        'logged_in' : no_user,
     }
     return render(request,'main/myschedule.html', context)
+
+def scheduleFormatter(courses):
+    meetings = {"Monday":[], "Tuesday":[], "Wednesday":[], "Thursday":[], "Friday":[]}
+    for course in courses:
+        days = course.meeting_days
+        if "Mo" in days:
+            meetings['Monday'].append(course)
+        if "Tu" in days:
+            meetings['Tuesday'].append(course)
+        if "We" in days:
+            meetings['Wednesday'].append(course)
+        if "Th" in days:
+            meetings['Thursday'].append(course)
+        if "Fr" in days:
+            meetings['Friday'].append(course)
+    
+    return meetings
 
 
 def shoppingcart(request):
@@ -406,11 +441,43 @@ def removeclass(request, dept, course_id, class_list):
     shoppingCartActiveUser, created = ShoppingCart.objects.get_or_create(activeUser=activeUser)
     courseDeleted = course.objects.get(department=dept, id=course_id)
     shoppingCartActiveUser.coursesInCart.remove(courseDeleted)
-    if(class_list):
+    if(class_list == 2):
+        return HttpResponseRedirect(reverse('main:myschedule'))
+    elif(class_list == 1):
         return HttpResponseRedirect(reverse('main:deptclasses', args=(dept,)))
-
-    else:
+    elif(class_list == 0):
         return HttpResponseRedirect(reverse('main:searchclass'))
+
+def addToSchedule(request):
+    # adds a class to the schedule and removes it from users cart
+    activeUser = myUser.objects.get(id=request.user.id)
+
+    shoppingCartActiveUser, created = ShoppingCart.objects.get_or_create(activeUser=activeUser)
+    scheduleActiveUser, created = ClassSchedule.objects.get_or_create(scheduleUser=activeUser)
+
+    currentCart = shoppingCartActiveUser.coursesInCart.all()
+    for cartCourse in currentCart:
+        # TODO - check for time conflicts
+        if cartCourse not in scheduleActiveUser.coursesInSchedule.all(): 
+            scheduleActiveUser.coursesInSchedule.add(cartCourse)
+            shoppingCartActiveUser.coursesInCart.remove(cartCourse)
+
+    return HttpResponseRedirect(reverse('main:myschedule'))
+
+
+def removeFromSchedule(request, course_id):
+    # removes the class from the schedule and adds it back to the shopping cart
+    activeUser = myUser.objects.get(id=request.user.id)
+
+    courseToRemove = course.objects.get(id=course_id)
+
+    shoppingCartActiveUser, created = ShoppingCart.objects.get_or_create(activeUser=activeUser)
+    scheduleActiveUser, created = ClassSchedule.objects.get_or_create(scheduleUser=activeUser)
+
+    shoppingCartActiveUser.coursesInCart.add(courseToRemove)
+    scheduleActiveUser.coursesInSchedule.remove(courseToRemove)
+
+    return HttpResponseRedirect(reverse('main:myschedule'))
 
 
     '''
