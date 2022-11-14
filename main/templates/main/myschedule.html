@@ -1,1 +1,50 @@
 {% extends 'main/index.html' %}
+
+<html>
+    {% block content %}
+    <body>
+        <div class="d-flex ms-3 me-5">
+            {% if user.is_authenticated %}
+            <div class="mt-4 flex-fill">
+                <ul style="list-style-type: none;">
+                    {% for day, classesList in schedule_courses.items %}
+                        <div class='ps-2 py-1'
+                                    style="background-color: {% if forloop.counter|divisibleby:2 %}lightcyan
+                                        {% else %} rgb(255, 221, 153) {% endif %}; width:85%;">
+                                        <h3> {{day}}</h3>
+                                        {% for classinfo in classesList %}
+                                        <li>
+                                            <div class="d-inline">{{ classinfo.department  }}</div> 
+                                            <div class="d-inline">{{ classinfo.catalogNumber  }} :</div> 
+                                            <div class="d-inline">{{ classinfo.description  }} :</div> 
+                                            <div class="d-inline">{{ classinfo.start_time  }} - {{classinfo.end_time}}</div>  
+                                            <a href="/main/myschedule/removefromschedule/{{classinfo.id}}" style="color: black" class="float-end me-4 fw-bold" id="removeFromSchedule">Put Back in Cart</a>
+                                        </li>
+                                        {%endfor%}
+                        </div>
+                    {% endfor %}
+                </ul>
+            </div>
+            <div class='mt-4 me-5' style="width:15%; height:10%; position:sticky; top:100px;" id='shoppingCart'>
+                <div class='text-white text-center px-3 py-1 fw-bold mt-2' style='background-color:darkblue;'>  <i class='bx bx-cart' style= "margin-top: 3px; margin-right: 5px;"></i>Shopping Cart</div>
+                    {% for classAdded in classesInCart %}
+                        <div class='text-center py-1' style="background-color:lightgray;">{{classAdded.department}} {{classAdded.catalogNumber}} ({{classAdded.id}})
+                        <a href="/main/coursecatalog/removeclass/{{classAdded.department}}/{{classAdded.id}}/" class="float-end me-4 fw-bold" id="removeClass">X</a></div>
+                    {% comment %} If the list is empty {% endcomment %}
+                    {% empty %}
+                        <div class='p-2 text-center' style="background-color:lightgray;">Your shopping cart is empty.</div>
+                    {% endfor %}
+                    {% if classesInCart %}
+                    <a href="/main/myschedule/addtoschedule" class='p-2 text-center' style="background-color: lightgray"> Add to Schedule </a>
+                    {%endif%}
+                </div>
+            </div>
+            {%else%}
+            <h1> My Schedule is only available for CourSelect Account Holders. <br> Login or Create an Account
+            <a href="/accounts/google/login" style="color: blue">  Here</a></h1>
+            {% endif %}
+
+        </div>
+    </body>
+    {% endblock content %}
+</html>
