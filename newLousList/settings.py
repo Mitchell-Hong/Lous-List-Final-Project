@@ -48,7 +48,6 @@ INSTALLED_APPS = [
     'allauth.socialaccount.providers.google',
 
     'mathfilters',
-    'schedule',
 ]
 
 MIDDLEWARE = [
