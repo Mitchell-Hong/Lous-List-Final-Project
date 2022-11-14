@@ -42,6 +42,7 @@
     width: 100%;
     margin: 0 auto;
     transition: .3s;
+    display: flex;
 }
 .container_flex {
     max-width: 1200px;
@@ -378,8 +379,15 @@ br1 {
     border: 2px solid;
     box-sizing: border-box;
     display: block;
+    padding: 20px;
   }
   
   .night .friendBorder {
     border-color: white;
+  }
+
+.centerDivFriend{
+    display: flex;
+    margin: auto;
+    margin-top: 1%;
   }

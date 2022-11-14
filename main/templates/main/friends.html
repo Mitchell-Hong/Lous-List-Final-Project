@@ -1,11 +1,32 @@
 {% extends 'main/index.html' %}
     {% block content %}
-    <ul>
-        {% for friend in allFriends %}
-        <img src="{{user.socialaccount_set.all.0.extra_data.picture}}" 
-            <li>{{friend.name}}</li>
-            <br>
+    <div class = "centerDivFriend">
+        <h1 class="centerDivFriend"> Friends <i class="fas fa-user-friends" style="font-size:50px; justify-content: center;"></i></h1>
+    </div>
+    {% for friend in allFriends %}
+        <ul class="list-group" style="list-style-type: none;">
+            <li class='friendBorder'">
+                {% comment %} Add a back button if the user is looking at someone else profile {% endcomment %}
+                {% comment %} Displays each users profile and their friends {% endcomment %}
+                 <h1 class="text-center">{{ friend.name }}</h1>
+                <div>
+                    <h4 class='my-1 fw-bold d-inline-block'>Email: <div class='d-inline-block fw-normal'>{{friend.email}}</h4></div>
+                </div>
+                <div>
+                    <div class='my-1 fw-bold d-inline-block'> Major: <div class="d-inline-block fw-normal">{{friend.major}}</div></div>
+                </div>
+    
+                <div>
+                    <div class='my-1 fw-bold d-inline-block'>Graduation Year: <div class='d-inline-block fw-normal'>{{friend.graduationYear}}</div></div>
+                </div>
+                <div class='my-1 fw-bold'>Summary:</div>
+                <p class="border border-dark rounded-3 p-2">{{ friend.summary }}</p>
+                <br>
+                <li>
+          </ul>
+
         {% endfor %}
     </ul>
 
     {% endblock content %}
+    
