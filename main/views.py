@@ -196,16 +196,6 @@ def scheduleFormatter(courses):
     
     return meetings
 
-
-def shoppingcart(request):
-    context = {
-    }
-    return render(request,'main/shoppingcart.html', context)
-
-
-
-
-
 ## ALL RELATED TO THE FRIENDS SYSTEM (PROFILE, EDITING, SEEING FRIENDS ETC)
 
 
@@ -427,7 +417,11 @@ def addclass(request, dept, course_id, class_list):
 
     # seeing if they have a shopping cart already
     shoppingCartActiveUser, created = ShoppingCart.objects.get_or_create(activeUser=activeUser)
-    shoppingCartActiveUser.coursesInCart.add(newCourse)
+    
+    isInCart = shoppingCartActiveUser.coursesInCart.filter(department=newCourse.department, catalogNumber=newCourse.catalogNumber).first()
+    # if there is no objects of the isInCart list then you can add it however otherwise you cannot add duplicate classes
+    if not isInCart:
+        shoppingCartActiveUser.coursesInCart.add(newCourse)
     if(class_list):
         return HttpResponseRedirect(reverse('main:deptclasses', args=(dept,)))
 
