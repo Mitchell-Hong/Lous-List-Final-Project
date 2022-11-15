@@ -42,7 +42,9 @@ def deptclasses(request, dept):
     if has_class:
         classesInCart = has_class.coursesInCart.all()
     
-    shoppingCartMessage = ShoppingCart.objects.get(activeUser=request.user.id).message
+    shoppingCartMessage = ""
+    if request.user.id:
+        shoppingCartMessage = ShoppingCart.objects.get(activeUser=request.user.id).message
 
     context = {
         'course_list': courses,
@@ -77,7 +79,9 @@ def searchclass(request):
         classesInCart = has_class.coursesInCart.all()
 
     # message after adding the course to the shopping cart or removing one
-    shoppingCartMessage = ShoppingCart.objects.get(activeUser=request.user.id).message
+    shoppingCartMessage = ""
+    if request.user.id:
+        shoppingCartMessage = ShoppingCart.objects.get(activeUser=request.user.id).message
 
     if input:
         noDep = False
