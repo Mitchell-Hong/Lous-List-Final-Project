@@ -444,6 +444,8 @@ def removeclass(request, dept, course_id, class_list):
     shoppingCartActiveUser, created = ShoppingCart.objects.get_or_create(activeUser=activeUser)
     courseDeleted = course.objects.get(department=dept, id=course_id)
     shoppingCartActiveUser.coursesInCart.remove(courseDeleted)
+    shoppingCartActiveUser.message = ""
+    shoppingCartActiveUser.save()
     if(class_list == 2):
         return HttpResponseRedirect(reverse('main:myschedule'))
     elif(class_list == 1):
@@ -457,6 +459,9 @@ def addToSchedule(request):
 
     shoppingCartActiveUser, created = ShoppingCart.objects.get_or_create(activeUser=activeUser)
     scheduleActiveUser, created = ClassSchedule.objects.get_or_create(scheduleUser=activeUser)
+
+    shoppingCartActiveUser.message = ""
+    shoppingCartActiveUser.save()
 
     currentCart = shoppingCartActiveUser.coursesInCart.all()
     for cartCourse in currentCart:
@@ -479,6 +484,9 @@ def removeFromSchedule(request, course_id):
 
     shoppingCartActiveUser.coursesInCart.add(courseToRemove)
     scheduleActiveUser.coursesInSchedule.remove(courseToRemove)
+
+    shoppingCartActiveUser.message = ""
+    shoppingCartActiveUser.save()
 
     return HttpResponseRedirect(reverse('main:myschedule'))
 
