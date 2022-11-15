@@ -82,6 +82,7 @@ class course(models.Model):
 class ShoppingCart(models.Model):
     activeUser = models.ForeignKey(myUser, related_name='activeUser', on_delete=models.CASCADE)
     coursesInCart = models.ManyToManyField(course, default='', blank=True, related_name='coursesInCart')
+    message = models.TextField(max_length=200, default="")
 
 
 class Comment(models.Model):

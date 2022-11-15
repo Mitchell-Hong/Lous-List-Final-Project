@@ -41,11 +41,14 @@ def deptclasses(request, dept):
     classesInCart = []
     if has_class:
         classesInCart = has_class.coursesInCart.all()
+    
+    shoppingCartMessage = ShoppingCart.objects.get(activeUser=request.user.id).message
 
     context = {
         'course_list': courses,
         'course_list_nodup':coursesNoDup,
         'classesInCart':classesInCart,
+        'shoppingCartMessage':shoppingCartMessage,
     }
     return render(request, 'main/classesList.html', context)
 
@@ -422,6 +425,12 @@ def addclass(request, dept, course_id, class_list):
     # if there is no objects of the isInCart list then you can add it however otherwise you cannot add duplicate classes
     if not isInCart:
         shoppingCartActiveUser.coursesInCart.add(newCourse)
+        shoppingCartActiveUser.message = ""
+    # if the course is already in your shoppingCart then it will not be added and it will show the user that you cannot do that
+    else:
+        shoppingCartActiveUser.message = "Another section of the same course was already in your cart!"
+
+    shoppingCartActiveUser.save()
     if(class_list):
         return HttpResponseRedirect(reverse('main:deptclasses', args=(dept,)))
 
