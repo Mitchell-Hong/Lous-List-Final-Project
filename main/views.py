@@ -45,6 +45,8 @@ def deptclasses(request, dept):
     shoppingCartMessage = ""
     if request.user.id:
         shoppingCartMessage = ShoppingCart.objects.get(activeUser=request.user.id).message
+        has_class.message = ""
+        has_class.save()       
 
     context = {
         'course_list': courses,
@@ -82,6 +84,8 @@ def searchclass(request):
     shoppingCartMessage = ""
     if request.user.id:
         shoppingCartMessage = ShoppingCart.objects.get(activeUser=request.user.id).message
+        has_class.message = ""
+        has_class.save()
 
     if input:
         noDep = False
