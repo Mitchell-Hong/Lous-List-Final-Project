@@ -76,9 +76,13 @@ def searchclass(request):
     if has_class:
         classesInCart = has_class.coursesInCart.all()
 
+    # message after adding the course to the shopping cart or removing one
+    shoppingCartMessage = ShoppingCart.objects.get(activeUser=request.user.id).message
+
     if input:
         noDep = False
-
+        # update the shoppingCartMessage to clear it 
+        shoppingCartMessage = ""
         url = 'http://luthers-list.herokuapp.com/api/dept/' + input + '/'
         response = requests.get(url)
         courses = response.json()
@@ -151,6 +155,7 @@ def searchclass(request):
         'classTypeChosen':classTypeChosen,
         'creditsChosen': creditsChosen,
         'classesInCart':classesInCart,
+        'shoppingCartMessage':shoppingCartMessage,
 
         # tab tells the HTML what the depict as the active tab
         'tab' : 'coursecatalog',

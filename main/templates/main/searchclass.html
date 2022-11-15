@@ -13,6 +13,12 @@
         {% bootstrap_javascript %}
     </head>
     {% block content %}
+    {% if shoppingCartMessage != "" %}
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            <strong>Course Not Added</strong> {{shoppingCartMessage}}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    {% endif %}
     <h1>
         Course Search
     </h1>
@@ -81,7 +87,7 @@
             {% if not course_list_nodup and not noDepartment%} <h2> No courses found </h2> {%endif%}
             </ul>
         </div>
-        {% if user.is_authenticated and course_list_nodup%}
+        {% if user.is_authenticated %}
             <div class='mt-4 me-5' style="width:15%; height:10%; position:sticky; top:100px;" id='shoppingCart'>
                 <div class='text-white text-center px-3 py-1 fw-bold mt-2' style='background-color:darkblue;'>  <i class='bx bx-cart' style= "margin-top: 3px; margin-right: 5px;"></i>Shopping Cart</div>
                     {% for classAdded in classesInCart %}
