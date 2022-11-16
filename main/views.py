@@ -2,9 +2,10 @@ from tracemalloc import start
 from django.shortcuts import render
 from django.http import HttpResponseRedirect, HttpResponse, HttpResponseNotFound
 from django.views import generic
+import datetime
 from django.urls import reverse
 from .forms import UserForm
-from .models import Friend_Request, FriendList, myUser, department, course, ShoppingCart
+from .models import Friend_Request, FriendList, myUser, department, course, ShoppingCart, ClassSchedule
 # this is used for making HTTP requests from an external API with django
 import requests
 
@@ -40,11 +41,18 @@ def deptclasses(request, dept):
     classesInCart = []
     if has_class:
         classesInCart = has_class.coursesInCart.all()
+    
+    shoppingCartMessage = ""
+    if request.user.id:
+        shoppingCartMessage = ShoppingCart.objects.get(activeUser=request.user.id).message
+        has_class.message = ""
+        has_class.save()       
 
     context = {
         'course_list': courses,
         'course_list_nodup':coursesNoDup,
         'classesInCart':classesInCart,
+        'shoppingCartMessage':shoppingCartMessage,
     }
     return render(request, 'main/classesList.html', context)
 
@@ -72,9 +80,17 @@ def searchclass(request):
     if has_class:
         classesInCart = has_class.coursesInCart.all()
 
+    # message after adding the course to the shopping cart or removing one
+    shoppingCartMessage = ""
+    if request.user.id:
+        shoppingCartMessage = ShoppingCart.objects.get(activeUser=request.user.id).message
+        has_class.message = ""
+        has_class.save()
+
     if input:
         noDep = False
-
+        # update the shoppingCartMessage to clear it 
+        shoppingCartMessage = ""
         url = 'http://luthers-list.herokuapp.com/api/dept/' + input + '/'
         response = requests.get(url)
         courses = response.json()
@@ -147,6 +163,7 @@ def searchclass(request):
         'classTypeChosen':classTypeChosen,
         'creditsChosen': creditsChosen,
         'classesInCart':classesInCart,
+        'shoppingCartMessage':shoppingCartMessage,
 
         # tab tells the HTML what the depict as the active tab
         'tab' : 'coursecatalog',
@@ -156,20 +173,44 @@ def searchclass(request):
 
 # myschedule dummy implementation for now
 def myschedule(request):
+    # begin by assuming user is logged in, if not, variable is used in html to print appropriate message
+    no_user = False
+    courses = []
+    classesInCart= []
+    try:
+        activeUser = myUser.objects.get(id=request.user.id)
+
+        scheduleActiveUser, created = ClassSchedule.objects.get_or_create(scheduleUser=activeUser)
+        cartActiveUser, created = ShoppingCart.objects.get_or_create(activeUser=activeUser)
+
+        courses = scheduleFormatter(scheduleActiveUser.coursesInSchedule.all())
+        classesInCart = cartActiveUser.coursesInCart.all()
+    except:
+        no_user = True        
+
     context = {
-        'tab' : 'myschedule',
+        'schedule_courses' : courses,
+        'classesInCart' : classesInCart,
+        'logged_in' : no_user,
     }
     return render(request,'main/myschedule.html', context)
 
-
-def shoppingcart(request):
-    context = {
-    }
-    return render(request,'main/shoppingcart.html', context)
-
-
-
-
+def scheduleFormatter(courses):
+    meetings = {"Monday":[], "Tuesday":[], "Wednesday":[], "Thursday":[], "Friday":[]}
+    for course in courses:
+        days = course.meeting_days
+        if "Mo" in days:
+            meetings['Monday'].append(course)
+        if "Tu" in days:
+            meetings['Tuesday'].append(course)
+        if "We" in days:
+            meetings['Wednesday'].append(course)
+        if "Th" in days:
+            meetings['Thursday'].append(course)
+        if "Fr" in days:
+            meetings['Friday'].append(course)
+    
+    return meetings
 
 ## ALL RELATED TO THE FRIENDS SYSTEM (PROFILE, EDITING, SEEING FRIENDS ETC)
 
@@ -392,7 +433,17 @@ def addclass(request, dept, course_id, class_list):
 
     # seeing if they have a shopping cart already
     shoppingCartActiveUser, created = ShoppingCart.objects.get_or_create(activeUser=activeUser)
-    shoppingCartActiveUser.coursesInCart.add(newCourse)
+    
+    isInCart = shoppingCartActiveUser.coursesInCart.filter(department=newCourse.department, catalogNumber=newCourse.catalogNumber).first()
+    # if there is no objects of the isInCart list then you can add it however otherwise you cannot add duplicate classes
+    if not isInCart:
+        shoppingCartActiveUser.coursesInCart.add(newCourse)
+        shoppingCartActiveUser.message = ""
+    # if the course is already in your shoppingCart then it will not be added and it will show the user that you cannot do that
+    else:
+        shoppingCartActiveUser.message = "Another section of the same course was already in your cart!"
+
+    shoppingCartActiveUser.save()
     if(class_list):
         return HttpResponseRedirect(reverse('main:deptclasses', args=(dept,)))
 
@@ -406,11 +457,51 @@ def removeclass(request, dept, course_id, class_list):
     shoppingCartActiveUser, created = ShoppingCart.objects.get_or_create(activeUser=activeUser)
     courseDeleted = course.objects.get(department=dept, id=course_id)
     shoppingCartActiveUser.coursesInCart.remove(courseDeleted)
-    if(class_list):
+    shoppingCartActiveUser.message = ""
+    shoppingCartActiveUser.save()
+    if(class_list == 2):
+        return HttpResponseRedirect(reverse('main:myschedule'))
+    elif(class_list == 1):
         return HttpResponseRedirect(reverse('main:deptclasses', args=(dept,)))
-
-    else:
+    elif(class_list == 0):
         return HttpResponseRedirect(reverse('main:searchclass'))
+
+def addToSchedule(request):
+    # adds a class to the schedule and removes it from users cart
+    activeUser = myUser.objects.get(id=request.user.id)
+
+    shoppingCartActiveUser, created = ShoppingCart.objects.get_or_create(activeUser=activeUser)
+    scheduleActiveUser, created = ClassSchedule.objects.get_or_create(scheduleUser=activeUser)
+
+    shoppingCartActiveUser.message = ""
+    shoppingCartActiveUser.save()
+
+    currentCart = shoppingCartActiveUser.coursesInCart.all()
+    for cartCourse in currentCart:
+        # TODO - check for time conflicts
+        if cartCourse not in scheduleActiveUser.coursesInSchedule.all(): 
+            scheduleActiveUser.coursesInSchedule.add(cartCourse)
+            shoppingCartActiveUser.coursesInCart.remove(cartCourse)
+
+    return HttpResponseRedirect(reverse('main:myschedule'))
+
+
+def removeFromSchedule(request, course_id):
+    # removes the class from the schedule and adds it back to the shopping cart
+    activeUser = myUser.objects.get(id=request.user.id)
+
+    courseToRemove = course.objects.get(id=course_id)
+
+    shoppingCartActiveUser, created = ShoppingCart.objects.get_or_create(activeUser=activeUser)
+    scheduleActiveUser, created = ClassSchedule.objects.get_or_create(scheduleUser=activeUser)
+
+    shoppingCartActiveUser.coursesInCart.add(courseToRemove)
+    scheduleActiveUser.coursesInSchedule.remove(courseToRemove)
+
+    shoppingCartActiveUser.message = ""
+    shoppingCartActiveUser.save()
+
+    return HttpResponseRedirect(reverse('main:myschedule'))
 
 
     '''

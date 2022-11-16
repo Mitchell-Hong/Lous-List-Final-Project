@@ -18,8 +18,10 @@ urlpatterns = [
     path('searchclass/', views.searchclass, name='searchclass'),
     # dummy link but will display individual users schedules for the courses they have selected so far
     path('myschedule/', views.myschedule, name='myschedule'),
-    # shows users what are all the courses they have added to their shopping cart they can then choose from those to move to their schedule
-    path('shoppingcart/', views.shoppingcart, name='shoppingcart'),
+
+    path('myschedule/addtoschedule', views.addToSchedule, name='addtoschedule'),
+    path('myschedule/removefromschedule/<int:course_id>', views.removeFromSchedule, name='removefromschedule'),
+
     # profile route that will show the user theirs and other profiles (they can edit theirs)
     path('profile/<int:user_id>/', views.profile, name='profile'),
     # profile that takes the user to a separate form once logged in to edit or update their profile

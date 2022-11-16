@@ -82,3 +82,16 @@ class course(models.Model):
 class ShoppingCart(models.Model):
     activeUser = models.ForeignKey(myUser, related_name='activeUser', on_delete=models.CASCADE)
     coursesInCart = models.ManyToManyField(course, default='', blank=True, related_name='coursesInCart')
+    message = models.TextField(max_length=200, default="")
+
+
+class Comment(models.Model):
+    author = models.ForeignKey(myUser, related_name='author', on_delete=models.CASCADE)
+    commentBody = models.CharField(max_length=200)
+    date_published = models.DateTimeField('date published')
+
+
+class ClassSchedule(models.Model):
+    scheduleUser = models.ForeignKey(myUser, related_name='scheduleUser', on_delete=models.CASCADE)
+    coursesInSchedule = models.ManyToManyField(course, default='', blank=True, related_name='coursesInSchedule')
+    comments = models.ManyToManyField(Comment, default='', blank=True, related_name='comments')

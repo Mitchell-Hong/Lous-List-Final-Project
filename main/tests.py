@@ -25,10 +25,6 @@ class URLTest(TestCase):
         response = self.client.get('/main/myschedule/')
         self.assertTrue(response.status_code == 200)
 
-    def test_shopping_cart_url(self):
-        response = self.client.get('/main/shoppingcart/')
-        self.assertTrue(response.status_code == 200)
-
 class UserTestCase(TestCase):
     def setUp(self, id=0, name="", email="", summary="", major="", graduationYear=0):
         self.factory = RequestFactory()
