@@ -13,10 +13,13 @@
         {% bootstrap_javascript %}
     </head>
     {% block content %}
-    <h1>
-        Course Search
-    </h1>
-    <form name="depSelect" method="GET">
+    <div class="centerDivElement">
+        <h1 class = "centerDivElement">
+            Course Search &nbsp <i class='bx bx-search' style= "margin-top: 3px; margin-right: 5px;"></i>
+        </h1>
+    </div>
+    <div class="centerDivElement">
+        <form class="centerDivElement" name="depSelect" method="GET">
             <select name="depSelect" onchange="this.form.submit()">
                 <option selected="selected" disabled>Departments</option>
                 {% for dep in department_results %}
@@ -42,8 +45,8 @@
                 <option value="3" {%if creditsChosen == "3" %} selected {%endif%} >3</option>
             </select>
             <input type="submit" {%if noDepartment%} disabled {%endif%} name="submitbtn" value="Select">
-    </form>
-
+        </form>
+    </div>
     <div class="d-flex ms-3 me-5">
         <div class="mt-4 flex-fill">
             <ul style="list-style-type: none;">
@@ -82,7 +85,7 @@
             </ul>
         </div>
         {% if user.is_authenticated and course_list_nodup%}
-            <div class='mt-4 me-5' style="width:15%; height:10%; position:sticky; top:100px;" id='shoppingCart'>
+            <div class='mt-4 me-5' style="width:15%; height:10%; position:sticky; top:100px; z-index: -1;" id='shoppingCart'>
                 <div class='text-white text-center px-3 py-1 fw-bold mt-2' style='background-color:darkblue;'>  <i class='bx bx-cart' style= "margin-top: 3px; margin-right: 5px;"></i>Shopping Cart</div>
                     {% for classAdded in classesInCart %}
                         <div class='text-center py-1' style="background-color:lightgray;">{{classAdded.department}} {{classAdded.catalogNumber}} ({{classAdded.id}})
