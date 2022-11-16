@@ -88,7 +88,6 @@
             </ul>
         </div>
         {% if user.is_authenticated and course_list_nodup%}
-        {% if user.is_authenticated and course_list_nodup%}
         <div class='mt-4 me-5' style="width:15%; height:10%; position:sticky; top:100px; z-index: -1;" id='shoppingCart'>
             <div class='text-white text-center px-3 py-1 fw-bold mt-2' style='background-color:darkblue;'>  <i class='bx bx-cart' style= "margin-top: 3px; margin-right: 5px;"></i>Shopping Cart</div>
                     {% for classAdded in classesInCart %}
