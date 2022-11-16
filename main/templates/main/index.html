@@ -45,7 +45,7 @@
             {% if user.is_authenticated %}
                 <div class="d-inline-block float-end me-4 dropdown position-relative">
                     <button class="btn dropdown-toggle position-relative mt-2" type="button" id="dropdownMenuButton1" 
-                    data-bs-toggle="dropdown" aria-expanded="false" style="height: 70%; cursor:pointer;">
+                    data-bs-toggle="dropdown" aria-expanded="false" style="height: 70%; cursor:pointer; z-index: 10;">
                         <img src="{{user.socialaccount_set.all.0.extra_data.picture}}" 
                         alt="Welcome, {{user.socialaccount_set.all.0.extra_data.given_name}}"
                         class="position-relative" id="profile"
@@ -106,13 +106,7 @@
      <!-- <script src="index/script.js">
     </script> -->
 <script>
-    if (localStorage.getItem('theme') == 'dark') {
-            setDarkMode();
-
-            if (document.getElementById('moon').checked) {
-                localStorage.setItem('moon', true)
-            }
-        }
+    const element = document.getElementById('moon');
 
         function setDarkMode() {
             let isDark = document.body.classList.toggle('night');
@@ -120,10 +114,15 @@
             if (isDark) {
                 setDarkMode.checked = true;
                 localStorage.setItem('theme' , 'night');
-                document.getElementById('moon').setAttribute('checked', 'checked');
             } else {
-                setDarkMode.checked = true;
-                localStorage.removeItem('theme', 'night');
+                setDarkMode.checked = false;
+                localStorage.removeItem('theme', '');
+            }
+        }
+        if (localStorage.getItem('theme') == 'dark') {
+            setDarkMode();
+            if (document.getElementById('moon').checked) {
+                localStorage.setItem('moon', true)
             }
         }
 </script>
