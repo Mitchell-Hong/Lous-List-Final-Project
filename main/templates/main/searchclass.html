@@ -11,8 +11,61 @@
         {% load bootstrap5 %}
         {% bootstrap_css %}
         {% bootstrap_javascript %}
+        {% block content %}
+        <style>
+            select {
+                -webkit-appearance: none;
+                -moz-appearance: none;
+                -ms-appearance: none;
+                appearance: none;
+                outline: 0;
+                background: #ed874e;
+                background-image: none;
+                border: 1px solid black;
+            }
+            .select {
+                position: relative;
+                display: block;
+                width: 20em;
+                height: 3em;
+                line-height: 3;
+                background: #fff;
+                overflow: hidden;
+                border-radius: .25em;
+            }
+            select {
+                width: 100%;
+                height: 100%;
+                margin: 0;
+                padding: 0 0 0 .5em;
+                color: #fff;
+                cursor: pointer;
+            }
+            select::-ms-expand {
+                display: none;
+            }
+            .select::after {
+                content: '\25BC';
+                position: absolute;
+                top: 0;
+                right: 0;
+                bottom: 0;
+                padding: 0 1em;
+                background: #34495E;
+                pointer-events: none;
+            }
+            .select:hover::after {
+                color: #ADD8E6;
+            }
+
+            option:checked {
+                color: #000080;
+            }
+            option:disabled {
+                color: black;
+            }
+        </style>
     </head>
-    {% block content %}
     {% if shoppingCartMessage != "" %}
     <div class="alert alert-danger alert-dismissible fade show" role="alert">
         <strong>Course Not Added</strong> {{shoppingCartMessage}}
@@ -22,33 +75,34 @@
     <h1>
         Course Search
     </h1>
-    <form name="depSelect" method="GET">
+    <div class="select">
+        <form name="depSelect" method="GET">
             <select name="depSelect" onchange="this.form.submit()">
-                <option selected="selected" disabled>Departments</option>
+                <option style="font-weight: bold" selected="selected" disabled>Departments</option>
                 {% for dep in department_results %}
-                    <option value="{{dep.abbreviation}}" {%if department == dep.abbreviation%} selected {%endif%} >{{dep.abbreviation}}</option>
+                    <option style="font-weight: bold" value="{{dep.abbreviation}}" {%if department == dep.abbreviation%} selected {%endif%} >{{dep.abbreviation}}</option>
                 {% endfor %}
             </select>
             <select name = "instructor" {%if noDepartment%} disabled {%endif%}>
-                <option selected="selected" value="none"> Instructor</option>
+                <option style="font-weight: bold" selected="selected" value="none" > Instructor</option>
                 {% for instructor in instructors %}
-                    <option value="{{instructor}}" {%if instructorChosen == instructor%} selected {%endif%}>{{instructor}}</option>
+                    <option style="font-weight: bold" value="{{instructor}}" {%if instructorChosen == instructor%} selected {%endif%}>{{instructor}}</option>
                 {% endfor %}
             </select>
             <select name = "classType" {%if noDepartment%} disabled {%endif%}>
-                <option selected="selected" value = "none"> Class Type</option>
-                <option value="LAB" {%if classTypeChosen == "LAB" %} selected {%endif%} >Lab</option>
-                <option value="LEC" {%if classTypeChosen == "LEC" %} selected {%endif%} >Lecture</option>
-                <option value="IND" {%if classTypeChosen == "IND" %} selected {%endif%} >Independent Study</option>
+                <option style="font-weight: bold" selected="selected" value = "none"> Class Type</option>
+                <option style="font-weight: bold" value="LAB" {%if classTypeChosen == "LAB" %} selected {%endif%} >Lab</option>
+                <option style="font-weight: bold" value="LEC" {%if classTypeChosen == "LEC" %} selected {%endif%} >Lecture</option>
+                <option style="font-weight: bold" value="IND" {%if classTypeChosen == "IND" %} selected {%endif%} >Independent Study</option>
             </select>
             <select name = "credits" {%if noDepartment%} disabled {%endif%}>
-                <option selected="selected" value = "none"> Credits</option>
-                <option value="1" {%if creditsChosen == "1" %} selected {%endif%} >1</option>
-                <option value="2" {%if creditsChosen == "2" %} selected {%endif%} >2</option>
-                <option value="3" {%if creditsChosen == "3" %} selected {%endif%} >3</option>
+                <option style="font-weight: bold" selected="selected" value = "none"> Credits</option>
+                <option style="font-weight: bold" value="1" {%if creditsChosen == "1" %} selected {%endif%} >1</option>
+                <option style="font-weight: bold" value="2" {%if creditsChosen == "2" %} selected {%endif%} >2</option>
+                <option style="font-weight: bold" value="3" {%if creditsChosen == "3" %} selected {%endif%} >3</option>
             </select>
-            <input type="submit" {%if noDepartment%} disabled {%endif%} name="submitbtn" value="Select">
-        </form>
+                <input type="submit" {%if noDepartment%} disabled {%endif%} name="submitbtn" value="Select">
+            </form>
     </div>
     <div class="d-flex ms-3 me-5">
         <div class="mt-4 flex-fill">
@@ -65,9 +119,9 @@
                     <div class='ps-2 py-1'
                         style="background-color: {% if forloop.counter|divisibleby:2 %} lightcyan
                         {% else %} rgb(255, 221, 153) {% endif %}; width:85% ; ">
-                        <div class="d-inline">{{ classinfo.course_number  }}</div> 
-                        <div class="d-inline">{{ classinfo.instructor.name  }}</div>  
-                        <div class="d-inline">{{ classinfo.enrollment_total }}/{{ classinfo.class_capacity }}</div> 
+                        <div class="d-inline">{{ classinfo.course_number  }}</div>
+                        <div class="d-inline">{{ classinfo.instructor.name  }}</div>
+                        <div class="d-inline">{{ classinfo.enrollment_total }}/{{ classinfo.class_capacity }}</div>
                         <div class="d-inline">{{ classinfo.meetings.days  }}</div>
                         {% comment %} #array access in django template with .index {% endcomment %}
                         <div class="d-inline">{{ classinfo.meetings.0.days  }}</div>
@@ -92,7 +146,7 @@
             <div class='text-white text-center px-3 py-1 fw-bold mt-2' style='background-color:darkblue;'>  <i class='bx bx-cart' style= "margin-top: 3px; margin-right: 5px;"></i>Shopping Cart</div>
                     {% for classAdded in classesInCart %}
                         <div class='text-center py-1' style="background-color:lightgray;">{{classAdded.department}} {{classAdded.catalogNumber}} ({{classAdded.id}})
-                        
+
                         {% comment %} 0 means it is coming from the searchClass page {% endcomment %}
                         <a href="/main/coursecatalog/removeclass/{{classAdded.department}}/{{classAdded.id}}/0/" class="float-end me-4 fw-bold" id="removeClass">X</a></div>
                     {% comment %} If the list is empty {% endcomment %}
