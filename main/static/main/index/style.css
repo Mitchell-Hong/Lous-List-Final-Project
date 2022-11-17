@@ -25,9 +25,7 @@
 .night h2{
     color: white;
 }
-.night h3{
-    color: white;
-}
+
 .night h4{
     color: white;
 }
@@ -391,3 +389,34 @@ br1 {
     margin: auto;
     margin-top: 1%;
   }
+
+.profileBorder{
+    border: 5px solid var(--primary-color);
+    border-width: 5px; border-radius: .3rem;
+    padding-top: 1.5rem;
+    padding-bottom: 1.5rem;
+    padding-left: 1rem;
+    padding-right: 1rem;
+    margin-top: 3rem;
+    margin-left: auto;
+    margin-right: auto;
+    width: 35%;
+}
+
+.profileBorder::before {
+    box-sizing: border-box;
+}
+
+.btnFriend{
+    color: #fff;
+    background-color: #33658A;
+    border-color: #33658A;
+    border-radius: 5px;
+}
+
+.btnSearchFriend{
+    color: #fff;
+    background-color: #ed874e;
+    border-color: #ed874e;
+    border-radius: 10px;
+}
