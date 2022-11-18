@@ -177,6 +177,7 @@ def myschedule(request):
     no_user = False
     courses = []
     classesInCart= []
+    shoppingCartMessage = ""
     try:
         activeUser = myUser.objects.get(id=request.user.id)
 
@@ -186,7 +187,6 @@ def myschedule(request):
         courses = scheduleFormatter(scheduleActiveUser.coursesInSchedule.all())
         classesInCart = cartActiveUser.coursesInCart.all()
 
-        shoppingCartMessage = ""
         if request.user.id:
             shoppingCartMessage = ShoppingCart.objects.get(activeUser=request.user.id).message
 
