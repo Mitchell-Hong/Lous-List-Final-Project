@@ -434,7 +434,7 @@ def addclass(request, dept, course_id, class_list):
     # seeing if they have a shopping cart already
     shoppingCartActiveUser, created = ShoppingCart.objects.get_or_create(activeUser=activeUser)
     
-    isInCart = shoppingCartActiveUser.coursesInCart.filter(department=newCourse.department, catalogNumber=newCourse.catalogNumber).first()
+    isInCart = shoppingCartActiveUser.coursesInCart.filter(department=newCourse.department, catalogNumber=newCourse.catalogNumber, lectureType = newCourse.lectureType ).first()
     # if there is no objects of the isInCart list then you can add it however otherwise you cannot add duplicate classes
     if not isInCart:
         shoppingCartActiveUser.coursesInCart.add(newCourse)
