@@ -3,6 +3,13 @@
 <html>
     {% block content %}
     <body>
+        {% if shoppingCartMessage != "" %}
+            <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                <strong>Course Not Added</strong> {{shoppingCartMessage}}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        {% endif %}
+
         <div class="centerDivElement">  
             <h1 class="centerDivElement"> My Schedule &nbsp <i class="fa fa-calendar" aria-hidden="true" style= "margin-top: 3px; margin-right: 5px;"></i> </h1>
         </div>

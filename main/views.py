@@ -185,6 +185,11 @@ def myschedule(request):
 
         courses = scheduleFormatter(scheduleActiveUser.coursesInSchedule.all())
         classesInCart = cartActiveUser.coursesInCart.all()
+
+        shoppingCartMessage = ""
+        if request.user.id:
+            shoppingCartMessage = ShoppingCart.objects.get(activeUser=request.user.id).message
+
     except:
         no_user = True        
 
@@ -192,6 +197,7 @@ def myschedule(request):
         'schedule_courses' : courses,
         'classesInCart' : classesInCart,
         'logged_in' : no_user,
+        'shoppingCartMessage': shoppingCartMessage,
     }
     return render(request,'main/myschedule.html', context)
 
@@ -433,14 +439,14 @@ def addclass(request, dept, course_id, class_list):
 
     # seeing if they have a shopping cart already
     shoppingCartActiveUser, created = ShoppingCart.objects.get_or_create(activeUser=activeUser)
-    
     isInCart = shoppingCartActiveUser.coursesInCart.filter(department=newCourse.department, catalogNumber=newCourse.catalogNumber, lectureType = newCourse.lectureType ).first()
+    
     # if there is no objects of the isInCart list then you can add it however otherwise you cannot add duplicate classes
     if not isInCart:
         shoppingCartActiveUser.coursesInCart.add(newCourse)
         shoppingCartActiveUser.message = ""
     # if the course is already in your shoppingCart then it will not be added and it will show the user that you cannot do that
-    else:
+    elif isInCart:
         shoppingCartActiveUser.message = "Another section of the same course was already in your cart!"
 
     shoppingCartActiveUser.save()
@@ -473,13 +479,16 @@ def addToSchedule(request):
     shoppingCartActiveUser, created = ShoppingCart.objects.get_or_create(activeUser=activeUser)
     scheduleActiveUser, created = ClassSchedule.objects.get_or_create(scheduleUser=activeUser)
 
-    shoppingCartActiveUser.message = ""
-    shoppingCartActiveUser.save()
-
     currentCart = shoppingCartActiveUser.coursesInCart.all()
     for cartCourse in currentCart:
-        # TODO - check for time conflicts
-        if cartCourse not in scheduleActiveUser.coursesInSchedule.all(): 
+        # not allowing time conflicts or duplicate classes in the same schedule
+        # seeing if there any courses currently in the schedule that have the same dep, catalogNumber, and department if 
+        # so then prevent this course from being add to schedule
+        isInSchedule = scheduleActiveUser.coursesInSchedule.filter(department=cartCourse.department, catalogNumber=cartCourse.catalogNumber, lectureType = cartCourse.lectureType ).first()
+        if isInSchedule:
+            shoppingCartActiveUser.message = "Another section of " + cartCourse.department + " " +cartCourse.catalogNumber + " is in your schedule (no duplicates allowed)!"
+            shoppingCartActiveUser.save()
+        else:
             scheduleActiveUser.coursesInSchedule.add(cartCourse)
             shoppingCartActiveUser.coursesInCart.remove(cartCourse)
 
