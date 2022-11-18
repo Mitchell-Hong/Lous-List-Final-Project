@@ -73,6 +73,15 @@ class course(models.Model):
     end_time = models.CharField(max_length=100, default = "")
     room_location = models.CharField(max_length=100, default = "")
 
+    # ways to check for time conflicts
+    # this calculation is done by translating the time into minutes (say a course starts at 2:30pm
+    # the start_time_int would equal 14*60 + 30 = 870)
+    start_time_int = models.IntegerField(default=0)
+
+    # we check to make sure the start_time_int of any new courses that are being added to the users
+    # schedule do not fall within a range of any start-end_t_int of any courses already in the schedule
+    end_time_int = models.IntegerField(default=0)
+
     def __str__(self):
         dep =  self.department
         num = self.id

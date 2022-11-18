@@ -432,6 +432,9 @@ def addclass(request, dept, course_id, class_list):
         classCapacity=addedClass[0]['class_capacity'],classEnrollment=addedClass[0]['enrollment_total'],
         classSpotsOpen=addedClass[0]['enrollment_available'],waitlist=addedClass[0]['wait_list'],
         waitlistMax=addedClass[0]['wait_cap'],
+
+        start_time_int = (int(addedClass[0]['meetings'][0]['start_time'][0:2])*60) + (int(addedClass[0]['meetings'][0]['start_time'][3:5])),
+        end_time_int = (int(addedClass[0]['meetings'][0]['end_time'][0:2])*60) + (int(addedClass[0]['meetings'][0]['end_time'][3:5])),
     )
 
     # activeUser is the person who is adding courses to their cart
@@ -485,6 +488,10 @@ def addToSchedule(request):
         # seeing if there any courses currently in the schedule that have the same dep, catalogNumber, and department if 
         # so then prevent this course from being add to schedule
         isInSchedule = scheduleActiveUser.coursesInSchedule.filter(department=cartCourse.department, catalogNumber=cartCourse.catalogNumber, lectureType = cartCourse.lectureType ).first()
+        
+        # taking care of time conflicts
+        print(int(cartCourse.start_time[0:2]))
+
         if isInSchedule:
             shoppingCartActiveUser.message = "Another section of " + cartCourse.department + " " +cartCourse.catalogNumber + " is in your schedule (no duplicates allowed)!"
             shoppingCartActiveUser.save()
