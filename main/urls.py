@@ -16,8 +16,10 @@ urlpatterns = [
     path('coursecatalog/<str:dept>', views.deptclasses, name='deptclasses'),
     # First step in class search -- will query for department
     path('searchclass/', views.searchclass, name='searchclass'),
-    # dummy link but will display individual users schedules for the courses they have selected so far
+
+    # shows the user their schedule
     path('myschedule/', views.myschedule, name='myschedule'),
+    path('viewschedule/<int:user_id>/', views.viewschedule, name='viewschedule'),
 
     path('myschedule/addtoschedule', views.addToSchedule, name='addtoschedule'),
     path('myschedule/removefromschedule/<int:course_id>', views.removeFromSchedule, name='removefromschedule'),

@@ -98,7 +98,6 @@ class Comment(models.Model):
     author = models.ForeignKey(myUser, related_name='author', on_delete=models.CASCADE)
     toUser = models.ForeignKey(myUser, related_name='toUser', on_delete=models.CASCADE, blank=True, default='')
     commentBody = models.CharField(max_length=200)
-    
 
 
 class ClassSchedule(models.Model):

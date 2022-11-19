@@ -1,0 +1,27 @@
+{% extends 'main/index.html' %}
+
+{% block content %}
+    {% if user.is_authenticated %}
+    <p class="fw-bold text-center mt-2 fs-4">{{theUser.name}}'s Schedule</p>
+
+    <div class="mt-2 flex-fill">
+        <div class='w-75 mx-auto' style="list-style-type: none;">
+            {% for day, classesList in schedule_courses.items %}
+                <div class='ps-2 py-1'
+                style="background-color: {% if forloop.counter|divisibleby:2 %}lightcyan
+                    {% else %} rgb(255, 221, 153) {% endif %};">
+                    <h3> {{day}}</h3>
+                    {% for classinfo in classesList %}
+                    <li>
+                        <div class="d-inline">{{ classinfo.department  }}</div> 
+                        <div class="d-inline">{{ classinfo.catalogNumber  }} :</div> 
+                        <div class="d-inline">{{ classinfo.description  }} :</div> 
+                        <div class="d-inline">{{ classinfo.start_time|slice:":5"}} - {{classinfo.end_time|slice:":5"}}</div>
+                    </li>
+                    {%endfor%}
+                </div>
+            {% endfor %}
+            </div>
+    </div>
+    {% endif %}
+{% endblock content %}

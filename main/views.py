@@ -172,7 +172,7 @@ def searchclass(request):
     return render(request,'main/searchclass.html', context)
 
 
-# myschedule dummy implementation for now
+# View for seeing your personal schedule and adding and subtracting course from it
 def myschedule(request):
     # begin by assuming user is logged in, if not, variable is used in html to print appropriate message
     no_user = False
@@ -218,6 +218,22 @@ def scheduleFormatter(courses):
             meetings['Friday'].append(course)
     
     return meetings
+
+# view for viewing and commenting on other users schedules
+def viewschedule(request, user_id):
+    # profile of the individual the user is looking at
+    theUser = myUser.objects.get(id=user_id)
+    userSchedule, created = ClassSchedule.objects.get_or_create(scheduleUser=theUser)
+
+    userCourses = scheduleFormatter(userSchedule.coursesInSchedule.all())
+    context = {
+        'schedule_courses' : userCourses,
+        'theUser': theUser,
+    }
+    
+    return render(request, 'main/friendsschedule.html', context)
+
+
 
 ## ALL RELATED TO THE FRIENDS SYSTEM (PROFILE, EDITING, SEEING FRIENDS ETC)
 
