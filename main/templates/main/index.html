@@ -19,7 +19,7 @@
     </head>
     <body>
         <header class="bg-gradient"
-        style="width: 100%; height: 8.5%; background-color:#ed874e; position: sticky; top: 0px">
+        style="width: 100%; height: 8.5%; background-color:#ed874e; position: sticky; top: 0px; z-index: 1000;">
             {% load static %}
             <div>
                 <!-- <a href="/main/" --> 
@@ -45,13 +45,13 @@
             {% if user.is_authenticated %}
                 <div class="d-inline-block float-end me-4 dropdown position-relative">
                     <button class="btn dropdown-toggle position-relative mt-2" type="button" id="dropdownMenuButton1" 
-                    data-bs-toggle="dropdown" aria-expanded="false" style="height: 70%; cursor:pointer; z-index: 10;">
+                    data-bs-toggle="dropdown" aria-expanded="false" style="height: 70%; cursor:pointer;">
                         <img src="{{user.socialaccount_set.all.0.extra_data.picture}}" 
                         alt="Welcome, {{user.socialaccount_set.all.0.extra_data.given_name}}"
                         class="position-relative" id="profile"
                         style="height: 100%; border-radius: 50%;"/>
                     </button>
-                    <ul class="dropdown-menu">
+                    <ul class="dropdown-menu" style="position: relative;">
                         <li><a class="disabled dropdown-item text-dark" href="#">Welcome, {{user.socialaccount_set.all.0.extra_data.given_name}}!</a></li>
                         <li><hr class="dropdown-divider"></li>
                         <li><a class="dropdown-item" href="/main/profile/{{user.id}}/">Profile</a></li>
