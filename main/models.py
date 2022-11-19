@@ -96,8 +96,9 @@ class ShoppingCart(models.Model):
 
 class Comment(models.Model):
     author = models.ForeignKey(myUser, related_name='author', on_delete=models.CASCADE)
+    toUser = models.ForeignKey(myUser, related_name='toUser', on_delete=models.CASCADE, blank=True, default='')
     commentBody = models.CharField(max_length=200)
-    date_published = models.DateTimeField('date published')
+    
 
 
 class ClassSchedule(models.Model):

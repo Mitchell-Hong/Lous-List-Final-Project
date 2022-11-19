@@ -1,32 +1,25 @@
 {% extends 'main/index.html' %}
     {% block content %}
-    <div class = "centerDivFriend">
-        <h1 class="centerDivFriend"> Friends &nbsp <i class="fas fa-user-friends" style="font-size:50px; justify-content: center;"></i></h1>
-    </div>
+    <h1 class="text-center"> Friends &nbsp <i class="fas fa-user-friends" style="font-size:50px;"></i></h1>
     {% for friend in allFriends %}
-        <ul class="list-group" style="list-style-type: none;">
-            <li class='friendBorder'">
-                {% comment %} Add a back button if the user is looking at someone else profile {% endcomment %}
-                {% comment %} Displays each users profile and their friends {% endcomment %}
-                 <h1 class="text-center">{{ friend.name }}</h1>
-                <div>
-                    <h4 class='my-1 fw-bold d-inline-block'>Email: <div class='d-inline-block fw-normal'>{{friend.email}}</h4></div>
-                </div>
-                <div>
-                    <div class='my-1 fw-bold d-inline-block'> Major: <div class="d-inline-block fw-normal">{{friend.major}}</div></div>
-                </div>
-    
-                <div>
-                    <div class='my-1 fw-bold d-inline-block'>Graduation Year: <div class='d-inline-block fw-normal'>{{friend.graduationYear}}</div></div>
-                </div>
-                <div class='my-1 fw-bold'>Summary:</div>
-                <p class="border border-dark rounded-3 p-2">{{ friend.summary }}</p>
-                <br>
-                <li>
-          </ul>
-
+    <div class="profileBorder">
+        {% comment %} Add a back button if the user is looking at someone else profile {% endcomment %}
+        <h1 class="text-center">{{ friend.name }}</h1>
+        {% comment %} Displays each users profile and their friends {% endcomment %}
+        <p class='my-1 fw-bold d-inline-block'>Friends: <a href='/main/friends/{{friend.id}}/' style='color:33658A;'>{{friend.numFriends}}</a></p>
+        <div>
+            <p class='my-1 d-inline-block'> <b>Email: </b> {{friend.email}}</p>
+            <br>
+            <p class='my-1 d-inline-block'> <b> Major: </b> {{friend.major}}</p>
+            <p class='my-1 fd-inline-block'> <b>Graduation Year: </b>{{friend.graduationYear}}</p>
+        </div>
+        <p class='my-1 fw-bold'>Summary:</p>
+        <p class="border border-dark rounded-3 p-2">{{ friend.summary }}</p>
+        
+        {% comment %} Viewing a friends schedule {% endcomment %}
+        <a class="fw-bold" href="/main/viewschedule/{{friend.id}}/">View Schedule</a>
+    </div>
         {% endfor %}
-    </ul>
 
     {% endblock content %}
     

@@ -9,8 +9,10 @@
             {% comment %} Displays each users profile and their friends {% endcomment %}
             <p class='my-1 fw-bold d-inline-block'>Friends: <a href='/main/friends/{{theUser.id}}/' style='color:33658A;'>{{theUser.numFriends}}</a></p>
             <div>
+                {% if isFriend == True %}
                 <p class='my-1 d-inline-block'> <b>Email: </b> {{theUser.email}}</p>
                 <br>
+                {% endif %}
                 <p class='my-1 d-inline-block'> <b> Major: </b> {{theUser.major}}</p>
                 <p class='my-1 fd-inline-block'> <b>Graduation Year: </b>{{theUser.graduationYear}}</p>
             </div>
