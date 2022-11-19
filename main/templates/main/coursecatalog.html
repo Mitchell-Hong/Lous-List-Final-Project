@@ -3,18 +3,23 @@
     {% block content %}
         <body>
             <div class="centerDivElement">  
-                <h1 class="centerDivElement"> Course Catalog &nbsp<i class='bx bx-list-ul' style= "margin-top: 3px; margin-right: 5px;"></i> </h1>
+                <h1 class="centerDivElement" style="margin-bottom:1%;"> Course Catalog &nbsp<i class='bx bx-list-ul' style= "margin-top: 3px; margin-right: 5px;"></i> </h1>
             </div>
             {% for category, depList in department_results.items %}
-                <h3> {{category}} </h3>
-                {% for dep in depList %}
-                    {% if forloop.first %}<div class="row">{% endif %}
-                        <div class="col">
-                            <a href="{{ dep.abbreviation }}" style="color: black">{{ dep.abbreviation }}</a>
-                        </div>
-                    {% if forloop.counter|divisibleby:4 %}</div><div class="row">{% endif %}
-                {% endfor %}
-                </div> 
+                <div class="dropdown">
+                    <button class="btn dropdown-toggle fw-bold bg-gradient w-100 rounded-0 mb-2" style="background-color:#ed874e;" type="button" id="dropdownMenuButton2" data-bs-toggle="dropdown" aria-expanded="false">
+                        {{ category }}
+                    </button>
+                    <div class="dropdown-menu w-100" aria-labelledby="dropdownMenuButton2">
+                    {% for dep in depList %}
+                        {% if forloop.first %}<div class="row">{% endif %}
+                            <div class="w-25">
+                                <a href="{{ dep.abbreviation }}" class="dropdown-item" style="color: black">{{ dep.abbreviation }}</a>
+                            </div>
+                        {% if forloop.counter|divisibleby:4 %}</div><div class="row">{% endif %}
+                    {% endfor %}
+                    </div> 
+                </div>
             {% endfor %}   
         </body>
     {% endblock %}
