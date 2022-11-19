@@ -294,7 +294,7 @@ def editprofile(request):
             # users have id, name, email, summary, major, graduationYear
                 newUser = myUser(id=request.user.id, name=str(request.user.first_name + " " + request.user.last_name), summary='', major='', graduationYear='')
                 
-                cartActiveUser, created = ShoppingCart.objects.get_or_create(activeUser=request.user.id)
+                cartActiveUser, created = ShoppingCart.objects.get_or_create(activeUser=newUser)
                 # beauty of this is our users will have the same ID as the socialaccount -> request.user
                 form = UserForm()
                 context = {
