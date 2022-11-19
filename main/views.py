@@ -21,7 +21,8 @@ def index(request):
 
 # view for the course catalog tab has a list of departments that user can click on to choose
 def coursecatalog(request):
-    departments = department.objects.all() # data is a list of departments {"subject": abbrev}
+    rawDepartments = department.objects.all() # data is a list of departments {"subject": abbrev}
+    departments = deptFormatter(rawDepartments)
     context = {
         'department_results' : departments,
         # tab tells the HTML what the depict as the active tab
@@ -202,6 +203,22 @@ def myschedule(request):
     }
     return render(request,'main/myschedule.html', context)
 
+# view for viewing and commenting on other users schedules
+def viewschedule(request, user_id):
+    # profile of the individual the user is looking at
+    theUser = myUser.objects.get(id=user_id)
+    userSchedule, created = ClassSchedule.objects.get_or_create(scheduleUser=theUser)
+
+    userCourses = scheduleFormatter(userSchedule.coursesInSchedule.all())
+    context = {
+        'schedule_courses' : userCourses,
+        'theUser': theUser,
+    }
+    
+    return render(request, 'main/friendsschedule.html', context)
+
+# Utility Functions otherr views call for help formatting etc
+# turns a list of user courses and parses them into the appropriate day in the schedule
 def scheduleFormatter(courses):
     meetings = {"Monday":[], "Tuesday":[], "Wednesday":[], "Thursday":[], "Friday":[]}
     for course in courses:
@@ -219,25 +236,29 @@ def scheduleFormatter(courses):
     
     return meetings
 
-# view for viewing and commenting on other users schedules
-def viewschedule(request, user_id):
-    # profile of the individual the user is looking at
-    theUser = myUser.objects.get(id=user_id)
-    userSchedule, created = ClassSchedule.objects.get_or_create(scheduleUser=theUser)
-
-    userCourses = scheduleFormatter(userSchedule.coursesInSchedule.all())
-    context = {
-        'schedule_courses' : userCourses,
-        'theUser': theUser,
-    }
-    
-    return render(request, 'main/friendsschedule.html', context)
-
-
+# turns the list of departments into 8 diff lists organized in an alphabetical manner
+def deptFormatter(depts):
+    categories = {"A-B":[], "C-D":[], "E-F":[], "G-H":[], "I-L":[], "M-O":[], "P-Q":[], "R-Z":[]}
+    for dept in depts:
+        if dept.abbreviation[0] in ["A", "B"]:
+            categories['A-B'].append(dept)
+        if dept.abbreviation[0] in ["C", "D"]:
+            categories['C-D'].append(dept)
+        if dept.abbreviation[0] in ["E", "F"]:
+            categories['E-F'].append(dept)
+        if dept.abbreviation[0] in ["G", "H"]:
+            categories['G-H'].append(dept)
+        if dept.abbreviation[0] in ["I", "J", "K", "L"]:
+            categories['I-L'].append(dept)
+        if dept.abbreviation[0] in ["M", "N", "O"]:
+            categories['M-O'].append(dept)
+        if dept.abbreviation[0] in ["P", "Q"]:
+            categories['P-Q'].append(dept)
+        if dept.abbreviation[0] in ["R", "S", "T", "U", "V", "W", "X", "Y", "Z"]:
+            categories['R-Z'].append(dept)
+    return categories
 
 ## ALL RELATED TO THE FRIENDS SYSTEM (PROFILE, EDITING, SEEING FRIENDS ETC)
-
-
 
 # profile view which allows the user to see their profile info they entered at login as well as edit it
 # only time they can hit this link is when they have already logged in WILL HAVE AN ID
