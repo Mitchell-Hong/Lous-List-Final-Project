@@ -31,6 +31,7 @@ def coursecatalog(request):
 
 # dynamic routing based on which department the user clicked a list of all classes that belong to that department appear
 def deptclasses(request, dept):
+
     url = 'http://luthers-list.herokuapp.com/api/dept/' + dept + '/'
     response = requests.get(url)
     courses = response.json()
@@ -44,6 +45,7 @@ def deptclasses(request, dept):
     
     shoppingCartMessage = ""
     if request.user.id:
+        cartActiveUser, created = ShoppingCart.objects.get_or_create(activeUser=request.user.id)
         shoppingCartMessage = ShoppingCart.objects.get(activeUser=request.user.id).message
         has_class.message = ""
         has_class.save()       
@@ -73,7 +75,6 @@ def searchclass(request):
     classTypeChosen = ''
     creditsChosen = ''
     input = request.GET.get('depSelect', None)
-
     # displaying to the user what items are in their shopping cart
     has_class = ShoppingCart.objects.filter(activeUser=request.user.id).first()
     classesInCart = []
@@ -82,7 +83,7 @@ def searchclass(request):
 
     # message after adding the course to the shopping cart or removing one
     shoppingCartMessage = ""
-    if request.user.id:
+    if request.user.id and has_class:
         shoppingCartMessage = ShoppingCart.objects.get(activeUser=request.user.id).message
         has_class.message = ""
         has_class.save()
@@ -292,6 +293,8 @@ def editprofile(request):
         except:
             # users have id, name, email, summary, major, graduationYear
                 newUser = myUser(id=request.user.id, name=str(request.user.first_name + " " + request.user.last_name), summary='', major='', graduationYear='')
+                
+                cartActiveUser, created = ShoppingCart.objects.get_or_create(activeUser=request.user.id)
                 # beauty of this is our users will have the same ID as the socialaccount -> request.user
                 form = UserForm()
                 context = {
