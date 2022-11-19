@@ -498,27 +498,32 @@ def addToSchedule(request):
         course_start_time = cartCourse.start_time_int
         course_end_time = cartCourse.end_time_int
         time_conflict = False
+        days1 = cartCourse.meeting_days
         # checking to see if any time conflicts (for conflict to occur the start time of another class
         # must fall within the range of a current class time)
         for cartCourse2 in allCourses:
+            days2 = cartCourse2.meeting_days
             # do not want to compare two of the same courses
             if cartCourse2 == cartCourse:
                 continue
             else:
-                # C1 is cartCourse, and C2 is cartCourse2 in the example below
-                # comparing two courses (time conflict if C1.start <= C2.start <= C1.end --> C2 starts during C1
-                # or if C2.start <= C1.start <= C2.end C1 starts during C2)
-                if (course_start_time <= cartCourse2.start_time_int and cartCourse2.start_time_int <= course_end_time) or (cartCourse2.start_time_int <= course_start_time and course_start_time <= cartCourse2.end_time_int):
-                    time_conflict = True
+                # ensuring that the courses both meet on the same days (cant have time conflicts across diff days)
+                if ("Mo" in days1 and "Mo" in days2) or ("Tu" in days1 and "Tu" in days2) or ("We" in days1 and "We" in days2) or ("Th" in days1 and "Th" in days2) or ("Fr" in days1 and "Fr" in days2):
+                    # C1 is cartCourse, and C2 is cartCourse2 in the example below
+                    # comparing two courses (time conflict if C1.start <= C2.start <= C1.end --> C2 starts during C1
+                    # or if C2.start <= C1.start <= C2.end C1 starts during C2)
+                    if (course_start_time <= cartCourse2.start_time_int and cartCourse2.start_time_int <= course_end_time) or (cartCourse2.start_time_int <= course_start_time and course_start_time <= cartCourse2.end_time_int):
+                        time_conflict = True
 
-                if time_conflict:
-                    shoppingCartActiveUser.message = "Time conflict between: " + cartCourse.department + " " + cartCourse.catalogNumber + " (" + cartCourse.lectureType +  ") and " + cartCourse2.department + " " + cartCourse2.catalogNumber + " (" + cartCourse2.lectureType +  ")!"
+                    if time_conflict:
+                        shoppingCartActiveUser.message = "Time conflict between: " + cartCourse.department + " " + cartCourse.catalogNumber + " (" + cartCourse.lectureType +  ") and " + cartCourse2.department + " " + cartCourse2.catalogNumber + " (" + cartCourse2.lectureType +  ")!"
+                        shoppingCartActiveUser.save()
 
         if isInSchedule:
             shoppingCartActiveUser.message = "Another section of " + cartCourse.department + " " + cartCourse.catalogNumber + " (" + cartCourse.lectureType + ") is in your schedule (no duplicates allowed)!"
             shoppingCartActiveUser.save()
         elif time_conflict:
-            shoppingCartActiveUser.save()
+            print('do nothing')
         else:
             scheduleActiveUser.coursesInSchedule.add(cartCourse)
             shoppingCartActiveUser.coursesInCart.remove(cartCourse)
