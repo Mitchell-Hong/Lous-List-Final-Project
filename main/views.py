@@ -5,7 +5,7 @@ from django.views import generic
 import datetime
 from django.urls import reverse
 from .forms import UserForm
-from .models import Friend_Request, FriendList, myUser, department, course, ShoppingCart, ClassSchedule
+from .models import Friend_Request, FriendList, myUser, department, course, ShoppingCart, ClassSchedule, Comment
 # this is used for making HTTP requests from an external API with django
 import requests
 
@@ -207,6 +207,7 @@ def myschedule(request):
 def viewschedule(request, user_id):
     # profile of the individual the user is looking at
     friend = myUser.objects.get(id=user_id)
+    activeUser = myUser.objects.get(id=request.user.id)
     friendSchedule, created = ClassSchedule.objects.get_or_create(scheduleUser=friend)
     friendCourses = scheduleFormatter(friendSchedule.coursesInSchedule.all())
 
@@ -217,10 +218,27 @@ def viewschedule(request, user_id):
     except:
         classesInCart = []
 
+    # Code for seeing other users comments / allowing users to leave their own comments on their friends schedule
+    # grabbing the new comment that the current user has posted 
+    input = request.GET.get('commentbody', None)
+    if input:
+        newComment, commentCreated = Comment.objects.get_or_create(author=activeUser, toUser=friend, commentBody=input)
+        # do not allow duplicate comments to be posted by the same user
+        if commentCreated:
+            newComment.save()
+
+    # seeing if the user has any comments on their schedule yet
+    has_comment = Comment.objects.filter(toUser=user_id).first()
+    all_comments = []
+    if has_comment:
+        all_comments = Comment.objects.all()
+
     context = {
         'schedule_courses' : friendCourses,
         'theUser': friend,
         'classesInCart' : classesInCart,
+        'hasComment': has_comment,
+        'allComments': all_comments,
     }
     
     return render(request, 'main/friendsschedule.html', context)
