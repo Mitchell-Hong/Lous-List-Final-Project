@@ -176,6 +176,7 @@ def searchclass(request):
 # View for seeing your personal schedule and adding and subtracting course from it
 def myschedule(request):
     has_comment = False
+    all_comments = []
     # generating the comments for each user's schedule
     if request.user.id:
         has_comment = Comment.objects.filter(toUser=request.user.id).first()
