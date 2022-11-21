@@ -175,6 +175,14 @@ def searchclass(request):
 
 # View for seeing your personal schedule and adding and subtracting course from it
 def myschedule(request):
+    has_comment = False
+    # generating the comments for each user's schedule
+    if request.user.id:
+        has_comment = Comment.objects.filter(toUser=request.user.id).first()
+        all_comments = []
+        if has_comment:
+            all_comments = Comment.objects.all()
+
     # begin by assuming user is logged in, if not, variable is used in html to print appropriate message
     no_user = False
     courses = []
@@ -200,6 +208,8 @@ def myschedule(request):
         'classesInCart' : classesInCart,
         'logged_in' : no_user,
         'shoppingCartMessage': shoppingCartMessage,
+        'hasComment': has_comment,
+        'allComments': all_comments,
     }
     return render(request,'main/myschedule.html', context)
 

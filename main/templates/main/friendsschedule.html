@@ -32,10 +32,10 @@
         <h3 style='color: mediumslateblue'>User Comments</h3>
     </div>
     {% if hasComment %}
-        <div class="border border-dark border-2 w-75 mx-auto mb-3">
+        <div class="border border-dark border-2 rounded-2 w-75 mx-auto mb-3 p-1">
             {% for comment in allComments %}
-                <div class="bg-gradient p-1" style="background-color: mediumslateblue">{{ comment.author }}</div>
-                <div class="p-1 mb-1" style="background-color: lightskyblue;">{{ comment.commentBody }}</div>
+                <div class="bg-gradient p-1 mt-1 rounded-top" style="background-color: mediumslateblue">{{ comment.author }}</div>
+                <div class="p-1 mb-2 rounded-bottom" style="background-color: lightskyblue;">{{ comment.commentBody }}</div>
             {% endfor %}
         </div>
     {% else %}
