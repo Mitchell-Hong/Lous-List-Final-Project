@@ -4,6 +4,7 @@ from django.db import models
 # https://docs.djangoproject.com/en/4.1/ref/models/fields/
 # refrence for different types of fields django
 
+
 class myUser(models.Model):
     # we are going to ID users by this id as primary key
     id = models.IntegerField(primary_key=True)
@@ -16,11 +17,12 @@ class myUser(models.Model):
     # followed friends tutorial at https://medium.com/analytics-vidhya/add-friends-with-689a2fa4e41d
     numFriends = models.SmallIntegerField(default=0)
     # schedule fields so that we can build a schedule for each user
-    schedule = models.TextField(max_length=500, default="")
+    # schedule = models.OneToOneField('ClassSchedule', related_name='schedule',on_delete=models.CASCADE)
     # shoppingcart = models.TextField(max_length=500, default="")
 
     def __str__(self):
         return self.name
+        
 
 class FriendList(models.Model):
     user = models.OneToOneField(myUser, related_name='user', on_delete=models.CASCADE)
@@ -97,10 +99,10 @@ class ShoppingCart(models.Model):
 class Comment(models.Model):
     author = models.ForeignKey(myUser, related_name='author', on_delete=models.CASCADE)
     toUser = models.ForeignKey(myUser, related_name='toUser', on_delete=models.CASCADE, blank=True, default='')
-    commentBody = models.CharField(max_length=200)
+    commentBody = models.TextField(max_length=200)
 
 
 class ClassSchedule(models.Model):
-    scheduleUser = models.ForeignKey(myUser, related_name='scheduleUser', on_delete=models.CASCADE)
+    scheduleUser = models.OneToOneField(myUser, related_name='scheduleUser', on_delete=models.CASCADE)
     coursesInSchedule = models.ManyToManyField(course, default='', blank=True, related_name='coursesInSchedule')
     comments = models.ManyToManyField(Comment, default='', blank=True, related_name='comments')

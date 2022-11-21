@@ -206,13 +206,21 @@ def myschedule(request):
 # view for viewing and commenting on other users schedules
 def viewschedule(request, user_id):
     # profile of the individual the user is looking at
-    theUser = myUser.objects.get(id=user_id)
-    userSchedule, created = ClassSchedule.objects.get_or_create(scheduleUser=theUser)
+    friend = myUser.objects.get(id=user_id)
+    friendSchedule, created = ClassSchedule.objects.get_or_create(scheduleUser=friend)
+    friendCourses = scheduleFormatter(friendSchedule.coursesInSchedule.all())
 
-    userCourses = scheduleFormatter(userSchedule.coursesInSchedule.all())
+    try:
+        currentUser = myUser.objects.get(id = request.user.id)
+        userCart, cartCreated = ShoppingCart.objects.get_or_create(activeUser=currentUser)
+        classesInCart = userCart.coursesInCart.all()
+    except:
+        classesInCart = []
+
     context = {
-        'schedule_courses' : userCourses,
-        'theUser': theUser,
+        'schedule_courses' : friendCourses,
+        'theUser': friend,
+        'classesInCart' : classesInCart,
     }
     
     return render(request, 'main/friendsschedule.html', context)
@@ -413,6 +421,7 @@ def friends(request, user_id):
     # passing all the friends that a user has into context so they can go to the front end
     context = {
         'allFriends': allFriends,
+        'theUser' : theUser,
     }
 
     return render(request, 'main/friends.html', context)
@@ -448,7 +457,7 @@ def addfriend(request):
 # changes where the redirect goes to. If 1 send it back to the department page, however if it is 0, send it back to the default
 # classSearch page
 
-def addclass(request, dept, course_id, class_list):
+def addclass(request, dept, course_id, class_list, friend_id = 0):
     # get all courses from that department since we cannot store them in model due to heroku max
     # number of rows with free version
     url = 'http://luthers-list.herokuapp.com/api/dept/' + dept + '/'
@@ -493,13 +502,16 @@ def addclass(request, dept, course_id, class_list):
         shoppingCartActiveUser.message = "Another section of the same course was already in your cart!"
 
     shoppingCartActiveUser.save()
-    if(class_list):
+    if (class_list == 2): #response for when user is adding class when viewing friends profile
+        return HttpResponseRedirect(reverse('main:viewschedule', args=(friend_id,)))
+
+    elif(class_list == 1):
         return HttpResponseRedirect(reverse('main:deptclasses', args=(dept,)))
 
     else:
         return HttpResponseRedirect(reverse('main:searchclass'))
 
-def removeclass(request, dept, course_id, class_list):
+def removeclass(request, dept, course_id, class_list, friend_id = 0):
     # activeUser is the person who is adding courses to their cart
     activeUser = myUser.objects.get(id=request.user.id)
     # seeing if they have a shopping cart already
@@ -508,7 +520,9 @@ def removeclass(request, dept, course_id, class_list):
     shoppingCartActiveUser.coursesInCart.remove(courseDeleted)
     shoppingCartActiveUser.message = ""
     shoppingCartActiveUser.save()
-    if(class_list == 2):
+    if(class_list == 3):
+        return HttpResponseRedirect(reverse('main:viewschedule', args=(friend_id,)))
+    elif(class_list == 2):
         return HttpResponseRedirect(reverse('main:myschedule'))
     elif(class_list == 1):
         return HttpResponseRedirect(reverse('main:deptclasses', args=(dept,)))
