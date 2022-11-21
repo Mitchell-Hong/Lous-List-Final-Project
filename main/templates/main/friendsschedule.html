@@ -2,7 +2,7 @@
 
 {% block content %}
     {% if user.is_authenticated %}
-    <p class="fw-bold text-center mt-2 fs-4">{{theUser.name}}'s Schedule</p>
+    <p class="fw-bold text-center mt-2 fs-4">{{theUser.name}}'s Schedule  &nbsp </p>
 
     <div class="mt-2 flex-fill">
         <div class='w-75 mx-auto' style="list-style-type: none;">
@@ -17,11 +17,28 @@
                         <div class="d-inline">{{ classinfo.catalogNumber  }} :</div> 
                         <div class="d-inline">{{ classinfo.description  }} :</div> 
                         <div class="d-inline">{{ classinfo.start_time|slice:":5"}} - {{classinfo.end_time|slice:":5"}}</div>
+                        <div class='float-end'>
+                            <a href="/main/coursecatalog/addclass/{{classinfo.department}}/{{classinfo.id}}/2/{{theUser.id}}" class='text-success me-3' id="addCourse">Add to Cart</a>
+                        </div>
                     </li>
                     {%endfor%}
                 </div>
             {% endfor %}
+        <div class='mt-4 me-5' style="width:23%; height:10%; position:sticky; top:100px;" id='shoppingCart'>
+            <div class='text-white text-center px-3 py-1 fw-bold mt-2' style='background-color:darkblue;'>  <i class='bx bx-cart' style= "margin-top: 3px; margin-right: 5px;"></i>Shopping Cart</div>
+                {% for classAdded in classesInCart %}
+                    <div class='text-center py-1' style="background-color:lightgray;">{{classAdded.department}} {{classAdded.catalogNumber}} ({{classAdded.lectureType}}) {{classAdded.meeting_days}}: {{classAdded.start_time|slice:":5"}}-{{classAdded.end_time|slice:":5"}}
+                    
+                    {% comment %} coming from 1  {% endcomment %}
+                    <a href="/main/coursecatalog/removeclass/{{classAdded.department}}/{{classAdded.id}}/3/{{theUser.id}}" class="float-end me-4 fw-bold" id="removeClass">X</a></div>
+                {% comment %} If the list is empty {% endcomment %}
+                {% empty %}
+                    <div class='p-2 text-center' style="background-color:lightgray;">Your shopping cart is empty.</div>
+                {% endfor %}
             </div>
+        </div>
     </div>
+
     {% endif %}
+    
 {% endblock content %}

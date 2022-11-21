@@ -1,6 +1,6 @@
 {% extends 'main/index.html' %}
     {% block content %}
-    <h1 class="text-center"> Friends &nbsp <i class="fas fa-user-friends" style="font-size:50px;"></i></h1>
+    <h1 class="text-center"> {{theUser.name}}'s Friends &nbsp <i class="fas fa-user-friends" style="font-size:50px;"></i></h1>
     {% for friend in allFriends %}
     <div class="profileBorder">
         {% comment %} Add a back button if the user is looking at someone else profile {% endcomment %}

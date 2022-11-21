@@ -54,7 +54,6 @@ class Migration(migrations.Migration):
                 ('major', models.CharField(max_length=20)),
                 ('graduationYear', models.IntegerField()),
                 ('numFriends', models.SmallIntegerField(default=0)),
-                ('schedule', models.TextField(default='', max_length=500)),
             ],
         ),
         migrations.CreateModel(
@@ -96,7 +95,7 @@ class Migration(migrations.Migration):
                 ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
                 ('comments', models.ManyToManyField(blank=True, default='', related_name='comments', to='main.comment')),
                 ('coursesInSchedule', models.ManyToManyField(blank=True, default='', related_name='coursesInSchedule', to='main.course')),
-                ('scheduleUser', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='scheduleUser', to='main.myuser')),
+                ('scheduleUser', models.OneToOneField(on_delete=django.db.models.deletion.CASCADE, related_name='scheduleUser', to='main.myuser')),
             ],
         ),
     ]
