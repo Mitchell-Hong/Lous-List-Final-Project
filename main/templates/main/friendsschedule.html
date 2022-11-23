@@ -14,7 +14,7 @@
                     {% for classinfo in classesList %}
                     <li>
                         <div class="d-inline">{{ classinfo.department  }}</div> 
-                        <div class="d-inline">{{ classinfo.catalogNumber  }} :</div> 
+                        <div class="d-inline">{{ classinfo.catalogNumber  }} ({{classinfo.lectureType}}):</div> 
                         <div class="d-inline">{{ classinfo.description  }} :</div> 
                         <div class="d-inline">{{ classinfo.start_time|slice:":5"}} - {{classinfo.end_time|slice:":5"}}</div>
                         <div class='float-end'>

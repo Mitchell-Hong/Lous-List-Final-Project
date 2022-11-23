@@ -257,6 +257,7 @@ def viewschedule(request, user_id):
 # Utility Functions otherr views call for help formatting etc
 # turns a list of user courses and parses them into the appropriate day in the schedule
 def scheduleFormatter(courses):
+    courses = courses.order_by('start_time_int')
     meetings = {"Monday":[], "Tuesday":[], "Wednesday":[], "Thursday":[], "Friday":[]}
     for course in courses:
         days = course.meeting_days
