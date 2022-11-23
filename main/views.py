@@ -14,6 +14,7 @@ import requests
 # Create your views here.
 # simple display of what is shown at /main/ route
 def index(request):
+    numFriendRequests = 0
     if request.user.id:
         activeUser = myUser.objects.get(id=request.user.id)
         friendRequestList = Friend_Request.objects.filter(to_user=activeUser)
