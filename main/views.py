@@ -15,13 +15,15 @@ import requests
 # simple display of what is shown at /main/ route
 def index(request):
     numFriendRequests = 0
+    theUser = ''
     if request.user.id:
+        theUser = request.user.id
         activeUser = myUser.objects.get(id=request.user.id)
         friendRequestList = Friend_Request.objects.filter(to_user=activeUser)
         numFriendRequests = len(friendRequestList)
 
     context = {
-        'theUser':request.user.id,
+        'theUser': theUser,
         'numFriendRequests': numFriendRequests,
     }
     return render(request, 'main/index.html', context)
@@ -374,7 +376,7 @@ def editprofile(request):
         # if the user has not logged in yet then create a new user
         except:
             # users have id, name, email, summary, major, graduationYear
-                newUser = myUser(id=request.user.id, name=str(request.user.first_name + " " + request.user.last_name), summary='', major='', graduationYear='')
+                newUser = myUser(id=request.user.id, name=str(request.user.first_name + " " + request.user.last_name), summary='', major='', graduationYear="")
                 
                 # beauty of this is our users will have the same ID as the socialaccount -> request.user
                 form = UserForm()

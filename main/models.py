@@ -13,12 +13,10 @@ class myUser(models.Model):
     summary = models.TextField(max_length=500)
     major = models.CharField(max_length=20)
     graduationYear = models.IntegerField()
+    schedule = models.CharField(max_length=5, blank=True, default="")
 
     # followed friends tutorial at https://medium.com/analytics-vidhya/add-friends-with-689a2fa4e41d
     numFriends = models.SmallIntegerField(default=0)
-    # schedule fields so that we can build a schedule for each user
-    # schedule = models.OneToOneField('ClassSchedule', related_name='schedule',on_delete=models.CASCADE)
-    # shoppingcart = models.TextField(max_length=500, default="")
 
     def __str__(self):
         return self.name
