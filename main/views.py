@@ -469,6 +469,26 @@ def acceptrequest(request, fromUserID):
     friendRequest.delete()
     return HttpResponseRedirect(reverse('main:friendrequests'))
 
+def removefriend(request, user_id):
+     # activeUser is the person who is checking their friend requests
+    activeUser = myUser.objects.get(id=request.user.id)
+    # friend is the person who you are removing from your friends list
+    friend = myUser.objects.get(id=user_id)
+
+    # see whether or not each user has an exisiting friends list or if one needs to be made
+    friendListActiveUser, createdActive = FriendList.objects.get_or_create(user=activeUser)
+    friendListFromUser, createdFrom = FriendList.objects.get_or_create(user=friend)
+
+    # add the fromUser to the activeUsers friends list AND VICE VERSA
+    friendListActiveUser.friends.remove(friend)
+    friendListFromUser.friends.remove(activeUser)
+    # increment the number of friends each user has
+    friend.numFriends = friend.numFriends - 1
+    activeUser.numFriends = activeUser.numFriends - 1
+    friend.save()
+    activeUser.save()
+    return HttpResponseRedirect(reverse('main:friends', args=(request.user.id,)))
+
 
 def friends(request, user_id):
     numFriendRequests = getFriendRequest(request)
