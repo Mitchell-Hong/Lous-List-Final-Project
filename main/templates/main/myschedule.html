@@ -51,27 +51,28 @@
                     {%endif%}
                 </div>
             </div>
+            {% comment %} Showing comments other users have posted abt your schedule {% endcomment %}
+            <div class="ms-5">
+                <h3 style='color: mediumslateblue'>User Comments</h3>
+            </div>
+            {% if hasComment %}
+                <div class="border border-dark border-2 rounded-2 w-75 ms-5 mb-3 p-1">
+                    {% for comment in allComments %}
+                        <div class="bg-gradient p-1 mt-1 rounded-top" style="background-color: mediumslateblue">{{ comment.author }}</div>
+                        <div class="p-1 mb-2 rounded-bottom" style="background-color: lightskyblue;">{{ comment.commentBody }}</div>
+                    {% endfor %}
+                </div>
+            {% else %}
+                <p class='fw-bold ms-5'>This schedule has no comments. Be the first to comment below!</p> 
+            {% endif %}
+
+
             {%else%}
-            <h1> My Schedule is only available for CourSelect Account Holders. <br> Login or Create an Account
-            <a href="/accounts/google/login" style="color: blue">  Here</a></h1>
+            <h3 class='mt-5 ms-5' style='color: ed874e'> You must be logged in to create your schedule! Login or Create an Account <a href="/accounts/google/login" style="color: blue; text-decoration: underline;">Here</a></h3>          
+            
             {% endif %}
 
         </div>
-
-        {% comment %} Showing comments other users have posted abt your schedule {% endcomment %}
-        <div class="ms-5">
-            <h3 style='color: mediumslateblue'>User Comments</h3>
-        </div>
-        {% if hasComment %}
-            <div class="border border-dark border-2 rounded-2 w-75 ms-5 mb-3 p-1">
-                {% for comment in allComments %}
-                    <div class="bg-gradient p-1 mt-1 rounded-top" style="background-color: mediumslateblue">{{ comment.author }}</div>
-                    <div class="p-1 mb-2 rounded-bottom" style="background-color: lightskyblue;">{{ comment.commentBody }}</div>
-                {% endfor %}
-            </div>
-        {% else %}
-            <p class='fw-bold ms-5'>This schedule has no comments. Be the first to comment below!</p> 
-        {% endif %}
 
     </body>
     {% endblock content %}

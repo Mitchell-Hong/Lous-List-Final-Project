@@ -9,11 +9,7 @@ from .models import Friend_Request, FriendList, myUser, department, course, Shop
 # this is used for making HTTP requests from an external API with django
 import requests
 
-# allows for HTTP requests from the API
-
-# Create your views here.
-# simple display of what is shown at /main/ route
-def index(request):
+def getFriendRequest(request):
     numFriendRequests = 0
     theUser = ''
     if request.user.id:
@@ -21,19 +17,27 @@ def index(request):
         activeUser = myUser.objects.get(id=request.user.id)
         friendRequestList = Friend_Request.objects.filter(to_user=activeUser)
         numFriendRequests = len(friendRequestList)
+    return numFriendRequests
 
+# allows for HTTP requests from the API
+
+# Create your views here.
+# simple display of what is shown at /main/ route
+def index(request):
+    numFriendRequests = getFriendRequest(request)
     context = {
-        'theUser': theUser,
         'numFriendRequests': numFriendRequests,
     }
     return render(request, 'main/index.html', context)
 
 # view for the course catalog tab has a list of departments that user can click on to choose
 def coursecatalog(request):
+    numFriendRequests = getFriendRequest(request)
     rawDepartments = department.objects.all() # data is a list of departments {"subject": abbrev}
     departments = deptFormatter(rawDepartments)
     context = {
         'department_results' : departments,
+        'numFriendRequests': numFriendRequests,
         # tab tells the HTML what the depict as the active tab
         'tab' : 'coursecatalog',
     }
@@ -41,6 +45,7 @@ def coursecatalog(request):
 
 # dynamic routing based on which department the user clicked a list of all classes that belong to that department appear
 def deptclasses(request, dept):
+    numFriendRequests = getFriendRequest(request)
 
     url = 'http://luthers-list.herokuapp.com/api/dept/' + dept + '/'
     response = requests.get(url)
@@ -65,11 +70,15 @@ def deptclasses(request, dept):
         'course_list_nodup':coursesNoDup,
         'classesInCart':classesInCart,
         'shoppingCartMessage':shoppingCartMessage,
+        'numFriendRequests': numFriendRequests,
+
     }
     return render(request, 'main/classesList.html', context)
 
 # class search dummy implementation for now
 def searchclass(request):
+    numFriendRequests = getFriendRequest(request)
+
     departments = department.objects.all() # data is a list of departments {"subject": abbrev}
     noDep = True
     Instructors = []
@@ -175,6 +184,7 @@ def searchclass(request):
         'creditsChosen': creditsChosen,
         'classesInCart':classesInCart,
         'shoppingCartMessage':shoppingCartMessage,
+        'numFriendRequests': numFriendRequests,
 
         # tab tells the HTML what the depict as the active tab
         'tab' : 'coursecatalog',
@@ -184,6 +194,8 @@ def searchclass(request):
 
 # View for seeing your personal schedule and adding and subtracting course from it
 def myschedule(request):
+    numFriendRequests = getFriendRequest(request)
+
     has_comment = False
     all_comments = []
     # generating the comments for each user's schedule
@@ -220,11 +232,14 @@ def myschedule(request):
         'shoppingCartMessage': shoppingCartMessage,
         'hasComment': has_comment,
         'allComments': all_comments,
+        'numFriendRequests': numFriendRequests,
     }
     return render(request,'main/myschedule.html', context)
 
 # view for viewing and commenting on other users schedules
 def viewschedule(request, user_id):
+    numFriendRequests = getFriendRequest(request)
+
     # profile of the individual the user is looking at
     friend = myUser.objects.get(id=user_id)
     activeUser = myUser.objects.get(id=request.user.id)
@@ -259,6 +274,7 @@ def viewschedule(request, user_id):
         'classesInCart' : classesInCart,
         'hasComment': has_comment,
         'allComments': all_comments,
+        'numFriendRequests': numFriendRequests,
     }
     
     return render(request, 'main/friendsschedule.html', context)
@@ -310,6 +326,8 @@ def deptFormatter(depts):
 # profile view which allows the user to see their profile info they entered at login as well as edit it
 # only time they can hit this link is when they have already logged in WILL HAVE AN ID
 def profile(request, user_id):
+    numFriendRequests = getFriendRequest(request)
+
     # profile of the individual the user is looking at
     theUser = myUser.objects.get(id=user_id)
 
@@ -346,6 +364,7 @@ def profile(request, user_id):
         'theUser' : theUser,
         'messageSent' : messageSent,
         'isFriend': isFriend,
+        'numFriendRequests': numFriendRequests,
     }
     return render(request, 'main/profile.html', context)
 
@@ -403,9 +422,12 @@ def editprofile(request):
 
 # this displays all of the active friend requests and allows users to accept or delete them
 def friendrequests(request):
+    numFriendRequests = getFriendRequest(request)
+
     friend_requests = Friend_Request.objects.filter(to_user_id=request.user.id)
     context = {
-        'friend_requests': friend_requests
+        'friend_requests': friend_requests,
+        'numFriendRequests': numFriendRequests,
     }
     return render(request, 'main/friendrequests.html', context)
 
@@ -449,6 +471,7 @@ def acceptrequest(request, fromUserID):
 
 
 def friends(request, user_id):
+    numFriendRequests = getFriendRequest(request)
 
     theUser = myUser.objects.get(id=user_id)
     # we are basically checking whether or not the user has friends since you cannot call .all()
@@ -461,6 +484,7 @@ def friends(request, user_id):
     context = {
         'allFriends': allFriends,
         'theUser' : theUser,
+        'numFriendRequests': numFriendRequests,
     }
 
     return render(request, 'main/friends.html', context)
@@ -468,6 +492,8 @@ def friends(request, user_id):
 
 # allows the user to search for other users on the app by name (corresponds to addfriend/ path)
 def addfriend(request):
+    numFriendRequests = getFriendRequest(request)
+
     # do not allow users to find ppl they are already friends with on this page
     has_friend = FriendList.objects.filter(user=request.user.id).first()
     allFriends = []
@@ -484,6 +510,7 @@ def addfriend(request):
         shownUsers = myUser.objects.filter(name__icontains=input).exclude(id=request.user.id)
     context = {
         'shownUsers' : shownUsers,
+        'numFriendRequests': numFriendRequests,
     }
     return render(request, 'main/addfriend.html', context)
 
