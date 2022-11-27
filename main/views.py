@@ -552,6 +552,15 @@ def addclass(request, dept, course_id, class_list, friend_id = 0):
 
     # only add classes to model when people need them for their schedule bc Heroku cant support all classes 
     addedClass = list(filter(lambda course: course['course_number'] == course_id, courses))
+
+    startTime = '0000000'
+    endTime = '00000000'
+    if addedClass[0]['meetings'][0]['start_time']:
+        startTime = addedClass[0]['meetings'][0]['start_time']
+    
+    if addedClass[0]['meetings'][0]['end_time']:
+        endTime = addedClass[0]['meetings'][0]['end_time']
+
     newCourse, courseCreated = course.objects.get_or_create(
         id=addedClass[0]['course_number'],
         department=addedClass[0]['subject'], 
@@ -568,8 +577,8 @@ def addclass(request, dept, course_id, class_list, friend_id = 0):
         classSpotsOpen=addedClass[0]['enrollment_available'],waitlist=addedClass[0]['wait_list'],
         waitlistMax=addedClass[0]['wait_cap'],
 
-        start_time_int = (int(addedClass[0]['meetings'][0]['start_time'][0:2])*60) + (int(addedClass[0]['meetings'][0]['start_time'][3:5])),
-        end_time_int = (int(addedClass[0]['meetings'][0]['end_time'][0:2])*60) + (int(addedClass[0]['meetings'][0]['end_time'][3:5])),
+        start_time_int = (int(startTime[0:2])*60) + (int(startTime[3:5])),
+        end_time_int = (int(endTime[0:2])*60) + (int(endTime[3:5])),
     )
 
     # activeUser is the person who is adding courses to their cart
