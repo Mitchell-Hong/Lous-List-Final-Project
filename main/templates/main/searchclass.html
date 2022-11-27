@@ -173,7 +173,7 @@
             {% if not course_list_nodup and not noDepartment%} <h2> No courses found </h2> {%endif%}
             </ul>
         </div>
-        {% if user.is_authenticated and course_list_nodup%}
+        {% if user.is_authenticated %}
         <div class='me-5' style="width:23%; height:10%; position:sticky; top:100px;" id='shoppingCart'>
             <div class='text-white text-center px-3 py-1 fw-bold mt-2' style='background-color:darkblue;'>  <i class='bx bx-cart' style= "margin-top: 3px; margin-right: 5px;"></i>Shopping Cart</div>
                     {% for classAdded in classesInCart %}
