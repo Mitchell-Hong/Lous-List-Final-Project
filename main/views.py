@@ -223,7 +223,7 @@ def myschedule(request):
             shoppingCartMessage = ShoppingCart.objects.get(activeUser=request.user.id).message
 
     except:
-        no_user = True        
+        no_user = True    
 
     context = {
         'schedule_courses' : courses,
@@ -283,7 +283,7 @@ def viewschedule(request, user_id):
 # turns a list of user courses and parses them into the appropriate day in the schedule
 def scheduleFormatter(courses):
     courses = courses.order_by('start_time_int')
-    meetings = {"Monday":[], "Tuesday":[], "Wednesday":[], "Thursday":[], "Friday":[]}
+    meetings = {"Monday":[], "Tuesday":[], "Wednesday":[], "Thursday":[], "Friday":[], "Misc.":[]}
     for course in courses:
         days = course.meeting_days
         if "Mo" in days:
@@ -296,6 +296,8 @@ def scheduleFormatter(courses):
             meetings['Thursday'].append(course)
         if "Fr" in days:
             meetings['Friday'].append(course)
+        if "-" in days:
+            meetings["Misc."].append(course)
     
     return meetings
 

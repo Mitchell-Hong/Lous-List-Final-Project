@@ -19,18 +19,18 @@
                 <ul style="list-style-type: none;">
                     {% for day, classesList in schedule_courses.items %}
                         <div class='ps-2 py-1'
-                                    style="background-color: {% if forloop.counter|divisibleby:2 %}lightcyan
-                                        {% else %} rgb(255, 221, 153) {% endif %}; width:85%;">
-                                        <h3> {{day}}</h3>
-                                        {% for classinfo in classesList %}
-                                        <li>
-                                            <div class="d-inline">{{ classinfo.department  }}</div> 
-                                            <div class="d-inline">{{ classinfo.catalogNumber  }} ({{classinfo.lectureType}}):</div> 
-                                            <div class="d-inline">{{ classinfo.description  }} :</div> 
-                                            <div class="d-inline">{{ classinfo.start_time|slice:":5"}} - {{classinfo.end_time|slice:":5"}}</div>  
-                                            <a href="/main/myschedule/removefromschedule/{{classinfo.id}}" style="color: black" class="float-end me-4 fw-bold" id="removeFromSchedule">Put Back in Cart</a>
-                                        </li>
-                                        {%endfor%}
+                            style="background-color: {% if forloop.counter|divisibleby:2 %}lightcyan
+                                {% else %} rgb(255, 221, 153) {% endif %}; width:85%;">
+                                <h3> {{day}}</h3>
+                                {% for classinfo in classesList %}
+                                <li>
+                                    <div class="d-inline">{{ classinfo.department  }}</div> 
+                                    <div class="d-inline">{{ classinfo.catalogNumber  }} ({{classinfo.lectureType}}):</div> 
+                                    <div class="d-inline">{{ classinfo.description  }} :</div> 
+                                    <div class="d-inline">{{ classinfo.start_time|slice:":5"}} - {{classinfo.end_time|slice:":5"}}</div>  
+                                    <a href="/main/myschedule/removefromschedule/{{classinfo.id}}" style="color: black" class="float-end me-4 fw-bold" id="removeFromSchedule">Put Back in Cart</a>
+                                </li>
+                                {%endfor%}
                         </div>
                     {% endfor %}
                 </ul>
