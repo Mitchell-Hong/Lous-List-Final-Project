@@ -106,25 +106,29 @@
      <!-- <script src="index/script.js">
     </script> -->
 <script>
-    const element = document.getElementById('moon');
+            let darkMode = localStorage.getItem('darkMode');
+            let darkToggle = document.querySelector('.header_moon');
+            let bodyToggle = document.querySelector('body');
 
-        function setDarkMode() {
-            let isDark = document.body.classList.toggle('night');
+            if (darkMode && darkMode === '1') {
+                bodyToggle.classList.add('night');
+                darkToggle.classList.add('is-active');
+            }
 
-            if (isDark) {
-                setDarkMode.checked = true;
-                localStorage.setItem('theme' , 'night');
-            } else {
-                setDarkMode.checked = false;
-                localStorage.removeItem('theme', '');
-            }
-        }
-        if (localStorage.getItem('theme') == 'dark') {
-            setDarkMode();
-            if (document.getElementById('moon').checked) {
-                localStorage.setItem('moon', true)
-            }
-        }
+                darkToggle.onclick = function() {
+                bodyToggle.classList.toggle('night');
+                darkToggle.classList.toggle('is-active');
+                if (darkMode) {
+                    if (darkMode === '1') {
+                        localStorage.setItem('darkMode', '0');
+                    } else {
+                        localStorage.setItem('darkMode', '1');
+                    }
+                } else {
+                    localStorage.setItem('darkMode', '1');
+                }
+        };
+
 </script>
 
     </body>
