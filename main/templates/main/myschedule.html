@@ -53,7 +53,7 @@
                     {% endif %}
                 </div>
             </div>
-            
+
             {% comment %} Showing comments other users have posted abt your schedule {% endcomment %}
             <div class="ms-5">
                 <h3 style='color: mediumslateblue'>User Comments</h3>
@@ -61,7 +61,10 @@
                 {% if hasComment %}
                     <div class="border border-dark border-2 rounded-2 w-75 ms-5 mb-3 p-1">
                         {% for comment in allComments %}
-                            <div class="bg-gradient p-1 mt-1 rounded-top" style="background-color: mediumslateblue">{{ comment.author }}</div>
+                            <div class="bg-gradient p-1 mt-1 rounded-top d-flex justify-content-between" style="background-color: mediumslateblue">
+                                <div>{{ comment.author }}</div>
+                                <a class="text-danger fw-bold me-3" title="Delete Comment" href="/main/deletecomment/{{comment.id}}/">X</a>
+                            </div>
                             <div class="p-1 mb-2 rounded-bottom" style="background-color: lightskyblue;">{{ comment.commentBody }}</div>
                         {% endfor %}
                     </div>

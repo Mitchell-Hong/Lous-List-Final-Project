@@ -9,6 +9,10 @@ from .models import Friend_Request, FriendList, myUser, department, course, Shop
 # this is used for making HTTP requests from an external API with django
 import requests
 
+
+#######################          UTILITY FUNCTIONS       ################
+
+
 def getFriendRequest(request):
     numFriendRequests = 0
     theUser = ''
@@ -19,10 +23,53 @@ def getFriendRequest(request):
         numFriendRequests = len(friendRequestList)
     return numFriendRequests
 
-# allows for HTTP requests from the API
+# turns a list of user courses and parses them into the appropriate day in the schedule
+def scheduleFormatter(courses):
+    courses = courses.order_by('start_time_int')
+    meetings = {"Monday":[], "Tuesday":[], "Wednesday":[], "Thursday":[], "Friday":[], "Misc.":[]}
+    for course in courses:
+        days = course.meeting_days
+        if "Mo" in days:
+            meetings['Monday'].append(course)
+        if "Tu" in days:
+            meetings['Tuesday'].append(course)
+        if "We" in days:
+            meetings['Wednesday'].append(course)
+        if "Th" in days:
+            meetings['Thursday'].append(course)
+        if "Fr" in days:
+            meetings['Friday'].append(course)
+        if "-" in days:
+            meetings["Misc."].append(course)
+    
+    return meetings
 
-# Create your views here.
-# simple display of what is shown at /main/ route
+# turns the list of departments into 8 diff lists organized in an alphabetical manner
+def deptFormatter(depts):
+    categories = {"A-B":[], "C-D":[], "E-F":[], "G-H":[], "I-L":[], "M-O":[], "P-Q":[], "R-Z":[]}
+    for dept in depts:
+        if dept.abbreviation[0] in ["A", "B"]:
+            categories['A-B'].append(dept)
+        if dept.abbreviation[0] in ["C", "D"]:
+            categories['C-D'].append(dept)
+        if dept.abbreviation[0] in ["E", "F"]:
+            categories['E-F'].append(dept)
+        if dept.abbreviation[0] in ["G", "H"]:
+            categories['G-H'].append(dept)
+        if dept.abbreviation[0] in ["I", "J", "K", "L"]:
+            categories['I-L'].append(dept)
+        if dept.abbreviation[0] in ["M", "N", "O"]:
+            categories['M-O'].append(dept)
+        if dept.abbreviation[0] in ["P", "Q"]:
+            categories['P-Q'].append(dept)
+        if dept.abbreviation[0] in ["R", "S", "T", "U", "V", "W", "X", "Y", "Z"]:
+            categories['R-Z'].append(dept)
+    return categories
+
+
+#######################        NAVBAR VIEWS           #################
+
+
 def index(request):
     numFriendRequests = getFriendRequest(request)
     context = {
@@ -192,6 +239,9 @@ def searchclass(request):
     return render(request,'main/searchclass.html', context)
 
 
+#######################         SCHEDULE VIEWS           ##################
+
+
 # View for seeing your personal schedule and adding and subtracting course from it
 def myschedule(request):
     numFriendRequests = getFriendRequest(request)
@@ -279,51 +329,16 @@ def viewschedule(request, user_id):
     
     return render(request, 'main/friendsschedule.html', context)
 
-# Utility Functions otherr views call for help formatting etc
-# turns a list of user courses and parses them into the appropriate day in the schedule
-def scheduleFormatter(courses):
-    courses = courses.order_by('start_time_int')
-    meetings = {"Monday":[], "Tuesday":[], "Wednesday":[], "Thursday":[], "Friday":[], "Misc.":[]}
-    for course in courses:
-        days = course.meeting_days
-        if "Mo" in days:
-            meetings['Monday'].append(course)
-        if "Tu" in days:
-            meetings['Tuesday'].append(course)
-        if "We" in days:
-            meetings['Wednesday'].append(course)
-        if "Th" in days:
-            meetings['Thursday'].append(course)
-        if "Fr" in days:
-            meetings['Friday'].append(course)
-        if "-" in days:
-            meetings["Misc."].append(course)
-    
-    return meetings
+# view for allowing owner of the schedule to delete other users comments from it
+def deletecomment(request, comment_id):
+    theComment = Comment.objects.get(id=comment_id)
+    theComment.delete()
+    return HttpResponseRedirect(reverse('main:myschedule'))
 
-# turns the list of departments into 8 diff lists organized in an alphabetical manner
-def deptFormatter(depts):
-    categories = {"A-B":[], "C-D":[], "E-F":[], "G-H":[], "I-L":[], "M-O":[], "P-Q":[], "R-Z":[]}
-    for dept in depts:
-        if dept.abbreviation[0] in ["A", "B"]:
-            categories['A-B'].append(dept)
-        if dept.abbreviation[0] in ["C", "D"]:
-            categories['C-D'].append(dept)
-        if dept.abbreviation[0] in ["E", "F"]:
-            categories['E-F'].append(dept)
-        if dept.abbreviation[0] in ["G", "H"]:
-            categories['G-H'].append(dept)
-        if dept.abbreviation[0] in ["I", "J", "K", "L"]:
-            categories['I-L'].append(dept)
-        if dept.abbreviation[0] in ["M", "N", "O"]:
-            categories['M-O'].append(dept)
-        if dept.abbreviation[0] in ["P", "Q"]:
-            categories['P-Q'].append(dept)
-        if dept.abbreviation[0] in ["R", "S", "T", "U", "V", "W", "X", "Y", "Z"]:
-            categories['R-Z'].append(dept)
-    return categories
 
-## ALL RELATED TO THE FRIENDS SYSTEM (PROFILE, EDITING, SEEING FRIENDS ETC)
+
+#######################          PROFILE VIEWS               ################
+
 
 # profile view which allows the user to see their profile info they entered at login as well as edit it
 # only time they can hit this link is when they have already logged in WILL HAVE AN ID
@@ -419,7 +434,8 @@ def editprofile(request):
 
 
 
-################   FRIENDS VIEWS AND LOGIC     ################################
+#######################   FRIENDS VIEWS AND LOGIC     ######################
+
 
 
 # this displays all of the active friend requests and allows users to accept or delete them
@@ -538,7 +554,9 @@ def addfriend(request):
 
 
 
-####################   VIEWS DEALING WITH SHOPPING CART / SCHEDULE   ########################
+
+#######################   VIEWS DEALING WITH SHOPPING CART / SCHEDULE   ######################
+
 
 
 # If the last parameter is 1 it is coming from the classList page, if it is 0 it is coming from the searchClass page
