@@ -253,7 +253,7 @@ def myschedule(request):
         has_comment = Comment.objects.filter(toUser=request.user.id).first()
         all_comments = []
         if has_comment:
-            all_comments = Comment.objects.all()
+            all_comments = Comment.objects.filter(toUser=request.user.id)
 
     # begin by assuming user is logged in, if not, variable is used in html to print appropriate message
     no_user = False
@@ -316,7 +316,7 @@ def viewschedule(request, user_id):
     has_comment = Comment.objects.filter(toUser=user_id).first()
     all_comments = []
     if has_comment:
-        all_comments = Comment.objects.all()
+        all_comments = Comment.objects.filter(toUser=user_id)
 
     context = {
         'schedule_courses' : friendCourses,
