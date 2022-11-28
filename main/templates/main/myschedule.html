@@ -19,18 +19,19 @@
                 <ul style="list-style-type: none;">
                     {% for day, classesList in schedule_courses.items %}
                         <div class='ps-2 py-1'
-                            style="background-color: {% if forloop.counter|divisibleby:2 %}lightcyan
-                                {% else %} rgb(255, 221, 153) {% endif %}; width:85%;">
-                                <h3> {{day}}</h3>
-                                {% for classinfo in classesList %}
-                                <li>
-                                    <div class="d-inline">{{ classinfo.department  }}</div> 
-                                    <div class="d-inline">{{ classinfo.catalogNumber  }} ({{classinfo.lectureType}}):</div> 
-                                    <div class="d-inline">{{ classinfo.description  }} :</div> 
-                                    <div class="d-inline">{{ classinfo.start_time|slice:":5"}} - {{classinfo.end_time|slice:":5"}}</div>  
-                                    <a href="/main/myschedule/removefromschedule/{{classinfo.id}}" style="color: black" class="float-end me-4 fw-bold" id="removeFromSchedule">Put Back in Cart</a>
-                                </li>
-                                {%endfor%}
+                                    style="background-color: {% if forloop.counter|divisibleby:2 %}lightcyan
+                                        {% else %} rgb(255, 221, 153) {% endif %}; width:85%;">
+                                        <h3> {{day}}</h3>
+                                        {% for classinfo in classesList %}
+                                        <li>
+                                            <div class="d-inline">{{ classinfo.department  }}</div> 
+                                            <div class="d-inline">{{ classinfo.catalogNumber  }} ({{classinfo.lectureType}}):</div> 
+                                            <div class="d-inline">{{ classinfo.description  }} :</div> 
+                                            <div class="d-inline">{{ classinfo.start_time|slice:":5"}} - {{classinfo.end_time|slice:":5"}}</div>  
+                                            <div class="d-inline">({{ classinfo.credits}} Credits)</div>
+                                            <a href="/main/myschedule/removefromschedule/{{classinfo.id}}" style="color: black" class="float-end me-4 fw-bold" id="removeFromSchedule">Put Back in Cart</a>
+                                        </li>
+                                        {%endfor%}
                         </div>
                     {% endfor %}
                 </ul>
@@ -46,33 +47,34 @@
                     {% endfor %}
                     {% if classesInCart %}
                     <div class="mt-4 mx-auto" style="width: 40%;">
-                        <a href="/main/myschedule/addtoschedule" class='p-2 text-center' style="background-color: lightgreen;"> Add to Schedule </a>
+                        <div class="cart">
+                            <a href="/main/myschedule/addtoschedule" title="" class="btn" style="background-color:#ed874e; font-weight:700; text-white;"> Add to Schedule</i></a>
                     </div>
+                </div>
                     {%endif%}
                 </div>
             </div>
-            {% comment %} Showing comments other users have posted abt your schedule {% endcomment %}
-            <div class="ms-5">
-                <h3 style='color: mediumslateblue'>User Comments</h3>
-            </div>
-            {% if hasComment %}
-                <div class="border border-dark border-2 rounded-2 w-75 ms-5 mb-3 p-1">
-                    {% for comment in allComments %}
-                        <div class="bg-gradient p-1 mt-1 rounded-top" style="background-color: mediumslateblue">{{ comment.author }}</div>
-                        <div class="p-1 mb-2 rounded-bottom" style="background-color: lightskyblue;">{{ comment.commentBody }}</div>
-                    {% endfor %}
-                </div>
-            {% else %}
-                <p class='fw-bold ms-5'>This schedule has no comments. Be the first to comment below!</p> 
-            {% endif %}
-
-
             {%else%}
-            <h3 class='mt-5 ms-5' style='color: ed874e'> You must be logged in to create your schedule! Login or Create an Account <a href="/accounts/google/login" style="color: blue; text-decoration: underline;">Here</a></h3>          
-            
+            <h1> My Schedule is only available for CourSelect Account Holders. <br> Login or Create an Account
+            <a href="/accounts/google/login" style="color: blue">  Here</a></h1>
             {% endif %}
 
         </div>
+
+        {% comment %} Showing comments other users have posted abt your schedule {% endcomment %}
+        <div class="ms-5">
+            <h3 style='color: mediumslateblue'>User Comments</h3>
+        </div>
+        {% if hasComment %}
+            <div class="border border-dark border-2 rounded-2 w-75 ms-5 mb-3 p-1">
+                {% for comment in allComments %}
+                    <div class="bg-gradient p-1 mt-1 rounded-top" style="background-color: mediumslateblue">{{ comment.author }}</div>
+                    <div class="p-1 mb-2 rounded-bottom" style="background-color: lightskyblue;">{{ comment.commentBody }}</div>
+                {% endfor %}
+            </div>
+        {% else %}
+        <p class='fw-bold ms-5'>Your schedule has no comments. Ask your friends to be your first comment!</p> 
+        {% endif %}
 
     </body>
     {% endblock content %}

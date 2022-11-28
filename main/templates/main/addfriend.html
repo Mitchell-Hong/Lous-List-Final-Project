@@ -18,7 +18,7 @@
 
         <ul style="list-style-type: none">
             {% for i in shownUsers|slice:":10" %}
-                <li><a href="/main/profile/{{i.id}}/" style="color:blue;">
+                <li><a href="/main/profile/{{i.id}}/" class="addFriends">
                     {{i.name}} - Class of {{i.graduationYear}}, Major: {{i.major}}
                 </a></li>
             {% endfor %}

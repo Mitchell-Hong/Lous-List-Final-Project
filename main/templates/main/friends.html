@@ -6,7 +6,7 @@
         {% comment %} Add a back button if the user is looking at someone else profile {% endcomment %}
         <h1 class="text-center">{{ friend.name }}</h1>
         {% comment %} Displays each users profile and their friends {% endcomment %}
-        <p class='my-1 fw-bold d-inline-block'>Friends: {{friend.numFriends}}</p>
+        <p class='my-1 fw-bold d-inline-block'>Friends: <a href='/main/friends/{{friend.id}}/' style='color: #ed874e;'>{{friend.numFriends}}</a></p>
         <div>
             <p class='my-1 d-inline-block'> <b>Email: </b> {{friend.email}}</p>
             <br>
