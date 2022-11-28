@@ -5,12 +5,13 @@
             <div class="centerDivElement">  
                 <h1 class="centerDivElement" style="margin-bottom:1%;"> Course Catalog &nbsp<i class='bx bx-list-ul' style= "margin-top: 3px; margin-right: 5px;"></i> </h1>
             </div>
+            <div class= text-center>
             {% for category, depList in department_results.items %}
                 <div class="dropdown">
-                    <button class="btn dropdown-toggle fw-bold bg-gradient w-100 rounded-0 mb-2" style="background-color:#ed874e;" type="button" id="dropdownMenuButton2" data-bs-toggle="dropdown" aria-expanded="false">
+                    <button class="btn dropdown-toggle fw-bold bg-gradient w-50 rounded-0 mb-2" style="background-color:#ed874e; justify-content:" type="button" id="dropdownMenuButton2" data-bs-toggle="dropdown" aria-expanded="false">
                         {{ category }}
                     </button>
-                    <div class="dropdown-menu w-100" aria-labelledby="dropdownMenuButton2">
+                    <div class="dropdown-menu w-50" aria-labelledby="dropdownMenuButton2">
                     {% for dep in depList %}
                         {% if forloop.first %}<div class="row">{% endif %}
                             <div class="w-25">

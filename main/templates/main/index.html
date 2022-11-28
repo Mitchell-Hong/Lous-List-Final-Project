@@ -1,7 +1,7 @@
 {% load socialaccount %}
 {% load static %}
 
-<title>CourSelect</title>
+       
 <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css" integrity="sha384-50oBUHEmvpQ+1lW4y57PTFmhCaXp0ML5d60M1M7uH2+nqUivzIebhndOJK28anvf" crossorigin="anonymous">
 <link href='https://unpkg.com/boxicons@2.1.1/css/boxicons.min.css' rel='stylesheet'>
 <link rel="stylesheet" href="{% static 'main/index/style.css'%}?{% now "U" %}">
@@ -13,19 +13,19 @@
         <meta charset="UTF-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>CourSelect</title>
+        <link rel="icon" type="image/x-icon" href= "{% static "main/images/CourSelect Favicon.svg" %}">
         {% load bootstrap5 %}
         {% bootstrap_css %}
         {% bootstrap_javascript %}
     </head>
     <body>
-        <header class="bg-gradient"
-        style="width: 100%; height: 8.5%; background-color:#ed874e; position: sticky; top: 0px; z-index: 1000;">
+        <header class="headBlock"
+        style="position: sticky; top: 0px; z-index: 1000;">
             {% load static %}
             <div>
                 <!-- <a href="/main/" --> 
-                <a href="/main/"> <img src="{% static "main/images/uvaLogo.png" %}" class="d-inline-block ms-2 pb-2" alt="UVA" />
-                <h4 class="text-center d-inline-block pt-3 ms-2 me-5" style="color:rgb(240, 240, 240)">CourSelect</h4>
-                
+                <a href="/main/"> <img src="{% static "main/images/CourSelect.svg" %}" class="d-inline-block ms-5 pb-2" style="width:150px; height:75px;" alt="UVA" />
                 <a href="/main/coursecatalog/" class="a_links" 
                 {% if tab == 'coursecatalog' %}style="selected"{% endif %}> <i class='bx bx-list-ul' style= "margin-top: 3px; margin-right: 5px;"></i>
                 Course Catalog</a>
@@ -64,7 +64,7 @@
                 </div>
             {% else %}
             <div class="d-inline-block float-end pt-3 mt-1 me-5 position-relative">
-                <a href="{% provider_login_url 'google' %}" class="a_hover"
+                <a href="{% provider_login_url 'google' %}" class="a_links"
                 style=" position:relative; text-decoration:none; cursor:pointer; width:100%">Sign In</a>
             </div>
             {% endif %}
@@ -72,6 +72,7 @@
     </header>
         {% comment %} The above code is the navbar and then below we can add the content for each page inside block content tag {% endcomment %}
         {% block content %}
+        <body>
         <div class="page_intro intro">
             <div class="intro_container container">
               <div class="intro_body">
@@ -89,18 +90,22 @@
                         <li><span1>English</span1></li>
                         <li><span1>History</span1></li>
                     </ul>
+
+                    <div>
+                        <a href="/main/searchclass/" title="" class="btn" style="color:white; font-weight:700;">Search Class</i></a>
+                    </div>
+
                 </div>   
             </div>     
             <div class = "intro_img">
                 <img src="/static/main/images/courselectHome.png">
-                <div>
-                    <a href="/main/searchclass/" title="" class="btn" style="color:white; font-weight:700;"> Search Class</i></a>
-                        </div>
             </div>
         </div> 
         </div>
         </div>
+    </body>
         </div>
+    </div>
         {% endblock content %}
 </header>
      <!-- <script src="index/script.js">

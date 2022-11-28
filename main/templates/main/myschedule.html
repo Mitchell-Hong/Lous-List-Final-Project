@@ -28,6 +28,7 @@
                                             <div class="d-inline">{{ classinfo.catalogNumber  }} ({{classinfo.lectureType}}):</div> 
                                             <div class="d-inline">{{ classinfo.description  }} :</div> 
                                             <div class="d-inline">{{ classinfo.start_time|slice:":5"}} - {{classinfo.end_time|slice:":5"}}</div>  
+                                            <div class="d-inline">({{ classinfo.credits}} Credits)</div>
                                             <a href="/main/myschedule/removefromschedule/{{classinfo.id}}" style="color: black" class="float-end me-4 fw-bold" id="removeFromSchedule">Put Back in Cart</a>
                                         </li>
                                         {%endfor%}
@@ -46,8 +47,10 @@
                     {% endfor %}
                     {% if classesInCart %}
                     <div class="mt-4 mx-auto" style="width: 40%;">
-                        <a href="/main/myschedule/addtoschedule" class='p-2 text-center' style="background-color: lightgreen;"> Add to Schedule </a>
+                        <div class="cart">
+                            <a href="/main/myschedule/addtoschedule" title="" class="btn" style="background-color:#ed874e; font-weight:700; text-white;"> Add to Schedule</i></a>
                     </div>
+                </div>
                     {%endif%}
                 </div>
             </div>
@@ -70,7 +73,7 @@
                 {% endfor %}
             </div>
         {% else %}
-            <p class='fw-bold ms-5'>This schedule has no comments. Be the first to comment below!</p> 
+            <p class='fw-bold ms-5'>Your schedule has no comments. Ask your friends to be your first comment!</p> 
         {% endif %}
 
     </body>

@@ -18,7 +18,7 @@
                     <li class="my-2 d-flex" style="background-color:rgb(230, 230, 230); width: 85%;">
                         <a href="https://thecourseforum.com/course/{{ class.subject }}/{{ class.catalog_number }}/" 
                         title="View TCForum" style="background-color:lightskyblue; color:black;" class="py-1 px-2 fs-4 me-0 d-inline-block">{{ class.subject }}{{ class.catalog_number }}</a>
-                        <div style="background-color:slateblue" class="d-inline-block py-1 fs-4 px-3 flex-fill">{{ class.description }}</div>
+                        <div style="background-color:slateblue" class="d-inline-block py-1 fs-4 px-3 flex-fill text-white">{{ class.description }}</div>
                     </li>
                     {% for classinfo in course_list %}
                         {% comment %} this is one section of the class therefore we are going to print some info about it {% endcomment %}
