@@ -51,7 +51,21 @@
                             <a href="/main/myschedule/addtoschedule" title="" class="btn" style="background-color:#ed874e; font-weight:700; text-white;"> Add to Schedule</i></a>
                     </div>
                 </div>
-                    {%endif%}
+                    {% comment %} Showing comments other users have posted abt your schedule {% endcomment %}
+                <div class="ms-5">
+                    <h3 style='color: mediumslateblue'>User Comments</h3>
+                </div>
+                    {% if hasComment %}
+                        <div class="border border-dark border-2 rounded-2 w-75 ms-5 mb-3 p-1">
+                            {% for comment in allComments %}
+                                <div class="bg-gradient p-1 mt-1 rounded-top" style="background-color: mediumslateblue">{{ comment.author }}</div>
+                                <div class="p-1 mb-2 rounded-bottom" style="background-color: lightskyblue;">{{ comment.commentBody }}</div>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        <p class='fw-bold ms-5'>Your schedule has no comments. Ask your friends to be your first comment!</p> 
+                    {% endif %}
+                {%endif%}
                 </div>
             </div>
             {%else%}
@@ -60,21 +74,6 @@
             {% endif %}
 
         </div>
-
-        {% comment %} Showing comments other users have posted abt your schedule {% endcomment %}
-        <div class="ms-5">
-            <h3 style='color: mediumslateblue'>User Comments</h3>
-        </div>
-        {% if hasComment %}
-            <div class="border border-dark border-2 rounded-2 w-75 ms-5 mb-3 p-1">
-                {% for comment in allComments %}
-                    <div class="bg-gradient p-1 mt-1 rounded-top" style="background-color: mediumslateblue">{{ comment.author }}</div>
-                    <div class="p-1 mb-2 rounded-bottom" style="background-color: lightskyblue;">{{ comment.commentBody }}</div>
-                {% endfor %}
-            </div>
-        {% else %}
-        <p class='fw-bold ms-5'>Your schedule has no comments. Ask your friends to be your first comment!</p> 
-        {% endif %}
 
     </body>
     {% endblock content %}
