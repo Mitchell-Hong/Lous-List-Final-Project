@@ -2,6 +2,23 @@
 
 {% block content %}
     {% if user.is_authenticated %}
+
+    {% comment %} Alert System {% endcomment %}
+    {% if shoppingCartMessage != "" %}
+        {% comment %} course not added {% endcomment %}
+        {% if shoppingCartMessage == "Another section of the same course was already in your cart!"%}
+            <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                <strong>Course Not Added</strong> {{shoppingCartMessage}}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        {% else %}
+            <div class="alert alert-success alert-dismissible fade show" role="alert">
+                <strong>Course Added</strong> {{shoppingCartMessage}}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        {% endif %}
+    {% endif %}
+
     <p class="fw-bold text-center mt-2 fs-4">{{theUser.name}}'s Schedule  &nbsp </p>
 
     <div class="mt-2 flex-fill mb-3">

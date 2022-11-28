@@ -625,6 +625,11 @@ def addclass(request, dept, course_id, class_list, friend_id = 0):
 
     shoppingCartActiveUser.save()
     if (class_list == 2): #response for when user is adding class when viewing friends profile
+        # let the user know from friends page if the course was added to their cart
+        if not isInCart:
+            shoppingCartActiveUser.message = "Course added to your cart!"
+        shoppingCartActiveUser.save()
+
         return HttpResponseRedirect(reverse('main:viewschedule', args=(friend_id,)))
 
     elif(class_list == 1):
