@@ -32,6 +32,8 @@ urlpatterns = [
 
     # route that allows users to see how many friends they have as well as add new ones
     path('addfriend/', views.addfriend, name='addfriend'),
+    # allows users to remove friends they are currently friend with
+    path('removefriend/<int:user_id>/', views.removefriend, name='removefriend'),
     # page that allows users to accept or reject friend requests
     path('friendrequests/', views.friendrequests, name='friendrequests'),
     # page that allows users to see a list of users who they are friends with
