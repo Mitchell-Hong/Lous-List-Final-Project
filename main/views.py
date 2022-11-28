@@ -317,14 +317,17 @@ def viewschedule(request, user_id):
     all_comments = []
     if has_comment:
         all_comments = Comment.objects.filter(toUser=user_id)
+        activeUser_comments = Comment.objects.filter(author=activeUser)
 
     context = {
         'schedule_courses' : friendCourses,
+        # profile of the individual you are looking at
         'theUser': friend,
         'classesInCart' : classesInCart,
         'hasComment': has_comment,
         'allComments': all_comments,
         'numFriendRequests': numFriendRequests,
+        'activeUser_comments': activeUser_comments,
     }
     
     return render(request, 'main/friendsschedule.html', context)
@@ -335,7 +338,10 @@ def deletecomment(request, comment_id):
     theComment.delete()
     return HttpResponseRedirect(reverse('main:myschedule'))
 
-
+def deleteowncomment(request, comment_id, friend_id):
+    theComment = Comment.objects.get(id=comment_id)
+    theComment.delete()
+    return HttpResponseRedirect(reverse('main:viewschedule', args=(friend_id,)))
 
 #######################          PROFILE VIEWS               ################
 

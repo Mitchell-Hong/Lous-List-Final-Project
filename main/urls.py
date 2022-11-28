@@ -26,6 +26,8 @@ urlpatterns = [
     path('viewschedule/<int:user_id>/', views.viewschedule, name='viewschedule'),
     # allows the owner of the schedule to delete other users comments on his page
     path('deletecomment/<int:comment_id>/', views.deletecomment, name='deletecomment'),
+    # delete a comment you wrote on another users schedule
+    path('deleteowncomment/<int:comment_id>/<int:friend_id>/', views.deleteowncomment, name='deleteowncomment'),
 
     # these routes deal with moving courses from the shopping cart into your schedule
     path('myschedule/addtoschedule', views.addToSchedule, name='addtoschedule'),
