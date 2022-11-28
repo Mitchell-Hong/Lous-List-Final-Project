@@ -289,6 +289,7 @@ def myschedule(request):
 # view for viewing and commenting on other users schedules
 def viewschedule(request, user_id):
     numFriendRequests = getFriendRequest(request)
+    activeUser_comments = []
 
     # profile of the individual the user is looking at
     friend = myUser.objects.get(id=user_id)
