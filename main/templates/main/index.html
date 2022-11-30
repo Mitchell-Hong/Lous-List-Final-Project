@@ -20,6 +20,11 @@
         {% bootstrap_javascript %}
     </head>
     <body>
+        <script>
+            const theme = localStorage.getItem('theme');
+            document.body.className = theme;
+        </script>
+        
         <header class="headBlock"
         style="position: sticky; top: 0px; z-index: 1000;">
             {% load static %}
