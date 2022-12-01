@@ -255,6 +255,7 @@ def searchclass(request):
 def myschedule(request):
     numFriendRequests = getFriendRequest(request)
     credits_amount = 0
+    schedule_credits = 0
     has_comment = False
     all_comments = []
     # generating the comments for each user's schedule
@@ -268,6 +269,7 @@ def myschedule(request):
     no_user = False
     courses = []
     classesInCart= []
+    coursesScheduled = []
     shoppingCartMessage = ""
     try:
         activeUser = myUser.objects.get(id=request.user.id)
@@ -277,20 +279,25 @@ def myschedule(request):
 
         courses = scheduleFormatter(scheduleActiveUser.coursesInSchedule.all())
         classesInCart = cartActiveUser.coursesInCart.all()
+        coursesScheduled = scheduleActiveUser.coursesInSchedule.all()
 
         if request.user.id:
             shoppingCartMessage = ShoppingCart.objects.get(activeUser=request.user.id).message
     except:
         no_user = True
 
-    # Credit System
+    # Credit System -- cart
     for classes in classesInCart:
         credits_amount = credits_amount + int(classes.credits)
+    # Credit System -- in schedule
+    for scheduledClasses in coursesScheduled:
+        schedule_credits = schedule_credits + int(scheduledClasses.credits)
 
     context = {
         'schedule_courses' : courses,
         'classesInCart' : classesInCart,
         'creditAmount': credits_amount,
+        'scheduledCredits': schedule_credits,
         'logged_in' : no_user,
         'shoppingCartMessage': shoppingCartMessage,
         'hasComment': has_comment,
