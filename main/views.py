@@ -132,6 +132,7 @@ def searchclass(request):
     courses = []
     filteredClass = []
     filteredNoDup = []
+    credits_amount = 0
     # These will check for what the user inputed
     fi = False
     fct = False
@@ -217,6 +218,10 @@ def searchclass(request):
         Instructors.sort()
         # ensure no duplicate filtered classes
         filteredNoDup = { each['catalog_number'] : each for each in filteredClass }.values()
+        # Credit System
+
+    for classes in classesInCart:
+        credits_amount = credits_amount + int(classes.credits)
 
     context = {
         'department_results' : departments,
@@ -228,6 +233,7 @@ def searchclass(request):
         # passing extra data to help us filter stuff
         'instructorChosen': instructorChosen,
         'classTypeChosen':classTypeChosen,
+        'creditAmount': credits_amount,
         'creditsChosen': creditsChosen,
         'classesInCart':classesInCart,
         'shoppingCartMessage':shoppingCartMessage,
@@ -259,7 +265,6 @@ def myschedule(request):
     no_user = False
     courses = []
     classesInCart= []
-    coursesList = []
     shoppingCartMessage = ""
     try:
         activeUser = myUser.objects.get(id=request.user.id)
@@ -269,7 +274,6 @@ def myschedule(request):
 
         courses = scheduleFormatter(scheduleActiveUser.coursesInSchedule.all())
         classesInCart = cartActiveUser.coursesInCart.all()
-        coursesList = scheduleActiveUser.coursesInSchedule.all()
 
         if request.user.id:
             shoppingCartMessage = ShoppingCart.objects.get(activeUser=request.user.id).message
@@ -277,7 +281,7 @@ def myschedule(request):
         no_user = True
 
     # Credit System
-    for classes in coursesList:
+    for classes in classesInCart:
         credits_amount = credits_amount + int(classes.credits)
 
     context = {
