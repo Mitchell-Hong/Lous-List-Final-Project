@@ -10,7 +10,7 @@
             </div>
         {% endif %}
 
-        <div class="centerDivElement">  
+        <div class="centerDivElement">
             <h1 class="centerDivElement"> My Schedule &nbsp <i class="fa fa-calendar" aria-hidden="true" style= "margin-top: 3px; margin-right: 5px;"></i> </h1>
         </div>
         <div class = "text-center ms-5">
@@ -28,10 +28,10 @@
                                         <h3> {{day}}</h3>
                                         {% for classinfo in classesList %}
                                         <li>
-                                            <div class="d-inline">{{ classinfo.department  }}</div> 
-                                            <div class="d-inline">{{ classinfo.catalogNumber  }} ({{classinfo.lectureType}}):</div> 
-                                            <div class="d-inline">{{ classinfo.description  }} :</div> 
-                                            <div class="d-inline">{{ classinfo.start_time|slice:":5"}} - {{classinfo.end_time|slice:":5"}}</div>  
+                                            <div class="d-inline">{{ classinfo.department  }}</div>
+                                            <div class="d-inline">{{ classinfo.catalogNumber  }} ({{classinfo.lectureType}}):</div>
+                                            <div class="d-inline">{{ classinfo.description  }} :</div>
+                                            <div class="d-inline">{{ classinfo.start_time|slice:":5"}} - {{classinfo.end_time|slice:":5"}}</div>
                                             <div class="d-inline">({{ classinfo.credits}} Credits)</div>
                                             <a href="/main/myschedule/removefromschedule/{{classinfo.id}}" style="color: black" class="float-end me-4 fw-bold" id="removeFromSchedule">Put Back in Cart</a>
                                         </li>
@@ -43,7 +43,7 @@
                 </ul>
             </div>
             <div class='mt-4 me-5' style="width:23%; height:10%; position:sticky; top:100px;" id='shoppingCart'>
-                <div class='text-white text-center px-3 py-1 fw-bold mt-2' style='background-color:darkblue;'>  <i class='bx bx-cart' style= "margin-top: 3px; margin-right: 5px;"></i>Shopping Cart</div>
+                <div class='text-white text-center px-3 py-1 fw-bold mt-2' style='background-color:darkblue;'>  <i class='bx bx-cart' style= "margin-top: 3px; margin-right: 5px;"></i>Shopping Cart || {{creditAmount}} Credits</div>
                     {% for classAdded in classesInCart %}
                         <div class='text-center py-1' style="background-color:lightgray;">{{classAdded.department}} {{classAdded.catalogNumber}} ({{classAdded.lectureType}}) {{classAdded.meeting_days}}: {{classAdded.start_time|slice:":5"}}-{{classAdded.end_time|slice:":5"}}
                         <a href="/main/coursecatalog/removeclass/{{classAdded.department}}/{{classAdded.id}}/2" class="float-end me-4 fw-bold" id="removeClass">X</a></div>
@@ -76,7 +76,7 @@
                         {% endfor %}
                     </div>
                 {% else %}
-                    <p class='fw-bold ms-5'>Your schedule has no comments. Ask your friends to be your first comment!</p> 
+                    <p class='fw-bold ms-5'>Your schedule has no comments. Ask your friends to be your first comment!</p>
                 {% endif %}
             </div>
             {%else%}
