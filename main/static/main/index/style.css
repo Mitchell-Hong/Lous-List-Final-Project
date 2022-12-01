@@ -600,3 +600,59 @@ br1 {
 .night .decline {
     color:rgb(240, 59, 59);
 }
+
+/* MIGHT WANT TO MAKE A REALLY COOL ANCHOR POINT SCROLL, DO */
+html {
+	scroll-behavior: smooth;
+  scroll-padding-top: 100px;
+}
+
+/**
+ * Disable smooth scrolling when users have prefers-reduced-motion enabled
+ */
+ @media screen and (prefers-reduced-motion: reduce) {
+	html {
+		scroll-behavior: auto;
+	}
+}
+
+/* scrollbar */
+::-webkit-scrollbar {
+    width: 12px;
+  }
+  ::-webkit-scrollbar-thumb {
+    background-clip: content-box;
+    background-color: #ed874e;
+    background-image: linear-gradient(#ed874e, #3F88C5);
+    border: 2px solid transparent;
+    border-radius: 10px;
+    z-index: -1;
+  }
+  ::-webkit-scrollbar-track {
+    background: var(--white-color)
+  }
+  .night::-webkit-scrollbar-track {
+    background: var(--invert-bg-color)
+  }
+
+  @media (min-width: 1720px) {
+    .headBlock {
+        height: 7%;
+
+    }
+    .intro .btn{
+        top: 65%;
+        left: 21.5%;
+    }
+  }
+
+  @media (max-width: 1023px) {
+    .headBlock {
+        height: 10%;
+
+    }
+    .intro .btn{
+        top: 80%;
+        left: 13%;
+    }
+  }
