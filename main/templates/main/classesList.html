@@ -16,7 +16,7 @@
                 <ul style="list-style-type: none;">
                 {% for class in course_list_nodup %}
                     <li class="my-2 d-flex" style="background-color:rgb(230, 230, 230); width: 85%;">
-                        <a href="https://thecourseforum.com/course/{{ class.subject }}/{{ class.catalog_number }}/" 
+                        <a href="https://thecourseforum.com/course/{{ class.subject }}/{{ class.catalog_number }}/"
                         title="View TCForum" style="background-color:lightskyblue; color:black;" class="py-1 px-2 fs-4 me-0 d-inline-block">{{ class.subject }}{{ class.catalog_number }}</a>
                         <div style="background-color:slateblue" class="d-inline-block py-1 fs-4 px-3 flex-fill text-white">{{ class.description }}</div>
                     </li>
@@ -26,9 +26,9 @@
                         <div class='ps-2 py-1'
                             style="background-color: {% if forloop.counter|divisibleby:2 %}lightcyan
                                 {% else %} rgb(255, 221, 153) {% endif %}; width:85%;">
-                                <div class="d-inline">{{ classinfo.course_number  }}</div> 
-                                <div class="d-inline">{{ classinfo.instructor.name  }}</div>  
-                                <div class="d-inline">{{ classinfo.enrollment_total }}/{{ classinfo.class_capacity }}</div> 
+                                <div class="d-inline">{{ classinfo.course_number  }}</div>
+                                <div class="d-inline">{{ classinfo.instructor.name  }}</div>
+                                <div class="d-inline">{{ classinfo.enrollment_total }}/{{ classinfo.class_capacity }}</div>
                                 <div class="d-inline">{{ classinfo.meetings.days  }}</div>
                                 {% comment %} #array access in django template with .index {% endcomment %}
                                 <div class="d-inline">{{ classinfo.meetings.0.days  }}</div>
@@ -52,7 +52,7 @@
                 <div class='text-white text-center px-3 py-1 fw-bold mt-2' style='background-color:darkblue;'>  <i class='bx bx-cart' style= "margin-top: 3px; margin-right: 5px;"></i> Shopping Cart || {{creditAmount}} Credits</div>
                     {% for classAdded in classesInCart %}
                         <div class='text-center py-1' style="background-color:lightgray;">{{classAdded.department}} {{classAdded.catalogNumber}} ({{classAdded.lectureType}}) {{classAdded.meeting_days}}: {{classAdded.start_time|slice:":5"}}-{{classAdded.end_time|slice:":5"}}
-                        
+
                         {% comment %} coming from 1  {% endcomment %}
                         <a href="/main/coursecatalog/removeclass/{{classAdded.department}}/{{classAdded.id}}/1/" class="float-end me-4 fw-bold" id="removeClass">X</a></div>
                     {% comment %} If the list is empty {% endcomment %}

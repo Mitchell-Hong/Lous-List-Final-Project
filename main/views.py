@@ -93,7 +93,7 @@ def coursecatalog(request):
 # dynamic routing based on which department the user clicked a list of all classes that belong to that department appear
 def deptclasses(request, dept):
     numFriendRequests = getFriendRequest(request)
-
+    credits_amount = 0
     url = 'http://luthers-list.herokuapp.com/api/dept/' + dept + '/'
     response = requests.get(url)
     courses = response.json()
@@ -111,11 +111,14 @@ def deptclasses(request, dept):
         shoppingCartMessage = ShoppingCart.objects.get(activeUser=request.user.id).message
         has_class.message = ""
         has_class.save()
-
+        # Credit System
+    for classes in classesInCart:
+        credits_amount = credits_amount + int(classes.credits)
     context = {
         'course_list': courses,
         'course_list_nodup':coursesNoDup,
         'classesInCart':classesInCart,
+        'creditAmount': credits_amount,
         'shoppingCartMessage':shoppingCartMessage,
         'numFriendRequests': numFriendRequests,
 
