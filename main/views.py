@@ -41,7 +41,7 @@ def scheduleFormatter(courses):
             meetings['Friday'].append(course)
         if "-" in days:
             meetings["Misc."].append(course)
-    
+
     return meetings
 
 # turns the list of departments into 8 diff lists organized in an alphabetical manner
@@ -104,13 +104,13 @@ def deptclasses(request, dept):
     classesInCart = []
     if has_class:
         classesInCart = has_class.coursesInCart.all()
-    
+
     shoppingCartMessage = ""
     if request.user.id:
         cartActiveUser, created = ShoppingCart.objects.get_or_create(activeUser=request.user.id)
         shoppingCartMessage = ShoppingCart.objects.get(activeUser=request.user.id).message
         has_class.message = ""
-        has_class.save()       
+        has_class.save()
 
     context = {
         'course_list': courses,
@@ -156,7 +156,7 @@ def searchclass(request):
 
     if input:
         noDep = False
-        # update the shoppingCartMessage to clear it 
+        # update the shoppingCartMessage to clear it
         shoppingCartMessage = ""
         url = 'http://luthers-list.herokuapp.com/api/dept/' + input + '/'
         response = requests.get(url)
@@ -188,16 +188,16 @@ def searchclass(request):
             elif (fi and fct):
                 if ((course['instructor']['name'] == filteredInstructor) and (course['component'] == filteredClassType)) :
                     filteredClass.append(course)
-                    
+
             elif (fi and fc):
                 if ((course['instructor']['name'] == filteredInstructor) and (course['units'] == filteredCredits)) :
                     filteredClass.append(course)
-                    
+
 
             elif (fct and fc):
                 if ((course['component'] == filteredClassType) and (course['units'] == filteredCredits)) :
                     filteredClass.append(course)
-                    
+
 
             elif (fi):
                 if ((course['instructor']['name'] == filteredInstructor)):
@@ -206,7 +206,7 @@ def searchclass(request):
             elif (fct):
                 if ((course['component'] == filteredClassType)):
                     filteredClass.append(course)
-                    
+
 
             elif (fc):
                 if ((course['units'] == filteredCredits)):
@@ -216,7 +216,7 @@ def searchclass(request):
         # sort all the instructors alphabetically so it is easier to find them
         Instructors.sort()
         # ensure no duplicate filtered classes
-        filteredNoDup = { each['catalog_number'] : each for each in filteredClass }.values()       
+        filteredNoDup = { each['catalog_number'] : each for each in filteredClass }.values()
 
     context = {
         'department_results' : departments,
@@ -245,7 +245,7 @@ def searchclass(request):
 # View for seeing your personal schedule and adding and subtracting course from it
 def myschedule(request):
     numFriendRequests = getFriendRequest(request)
-
+    credits_amount = 0
     has_comment = False
     all_comments = []
     # generating the comments for each user's schedule
@@ -268,16 +268,21 @@ def myschedule(request):
 
         courses = scheduleFormatter(scheduleActiveUser.coursesInSchedule.all())
         classesInCart = cartActiveUser.coursesInCart.all()
+        coursesList = scheduleActiveUser.coursesInSchedule.all()
 
         if request.user.id:
             shoppingCartMessage = ShoppingCart.objects.get(activeUser=request.user.id).message
-
     except:
-        no_user = True    
+        no_user = True
+
+    # Credit System
+    for classes in coursesList:
+        credits_amount = credits_amount + int(classes.credits)
 
     context = {
         'schedule_courses' : courses,
         'classesInCart' : classesInCart,
+        'creditAmount': credits_amount,
         'logged_in' : no_user,
         'shoppingCartMessage': shoppingCartMessage,
         'hasComment': has_comment,
@@ -305,7 +310,7 @@ def viewschedule(request, user_id):
         classesInCart = []
 
     # Code for seeing other users comments / allowing users to leave their own comments on their friends schedule
-    # grabbing the new comment that the current user has posted 
+    # grabbing the new comment that the current user has posted
     input = request.GET.get('commentbody', None)
     if input:
         newComment, commentCreated = Comment.objects.get_or_create(author=activeUser, toUser=friend, commentBody=input)
@@ -319,7 +324,6 @@ def viewschedule(request, user_id):
     if has_comment:
         all_comments = Comment.objects.filter(toUser=user_id)
         activeUser_comments = Comment.objects.filter(author=activeUser)
-
     context = {
         'schedule_courses' : friendCourses,
         # profile of the individual you are looking at
@@ -330,7 +334,7 @@ def viewschedule(request, user_id):
         'numFriendRequests': numFriendRequests,
         'activeUser_comments': activeUser_comments,
     }
-    
+
     return render(request, 'main/friendsschedule.html', context)
 
 # view for allowing owner of the schedule to delete other users comments from it
@@ -420,7 +424,7 @@ def editprofile(request):
         except:
             # users have id, name, email, summary, major, graduationYear
                 newUser = myUser(id=request.user.id, name=str(request.user.first_name + " " + request.user.last_name), summary='', major='', graduationYear="")
-                
+
                 # beauty of this is our users will have the same ID as the socialaccount -> request.user
                 form = UserForm()
                 context = {
@@ -577,25 +581,25 @@ def addclass(request, dept, course_id, class_list, friend_id = 0):
     response = requests.get(url)
     courses = response.json()
 
-    # only add classes to model when people need them for their schedule bc Heroku cant support all classes 
+    # only add classes to model when people need them for their schedule bc Heroku cant support all classes
     addedClass = list(filter(lambda course: course['course_number'] == course_id, courses))
 
     startTime = '0000000'
     endTime = '00000000'
     if addedClass[0]['meetings'][0]['start_time']:
         startTime = addedClass[0]['meetings'][0]['start_time']
-    
+
     if addedClass[0]['meetings'][0]['end_time']:
         endTime = addedClass[0]['meetings'][0]['end_time']
 
     newCourse, courseCreated = course.objects.get_or_create(
         id=addedClass[0]['course_number'],
-        department=addedClass[0]['subject'], 
+        department=addedClass[0]['subject'],
         instructorName=addedClass[0]['instructor']['name'], instructorEmail=addedClass[0]['instructor']['email'],
         courseSection=addedClass[0]['course_section'], semesterCode=addedClass[0]['semester_code'],
-        description=addedClass[0]['description'], 
+        description=addedClass[0]['description'],
         credits=addedClass[0]['units'], catalogNumber=addedClass[0]['catalog_number'],
-        lectureType=addedClass[0]['component'], 
+        lectureType=addedClass[0]['component'],
         meeting_days=addedClass[0]['meetings'][0]['days'],
         start_time=addedClass[0]['meetings'][0]['start_time'],
         end_time=addedClass[0]['meetings'][0]['end_time'],
@@ -614,7 +618,7 @@ def addclass(request, dept, course_id, class_list, friend_id = 0):
     # seeing if they have a shopping cart already
     shoppingCartActiveUser, created = ShoppingCart.objects.get_or_create(activeUser=activeUser)
     isInCart = shoppingCartActiveUser.coursesInCart.filter(department=newCourse.department, catalogNumber=newCourse.catalogNumber, lectureType = newCourse.lectureType ).first()
-    
+
     # if there is no objects of the isInCart list then you can add it however otherwise you cannot add duplicate classes
     if not isInCart:
         shoppingCartActiveUser.coursesInCart.add(newCourse)
@@ -669,10 +673,10 @@ def addToSchedule(request):
     allCourses = currentCart | currentSchedule
     for cartCourse in currentCart:
         # not allowing time conflicts or duplicate classes in the same schedule
-        # seeing if there any courses currently in the schedule that have the same dep, catalogNumber, and department if 
+        # seeing if there any courses currently in the schedule that have the same dep, catalogNumber, and department if
         # so then prevent this course from being add to schedule
         isInSchedule = scheduleActiveUser.coursesInSchedule.filter(department=cartCourse.department, catalogNumber=cartCourse.catalogNumber, lectureType = cartCourse.lectureType ).first()
-        
+
         course_start_time = cartCourse.start_time_int
         course_end_time = cartCourse.end_time_int
         time_conflict = False
