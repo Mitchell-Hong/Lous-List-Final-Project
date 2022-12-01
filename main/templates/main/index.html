@@ -21,8 +21,7 @@
     </head>
     <body>
         <script>
-            const theme = localStorage.getItem('theme');
-            document.body.className = theme;
+            if (localStorage.darkMode) document.documentElement.setAttribute("darkMode", localStorage.darkMode)
         </script>
         
         <header class="headBlock"
