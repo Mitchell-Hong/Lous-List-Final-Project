@@ -19,6 +19,7 @@
         <div class="d-flex ms-3 me-5">
             {% if user.is_authenticated %}
             <div class="mt-4 flex-fill">
+
                 <ul style="list-style-type: none;">
                     {% for day, classesList in schedule_courses.items %}
                         <div class='ps-2 py-1'
@@ -37,6 +38,9 @@
                                         {%endfor%}
                         </div>
                     {% endfor %}
+                    <div style='background-color:#ed874e; width:85%;'> <i class='bx bx-cart' style="font-size: 24px;"></i> <p style="margin-top:5px; margin-bottom: 5px; margin-right: 5px; font-size: 24px; display:inline-flex;">Total Credits</p>
+                    <p class="float-end me-4 fw-bold" style='margin-top:12px;display:inline-flex;'> {{creditAmount}} Credits </p>
+                    </div>
                 </ul>
             </div>
             <div class='mt-4 me-5' style="width:23%; height:10%; position:sticky; top:100px;" id='shoppingCart'>
