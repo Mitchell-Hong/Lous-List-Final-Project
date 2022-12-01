@@ -573,3 +573,30 @@ br1 {
     border-color: #ed874e;
     border-radius: 10px;
 }
+
+.friendRequest {
+    font-weight: 700;
+    flex: 1 1 auto;
+}
+
+.night .friendRequest {
+    color:white;
+}
+
+.accept {
+    margin-right: 1.5rem;
+    color:green
+    
+}
+
+.night .accept {
+    color:rgb(70, 186, 70)
+}
+
+.decline {
+    color: red
+}
+
+.night .decline {
+    color:rgb(240, 59, 59);
+}
