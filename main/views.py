@@ -259,6 +259,7 @@ def myschedule(request):
     no_user = False
     courses = []
     classesInCart= []
+    coursesList = []
     shoppingCartMessage = ""
     try:
         activeUser = myUser.objects.get(id=request.user.id)
