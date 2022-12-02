@@ -288,10 +288,12 @@ def myschedule(request):
 
     # Credit System -- cart
     for classes in classesInCart:
-        credits_amount = credits_amount + int(classes.credits)
+        if len(classes.credits) == 1:
+            credits_amount = credits_amount + int(classes.credits)
     # Credit System -- in schedule
     for scheduledClasses in coursesScheduled:
-        schedule_credits = schedule_credits + int(scheduledClasses.credits)
+        if len(scheduledClasses.credits) == 1:
+            schedule_credits = schedule_credits + int(scheduledClasses.credits)
 
     context = {
         'schedule_courses' : courses,
@@ -453,7 +455,7 @@ def editprofile(request):
                         cartActiveUser, created = ShoppingCart.objects.get_or_create(activeUser=newUser)
                         # reverse looks through all URLs defined in project and returns the one specified
                         # this is what we want so we have no hardcoded URLS
-                        return HttpResponseRedirect(reverse('main:coursecatalog'))
+                        return HttpResponseRedirect(reverse('main:index'))
                 return render(request, 'main/editprofile.html', context)
     else:
         return HttpResponseNotFound('<h1>Page not found</h1>')
