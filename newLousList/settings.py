@@ -27,8 +27,6 @@ DEBUG = True
 # SHERRIFF: Added both the local host and herokuapp.com here to handled the DisallowedHost error.
 ALLOWED_HOSTS = ['localhost','127.0.0.1','louslist.herokuapp.com']
 
-SECURE_SSL_HOST = 'https://louslist.herokuapp.com/'
-SECURE_SSL_REDIRECT = True
 # Application definition
 
 INSTALLED_APPS = [
@@ -42,9 +40,6 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'bootstrap5',
     'main',
-    'django.contrib.sitemaps',
-    'django.contrib.redirects',
-
     'allauth',
     'allauth.account',
     'allauth.socialaccount',
