@@ -4,7 +4,7 @@ from django.http import HttpResponseRedirect, HttpResponse, HttpResponseNotFound
 from django.views import generic
 from django.urls import reverse
 from .forms import UserForm
-from .models import Friend_Request, FriendList, myUser, department, course
+from .models import Friend_Request, FriendList, myUser, department, course, ShoppingCart
 # this is used for making HTTP requests from an external API with django
 import requests
 
@@ -35,9 +35,16 @@ def deptclasses(request, dept):
     courses = response.json()
     coursesNoDup = { each['catalog_number'] : each for each in courses }.values()
 
+    # displaying to the user what items are in their shopping cart
+    has_class = ShoppingCart.objects.filter(activeUser=request.user.id).first()
+    classesInCart = []
+    if has_class:
+        classesInCart = has_class.coursesInCart.all()
+
     context = {
         'course_list': courses,
         'course_list_nodup':coursesNoDup,
+        'classesInCart':classesInCart,
     }
     return render(request, 'main/classesList.html', context)
 
@@ -46,27 +53,96 @@ def searchclass(request):
     departments = department.objects.all() # data is a list of departments {"subject": abbrev}
     noDep = True
     Instructors = []
-    classTypes = []
+    courses = []
+    filteredClass = []
+    filteredNoDup = []
+    # These will check for what the user inputed
+    fi = False
+    fct = False
+    fc = False
+    # sending important data to the front end for select boxes and to filter out stuff
+    instructorChosen = ''
+    classTypeChosen = ''
+    creditsChosen = ''
     input = request.GET.get('depSelect', None)
-    filteredInstructor = request.GET.get('instructor', None)
-    filteredClassType = request.GET.get('classType', None)
-    filteredCredits = request.GET.get('credits', None)
     if input:
         noDep = False
+
         url = 'http://luthers-list.herokuapp.com/api/dept/' + input + '/'
         response = requests.get(url)
         courses = response.json()
-        coursesNoDup = { each['catalog_number'] : each for each in courses }.values()
-        for i in coursesNoDup:
-            Instructors.append(i['instructor']['name'])
+        filteredInstructor = request.GET.get('instructor', None)
+        if (filteredInstructor != "none"):
+            fi = True
+            instructorChosen = filteredInstructor
+
+        filteredClassType = request.GET.get('classType', None)
+        if (filteredClassType != "none"):
+            fct = True
+            classTypeChosen = filteredClassType
+
+        filteredCredits = request.GET.get('credits', None)
+        if (filteredCredits != "none"):
+            fc = True
+            creditsChosen = filteredCredits
+
+        for course in courses:
+            # preventing duplicate professors
+            if (course['instructor']['name'] not in Instructors):
+                Instructors.append(course['instructor']['name'])
+            # Checking for various combination of input that the user can enter -- some are less practical such as searching by credits but it is included nonetheless
+            if (fi and fct and fc):
+                if ((course['instructor']['name'] == filteredInstructor) and (course['component'] == filteredClassType)
+                and (course['units'] == filteredCredits)) :
+                    filteredClass.append(course)
+            elif (fi and fct):
+                if ((course['instructor']['name'] == filteredInstructor) and (course['component'] == filteredClassType)) :
+                    filteredClass.append(course)
+                    
+            elif (fi and fc):
+                if ((course['instructor']['name'] == filteredInstructor) and (course['units'] == filteredCredits)) :
+                    filteredClass.append(course)
+                    
+
+            elif (fct and fc):
+                if ((course['component'] == filteredClassType) and (course['units'] == filteredCredits)) :
+                    filteredClass.append(course)
+                    
+
+            elif (fi):
+                if ((course['instructor']['name'] == filteredInstructor)):
+                    filteredClass.append(course)
+
+            elif (fct):
+                if ((course['component'] == filteredClassType)):
+                    filteredClass.append(course)
+                    
+
+            elif (fc):
+                if ((course['units'] == filteredCredits)):
+                    filteredClass.append(course)
+        # sort all the instructors alphabetically so it is easier to find them
+        Instructors.sort()
+        # ensure no duplicate filtered classes
+        filteredNoDup = { each['catalog_number'] : each for each in filteredClass }.values()       
+
     context = {
         'department_results' : departments,
         'instructors': Instructors,
         'noDepartment': noDep,
+        'course_list': filteredClass,
+        'course_list_nodup': filteredNoDup,
+        'department': input,
+        # passing extra data to help us filter stuff
+        'instructorChosen': instructorChosen,
+        'classTypeChosen':classTypeChosen,
+        'creditsChosen': creditsChosen,
+
         # tab tells the HTML what the depict as the active tab
         'tab' : 'coursecatalog',
     }
     return render(request,'main/searchclass.html', context)
+
 
 # myschedule dummy implementation for now
 def myschedule(request):
@@ -75,10 +151,9 @@ def myschedule(request):
     }
     return render(request,'main/myschedule.html', context)
 
-# shopping cart dummy implementation for now
+
 def shoppingcart(request):
     context = {
-        'tab' : 'shoppingcart',
     }
     return render(request,'main/shoppingcart.html', context)
 
@@ -95,18 +170,40 @@ def shoppingcart(request):
 def profile(request, user_id):
     # profile of the individual the user is looking at
     theUser = myUser.objects.get(id=user_id)
+
+    # boolean value that determines whether or not the users are friends by default is False
+    isFriend = False
+    # get a list of all the friends of the user currently using the website
+    has_friend = FriendList.objects.filter(user=request.user.id).first()
+    allFriends = []
+    if has_friend:
+        allFriends = has_friend.friends.all()
+        if theUser in allFriends:
+            isFriend = True
+
+    # only able to send a Friend Request to people who you are not already friends with therefore
+    # a friendRequest can either be already sent and you will get a message telling you that
+    # or it will be created and sent for the first time and the message will alert you of that
     messageSent = ''
     if request.method == 'POST':
         from_user = myUser.objects.get(id=request.user.id)
         to_user = theUser
         friend_request, created = Friend_Request.objects.get_or_create(from_user=from_user, to_user=to_user)
 
+        # if the friend request was created for the first time alerts the user that it was sent
         if created:
             messageSent = 'Friend Request was sent!'
+        else:
+            messageSent = 'Friend Request has already been sent!'
 
+    # theUser passes along ifno about the user profile we are looking at, message sent is just
+    # alerting the user to assure them their request was sent
+    # isFriend is a boolean value (can only see a user's email and schedule if you are friends with
+    # them and you cannot send someone a FriendRequest if you are already friend with them)
     context = {
         'theUser' : theUser,
-        'messageSent' : messageSent
+        'messageSent' : messageSent,
+        'isFriend': isFriend,
     }
     return render(request, 'main/profile.html', context)
 
@@ -124,7 +221,8 @@ def edit(request):
             form.save()
             # reverse looks through all URLs defined in project and returns the one specified
             # this is what we want so we have no hardcoded URLS
-            return HttpResponseRedirect(reverse('main:coursecatalog'))
+            # comma is needed in order for it not to be an iterable very weird
+            return HttpResponseRedirect(reverse('main:profile', args=(request.user.id,)))
     return render(request, 'main/editprofileloggedin.html', context)
 
 # when the user signs in for the first time they will fill out our custom form
@@ -223,18 +321,64 @@ def friends(request, user_id):
     return render(request, 'main/friends.html', context)
 
 
-# allows the user to search for other users on the app by name
-def friendsearch(request):
-    shownUsers = myUser.objects.all()
+# allows the user to search for other users on the app by name (corresponds to addfriend/ path)
+def addfriend(request):
+    # do not allow users to find ppl they are already friends with on this page
+    has_friend = FriendList.objects.filter(user=request.user.id).first()
+    allFriends = []
+    if has_friend:
+        allFriends = has_friend.friends.all()
+
+    # list of all the Users on the site so far (only show the top ten results on front end)
+    # exlcudes the user himself as well as all people he is already friends with
+    shownUsers = myUser.objects.all().exclude(id=request.user.id).exclude(id__in=allFriends)
+    # the user input provided to search for their friends
     input = request.GET.get('friendsearch', None)
     if input:
         # filter on a specific item inside the model then __ some form of filtering in python
-        shownUsers = myUser.objects.filter(name__icontains=input)
+        shownUsers = myUser.objects.filter(name__icontains=input).exclude(id=request.user.id)
     context = {
         'shownUsers' : shownUsers,
     }
-    return render(request, 'main/friendsearch.html', context)
+    return render(request, 'main/addfriend.html', context)
 
+
+
+####################   VIEWS DEALING WITH SHOPPING CART / SCHEDULE   ########################
+
+def addclass(request, dept, course_id):
+    # get all courses from that department since we cannot store them in model due to heroku max
+    # number of rows with free version
+    url = 'http://luthers-list.herokuapp.com/api/dept/' + dept + '/'
+    response = requests.get(url)
+    courses = response.json()
+
+    # only add classes to model when people need them for their schedule bc Heroku cant support all classes 
+    addedClass = list(filter(lambda course: course['course_number'] == course_id, courses))
+    newCourse, courseCreated = course.objects.get_or_create(
+        id=addedClass[0]['course_number'],
+        department=addedClass[0]['subject'], 
+        instructorName=addedClass[0]['instructor']['name'], instructorEmail=addedClass[0]['instructor']['email'],
+        courseSection=addedClass[0]['course_section'], semesterCode=addedClass[0]['semester_code'],
+        description=addedClass[0]['description'], 
+        credits=addedClass[0]['units'], catalogNumber=addedClass[0]['catalog_number'],
+        lectureType=addedClass[0]['component'], 
+        meeting_days=addedClass[0]['meetings'][0]['days'],
+        start_time=addedClass[0]['meetings'][0]['start_time'],
+        end_time=addedClass[0]['meetings'][0]['end_time'],
+        room_location=addedClass[0]['meetings'][0]['facility_description'],
+        classCapacity=addedClass[0]['class_capacity'],classEnrollment=addedClass[0]['enrollment_total'],
+        classSpotsOpen=addedClass[0]['enrollment_available'],waitlist=addedClass[0]['wait_list'],
+        waitlistMax=addedClass[0]['wait_cap'],
+    )
+
+    # activeUser is the person who is checking their friend requests
+    activeUser = myUser.objects.get(id=request.user.id)
+
+    # seeing if they have a shopping cart already
+    shoppingCartActiveUser, created = ShoppingCart.objects.get_or_create(activeUser=activeUser)
+    shoppingCartActiveUser.coursesInCart.add(newCourse)
+    return HttpResponseRedirect(reverse('main:deptclasses', args=(dept,)))
 
 
 
