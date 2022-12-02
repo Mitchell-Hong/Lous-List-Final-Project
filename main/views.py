@@ -312,6 +312,10 @@ def myschedule(request):
 def viewschedule(request, user_id):
     numFriendRequests = getFriendRequest(request)
     activeUser_comments = []
+    shoppingCartMessage = ""
+
+    if request.user.id:
+        shoppingCartMessage = ShoppingCart.objects.get(activeUser=request.user.id).message
 
     # profile of the individual the user is looking at
     friend = myUser.objects.get(id=user_id)
@@ -350,6 +354,7 @@ def viewschedule(request, user_id):
         'allComments': all_comments,
         'numFriendRequests': numFriendRequests,
         'activeUser_comments': activeUser_comments,
+        'shoppingCartMessage': shoppingCartMessage,
     }
 
     return render(request, 'main/friendsschedule.html', context)
