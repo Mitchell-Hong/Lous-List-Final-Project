@@ -573,7 +573,7 @@ def addfriend(request):
     input = request.GET.get('friendsearch', None)
     if input:
         # filter on a specific item inside the model then __ some form of filtering in python
-        shownUsers = myUser.objects.filter(name__icontains=input).exclude(id=request.user.id)
+        shownUsers = myUser.objects.filter(name__icontains=input).exclude(id=request.user.id).exclude(id__in=allFriends)
     context = {
         'shownUsers' : shownUsers,
         'numFriendRequests': numFriendRequests,
