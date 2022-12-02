@@ -27,6 +27,7 @@ DEBUG = True
 # SHERRIFF: Added both the local host and herokuapp.com here to handled the DisallowedHost error.
 ALLOWED_HOSTS = ['localhost','127.0.0.1','louslist.herokuapp.com']
 
+CSRF_COOKIE_SECURE = True
 # Application definition
 
 INSTALLED_APPS = [
