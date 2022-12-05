@@ -19,38 +19,37 @@
         <div class="d-flex ms-3 me-5">
             {% if user.is_authenticated %}
             <div class="mt-4 flex-fill">
-
                 <ul style="list-style-type: none;">
+                    
                     {% for day, classesList in schedule_courses.items %}
-                        <div class='ps-2 py-1'
-                                    style="background-color: {% if forloop.counter|divisibleby:2 %}lightcyan
-                                        {% else %} rgb(255, 221, 153) {% endif %}; width:85%;">
+                        <div class='classBorder'
+                                    style="width:90%;">
                                         <h3> {{day}}</h3>
                                         {% for classinfo in classesList %}
                                         <li>
-                                            <div class="d-inline">{{ classinfo.department  }}</div>
-                                            <div class="d-inline">{{ classinfo.catalogNumber  }} ({{classinfo.lectureType}}):</div>
-                                            <div class="d-inline">{{ classinfo.description  }} :</div>
-                                            <div class="d-inline">{{ classinfo.start_time|slice:":5"}} - {{classinfo.end_time|slice:":5"}}</div>
-                                            <div class="d-inline">({{ classinfo.credits}} Credits)</div>
-                                            <a href="/main/myschedule/removefromschedule/{{classinfo.id}}" style="color: black" class="float-end me-4 fw-bold" id="removeFromSchedule">Put Back in Cart</a>
+                                            <p class="d-inline">{{ classinfo.department  }}</p>
+                                            <p class="d-inline">{{ classinfo.catalogNumber  }} ({{classinfo.lectureType}}):</p>
+                                            <p class="d-inline">{{ classinfo.description  }} :</p>
+                                            <p class="d-inline">{{ classinfo.start_time|slice:":5"}} - {{classinfo.end_time|slice:":5"}}</p>
+                                            <p class="d-inline">({{ classinfo.credits}} Credits)</p>
+                                            <a href="/main/myschedule/removefromschedule/{{classinfo.id}}" class="backCart" id="removeFromSchedule">Put Back in Cart</a>
                                         </li>
                                         {%endfor%}
                         </div>
                     {% endfor %}
-                    <div style='background-color:#ed874e; width:85%;'> <i class='bx bx-cart' style="font-size: 24px;"></i> <p style="margin-top:5px; margin-bottom: 5px; margin-right: 5px; font-size: 24px; display:inline-flex;">Total Credits</p>
-                    <p class="float-end me-4 fw-bold" style='margin-top:12px;display:inline-flex;'> {{scheduledCredits}} Credits </p>
+                    <div style= 'background-image: linear-gradient(to right, #FF928B 0%, #FFAC81 100%); width:90%;'> <p style="margin-top:5px; margin-bottom: 5px; margin-right: 5px; font-size: 24px; display:inline-flex; font-weight: bold;">Total Credits <i class='bx bx-cart' style="font-size: 24px; margin-top:5px;"></i></p>
+                    <p class="float-end me-4 fw-bold" style='margin-top:12px;display:inline-flex; font-weight: bold;'> {{scheduledCredits}} Credits </p>
                     </div>
                 </ul>
             </div>
             <div class='mt-4 me-5' style="width:23%; height:10%; position:sticky; top:100px;" id='shoppingCart'>
                 <div class='text-white text-center px-3 py-1 fw-bold mt-2' style='background-image: linear-gradient(45deg, #A7ACD9, #9E8FB2);'>  <i class='bx bx-cart' style= "margin-top: 3px; margin-right: 5px;"></i>Shopping Cart || {{creditAmount}} Credits</div>
                     {% for classAdded in classesInCart %}
-                        <div class='text-center py-1' style="background-color:lightgray;">{{classAdded.department}} {{classAdded.catalogNumber}} ({{classAdded.lectureType}}) {{classAdded.meeting_days}}: {{classAdded.start_time|slice:":5"}}-{{classAdded.end_time|slice:":5"}}
-                        <a href="/main/coursecatalog/removeclass/{{classAdded.department}}/{{classAdded.id}}/2" class="float-end me-4 fw-bold" id="removeClass">X</a></div>
+                        <div class='text-center py-1' style="background-color:#f2f2f2; border-bottom: 1px solid;">{{classAdded.department}} {{classAdded.catalogNumber}} ({{classAdded.lectureType}}) {{classAdded.meeting_days}}: {{classAdded.start_time|slice:":5"}}-{{classAdded.end_time|slice:":5"}}
+                        <a href="/main/coursecatalog/removeclass/{{classAdded.department}}/{{classAdded.id}}/2" class="float-end me-4 fw-bold" id="removeClass" style="color: #db5151;">X</a></div>
                     {% comment %} If the list is empty {% endcomment %}
                     {% empty %}
-                        <div class='p-2 text-center' style="background-color:lightgray;">Your shopping cart is empty.</div>
+                        <div class='p-2 text-center' style="background-color:#f2f2f2;">Your shopping cart is empty.</div>
                     {% endfor %}
                     {% if classesInCart %}
                     <div class="mt-4 mx-auto" style="width: 40%;">
@@ -66,13 +65,13 @@
                 <p class="fs-3 mt-2 fw-bold">Friends Comments</p>
             </div>
                 {% if hasComment %}
-                    <div class="border border-dark border-2 rounded-2 w-75 ms-5 mb-3 p-1">
+                    <div class="border border-dark border-2 rounded-2 ms-5 mb-3 p-1" style="width:61%;">
                         {% for comment in allComments %}
-                            <div class="bg-gradient p-1 mt-1 rounded-top d-flex justify-content-between" style="background-color: mediumslateblue">
-                                <div>{{ comment.author }}</div>
-                                <a class="text-danger fw-bold me-3" title="Delete Comment" href="/main/deletecomment/{{comment.id}}/">X</a>
+                            <div class=" p-1 mt-1 rounded-top d-flex justify-content-between">
+                                <p style="text-decoration: underline; font-weight:bold;">{{ comment.author }}</p>
+                                <a class="fw-bold me-3" style="color:#db5151;" title="Delete Comment" href="/main/deletecomment/{{comment.id}}/">X</a>
                             </div>
-                            <div class="p-1 mb-2 rounded-bottom" style="background-color: lightskyblue;">{{ comment.commentBody }}</div>
+                            <p class="p-1 mb-2 rounded-bottom">{{ comment.commentBody }}</p>
                         {% endfor %}
                     </div>
                 {% else %}
