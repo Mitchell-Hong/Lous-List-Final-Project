@@ -144,27 +144,25 @@
         <div class="flex-fill">
             <ul style="list-style-type: none;">
             {% for class in course_list_nodup %}
-                <li class="my-2 d-flex" style="background-color:rgb(230, 230, 230); width: 85%;">
+                <li class="my-2 d-flex" style="background-color:rgb(230, 230, 230); width: 95%;">
                     <a href="https://thecourseforum.com/course/{{ class.subject }}/{{ class.catalog_number }}/"
-                    title="View TCForum" style="background-color:lightskyblue; color:black;" class="py-1 px-2 fs-4 me-0 d-inline-block">{{ class.subject }}{{ class.catalog_number }}</a>
-                    <div style="background-color:slateblue" class="d-inline-block py-1 fs-4 px-3 flex-fill text-white">{{ class.description }}</div>
+                    title="View TCForum" style="background-image: linear-gradient(45deg, #C0EBF3, #F3D8C0); color:black;" class="py-1 px-2 fs-4 me-0 d-inline-block">{{ class.subject }}{{ class.catalog_number }}</a>
+                    <div style="background-image: linear-gradient(45deg, #746CC0, #58427C)"; class="d-inline-block py-1 fs-4 px-3 flex-fill text-white">{{ class.description }}</div>
                 </li>
-                {% for classinfo in course_list %}
+                    {% for classinfo in course_list %}
                     {% comment %} this is one section of the class therefore we are going to print some info about it {% endcomment %}
                     {% if classinfo.catalog_number == class.catalog_number %}
-                    <div class='ps-2 py-1'
-                        style="background-color: {% if forloop.counter|divisibleby:2 %} lightcyan
-                        {% else %} rgb(255, 221, 153) {% endif %}; width:85% ; ">
-                        <div class="d-inline">{{ classinfo.course_number  }}</div>
-                        <div class="d-inline">{{ classinfo.instructor.name  }}</div>
-                        <div class="d-inline">{{ classinfo.enrollment_total }}/{{ classinfo.class_capacity }}</div>
-                        <div class="d-inline">{{ classinfo.meetings.days  }}</div>
+                    <ul class='classBorder' style="font-size:14px;">
+                        <li class ="displayClass" style="width:9%;">{{ classinfo.course_number  }} &nbsp &nbsp &nbsp &nbsp</li>
+                        <li class="displayClass">{{ classinfo.instructor.name  }} &nbsp &nbsp &nbsp &nbsp</li>
+                        <li class="displayClass">{{ classinfo.enrollment_total }}/{{ classinfo.class_capacity }} Enrolled &nbsp &nbsp &nbsp &nbsp</li>
+                        <li class="displayClass">{{ classinfo.meetings.days  }}</li>
                         {% comment %} #array access in django template with .index {% endcomment %}
-                        <div class="d-inline">{{ classinfo.meetings.0.days  }}</div>
-                        <div class="d-inline">{{ classinfo.meetings.0.start_time|slice:":5"  }} - {{ classinfo.meetings.0.end_time|slice:":5"  }}</div>
-                        <div class="d-inline">{{ classinfo.meetings.0.facility_description  }}</div>
-                        <div class="d-inline">{{ classinfo.component        }}</div>
-                        <div class="d-inline">({{ classinfo.units            }} Credits)</div>
+                        <li class="displayClass">{{ classinfo.meetings.0.days  }}</li>
+                        <li class="displayClass">{{ classinfo.meetings.0.start_time|slice:":5"  }} - {{ classinfo.meetings.0.end_time|slice:":5"  }} &nbsp &nbsp &nbsp &nbsp</li>
+                        <li class="displayClass" >{{ classinfo.meetings.0.facility_description  }}&nbsp &nbsp &nbsp &nbsp</li>
+                        <li class="displayClass">{{ classinfo.component        }}</li>
+                        <li class="displayClass">({{ classinfo.units            }} Credits)</li>
                         {% if user.is_authenticated %}
                             <div class='float-end'>
                                 <div class="cart">
@@ -172,24 +170,25 @@
                                 </div>
                             </div>
                         {%endif%}
-                    </div>
+                        </ul>
                     {% endif %}
                 {% endfor %}
             {% endfor %}
             {% if not course_list_nodup and not noDepartment%} <h2> No courses found </h2> {%endif%}
             </ul>
+
         </div>
         {% if user.is_authenticated %}
         <div class='me-5' style="width:23%; height:10%; position:sticky; top:100px;" id='shoppingCart'>
-            <div class='text-white text-center px-3 py-1 fw-bold mt-2' style='background-color:darkblue;'>  <i class='bx bx-cart' style= "margin-top: 3px; margin-right: 5px;"></i>Shopping Cart || {{creditAmount}} Credits</div>
+            <div class='text-white text-center px-3 py-1 fw-bold mt-2' style='background-image: linear-gradient(45deg, #A7ACD9, #9E8FB2);'>  <i class='bx bx-cart' style= "margin-top: 3px; margin-right: 5px;"></i>Shopping Cart || {{creditAmount}} Credits</div>
                     {% for classAdded in classesInCart %}
-                        <div class='text-center py-1' style="background-color:lightgray;">{{classAdded.department}} {{classAdded.catalogNumber}} ({{classAdded.lectureType}}) {{classAdded.meeting_days}}: {{classAdded.start_time|slice:":5"}}-{{classAdded.end_time|slice:":5"}}
+                        <div class='text-center py-1' style="background-color:#f2f2f2; border-bottom: 1px solid;">{{classAdded.department}} {{classAdded.catalogNumber}} ({{classAdded.lectureType}}) {{classAdded.meeting_days}}: {{classAdded.start_time|slice:":5"}}-{{classAdded.end_time|slice:":5"}}
 
                         {% comment %} 0 means it is coming from the searchClass page {% endcomment %}
-                        <a href="/main/coursecatalog/removeclass/{{classAdded.department}}/{{classAdded.id}}/0/" class="float-end me-4 fw-bold" id="removeClass">X</a></div>
+                        <a href="/main/coursecatalog/removeclass/{{classAdded.department}}/{{classAdded.id}}/0/" class="float-end me-4 fw-bold" id="removeClass" style= "color: #db5151;" >X</a></div>
                     {% comment %} If the list is empty {% endcomment %}
                     {% empty %}
-                        <div class='p-2 text-center' style="background-color:lightgray;">Your shopping cart is empty.</div>
+                        <div class='p-2 text-center' style="background-color:#f2f2f2; border-bottom: 1px solid;">Your shopping cart is empty.</div>
                     {% endfor %}
                 </div>
             </div>
