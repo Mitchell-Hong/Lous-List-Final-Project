@@ -288,10 +288,12 @@ def myschedule(request):
 
     # Credit System -- cart
     for classes in classesInCart:
-        credits_amount = credits_amount + int(classes.credits)
+        if len(classes.credits) == 1:
+            credits_amount = credits_amount + int(classes.credits)
     # Credit System -- in schedule
     for scheduledClasses in coursesScheduled:
-        schedule_credits = schedule_credits + int(scheduledClasses.credits)
+        if len(scheduledClasses.credits) == 1:
+            schedule_credits = schedule_credits + int(scheduledClasses.credits)
 
     context = {
         'schedule_courses' : courses,
@@ -310,6 +312,10 @@ def myschedule(request):
 def viewschedule(request, user_id):
     numFriendRequests = getFriendRequest(request)
     activeUser_comments = []
+    shoppingCartMessage = ""
+
+    if request.user.id:
+        shoppingCartMessage = ShoppingCart.objects.get(activeUser=request.user.id).message
 
     # profile of the individual the user is looking at
     friend = myUser.objects.get(id=user_id)
@@ -348,6 +354,7 @@ def viewschedule(request, user_id):
         'allComments': all_comments,
         'numFriendRequests': numFriendRequests,
         'activeUser_comments': activeUser_comments,
+        'shoppingCartMessage': shoppingCartMessage,
     }
 
     return render(request, 'main/friendsschedule.html', context)
@@ -453,7 +460,7 @@ def editprofile(request):
                         cartActiveUser, created = ShoppingCart.objects.get_or_create(activeUser=newUser)
                         # reverse looks through all URLs defined in project and returns the one specified
                         # this is what we want so we have no hardcoded URLS
-                        return HttpResponseRedirect(reverse('main:coursecatalog'))
+                        return HttpResponseRedirect(reverse('main:index'))
                 return render(request, 'main/editprofile.html', context)
     else:
         return HttpResponseNotFound('<h1>Page not found</h1>')
@@ -571,7 +578,7 @@ def addfriend(request):
     input = request.GET.get('friendsearch', None)
     if input:
         # filter on a specific item inside the model then __ some form of filtering in python
-        shownUsers = myUser.objects.filter(name__icontains=input).exclude(id=request.user.id)
+        shownUsers = myUser.objects.filter(name__icontains=input).exclude(id=request.user.id).exclude(id__in=allFriends)
     context = {
         'shownUsers' : shownUsers,
         'numFriendRequests': numFriendRequests,

@@ -3,7 +3,7 @@
 <html>
     {% block content %}
     <body>
-        {% if shoppingCartMessage != "" %}
+        {% if shoppingCartMessage != "" and shoppingCartMessage != "Course added to your cart!"%}
             <div class="alert alert-danger alert-dismissible fade show" role="alert">
                 <strong>Course Not Added</strong> {{shoppingCartMessage}}
                 <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
@@ -63,7 +63,7 @@
             </div>
             {% comment %} Showing comments other users have posted abt your schedule {% endcomment %}
             <div class="ms-5">
-                <h3 style='color: mediumslateblue'>User Comments</h3>
+                <p class="fs-3 mt-2 fw-bold">Friends Comments</p>
             </div>
                 {% if hasComment %}
                     <div class="border border-dark border-2 rounded-2 w-75 ms-5 mb-3 p-1">

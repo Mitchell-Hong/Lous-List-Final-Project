@@ -6,15 +6,15 @@
         {% comment %} Add a back button if the user is looking at someone else profile {% endcomment %}
         <h1 class="text-center">{{ friend.name }}</h1>
         {% comment %} Displays each users profile and their friends {% endcomment %}
-        <p class='my-1 fw-bold d-inline-block'>Friends: <a href='/main/friends/{{friend.id}}/' style='color: #ed874e;'>{{friend.numFriends}}</a></p>
+        <p class='my-1 fw-bold d-inline-block'><b style="color:ed874e">Friends: </b>{{friend.numFriends}}</p>
         <div>
-            <p class='my-1 d-inline-block'> <b>Email: </b> {{friend.email}}</p>
+            <p class='my-1 d-inline-block'> <b style="color:ed874e">Email: </b> {{friend.email}}</p>
             <br>
-            <p class='my-1 d-inline-block'> <b> Major: </b> {{friend.major}}</p>
-            <p class='my-1 fd-inline-block'> <b>Graduation Year: </b>{{friend.graduationYear}}</p>
+            <p class='my-1 d-inline-block'> <b style="color:ed874e"> Major: </b> {{friend.major}}</p>
+            <p class='my-1 fd-inline-block'> <b style="color:ed874e">Graduation Year: </b>{{friend.graduationYear}}</p>
         </div>
-        <p class='my-1 fw-bold'>Summary:</p>
-        <p class="border border-dark rounded-3 p-2">{{ friend.summary }}</p>
+        <p class='my-1 fw-bold'><b style="color:ed874e">Summary: </b></p>
+        <p class="border rounded-3 p-2">{{ friend.summary }}</p>
         
         {% comment %} Viewing a friends schedule {% endcomment %}
         <div class='d-flex justify-content-between'>
