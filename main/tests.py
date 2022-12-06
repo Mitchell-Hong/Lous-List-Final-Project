@@ -1,6 +1,7 @@
 from django.test import RequestFactory, TestCase
 from django.urls import reverse
 from main.models import myUser, department, course
+from django.db import IntegrityError
 from .views import editprofile
 
 # Create your tests here.
@@ -35,6 +36,14 @@ class UserTestCase(TestCase):
         self.assertTrue(isinstance(user,myUser))
         self.assertEqual(user.__str__(), user.name)
 
+    def test_invalid_user(self):
+        failed = False
+        try:
+            bad= myUser.objects.create()
+        except:
+            failed = True
+        self.assertTrue(failed)
+
 class DepartmentTestCase(TestCase):
     def setUp(self, abbreviation="abv", departmentName="CS"):
         return department.objects.create(abbreviation=abbreviation,departmentName=departmentName)
@@ -43,3 +52,7 @@ class DepartmentTestCase(TestCase):
         dep = self.setUp()
         self.assertTrue(isinstance(dep, department))
         self.assertEqual(dep.__str__(),dep.abbreviation)
+
+    def test_department_name(self):
+        dep=self.setUp()
+        self.assertEqual(dep.departmentName, "CS")
