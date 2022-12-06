@@ -25,16 +25,16 @@
                         {% if classinfo.catalog_number == class.catalog_number %}
                         <ul class='classBorder'
                             style="font-size: 14px;">
-                                <div class="d-inline">{{ classinfo.course_number  }}&nbsp &nbsp &nbsp &nbsp</div>
-                                <div class="d-inline">{{ classinfo.instructor.name  }}&nbsp &nbsp &nbsp &nbsp</div>
-                                <div class="d-inline">{{ classinfo.enrollment_total }}/{{ classinfo.class_capacity }} Enrolled &nbsp &nbsp &nbsp &nbsp</div>
-                                <div class="d-inline">{{ classinfo.meetings.days  }}</div>
+                                <div class="displayClass">{{ classinfo.course_number  }}&nbsp &nbsp &nbsp &nbsp</div>
+                                <div class="displayClass">{{ classinfo.instructor.name  }}&nbsp &nbsp &nbsp &nbsp</div>
+                                <div class="displayClass">{{ classinfo.enrollment_total }}/{{ classinfo.class_capacity }} Enrolled &nbsp &nbsp &nbsp &nbsp</div>
+                                <div class="displayClass">{{ classinfo.meetings.days  }}</div>
                                 {% comment %} #array access in django template with .index {% endcomment %}
-                                <div class="d-inline">{{ classinfo.meetings.0.days  }}</div>
-                                <div class="d-inline">{{ classinfo.meetings.0.start_time|slice:":5"  }} - {{ classinfo.meetings.0.end_time|slice:":5"  }}&nbsp &nbsp &nbsp &nbsp</div>
-                                <div class="d-inline">{{ classinfo.meetings.0.facility_description  }}&nbsp &nbsp &nbsp &nbsp</div>
-                                <div class="d-inline">{{ classinfo.component        }}</div>
-                                <div class="d-inline">({{ classinfo.units            }} Credits)</div>
+                                <div class="displayClass">{{ classinfo.meetings.0.days  }}</div>
+                                <div class="displayClass">{{ classinfo.meetings.0.start_time|slice:":5"  }} - {{ classinfo.meetings.0.end_time|slice:":5"  }}&nbsp &nbsp &nbsp &nbsp</div>
+                                <div class="displayClass">{{ classinfo.meetings.0.facility_description  }}&nbsp &nbsp &nbsp &nbsp</div>
+                                <div class="displayClass">{{ classinfo.component        }}</div>
+                                <div class="displayClass">({{ classinfo.units            }} Credits)</div>
                                 {% if user.is_authenticated %}
                                     <div class='float-end'>
                                         <a href="/main/coursecatalog/addclass/{{class.subject}}/{{classinfo.course_number}}/1/" class='text-success me-3' id="addCourse">Add to Cart</a>
