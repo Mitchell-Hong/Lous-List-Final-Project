@@ -90,6 +90,41 @@ def coursecatalog(request):
     }
     return render(request,'main/coursecatalog.html', context)
 
+
+def format_times(courses):
+    startTime = '0000000'
+    endTime = '00000000'
+    for i in range(len(courses)):
+        if courses[i]['meetings'][0]['start_time']:
+            raw_startTime = courses[i]['meetings'][0]['start_time']
+            if int(raw_startTime[:2].replace(':','')) > 12: 
+                raw_startTime = str(int(raw_startTime[:2]) - 12) + raw_startTime[2:5] + " PM"
+            else: 
+                raw_startTime = raw_startTime[:2] + raw_startTime[2:5] + " AM"
+            startTime = raw_startTime.replace('.',':')
+            courses[i]['meetings'][0]['start_time'] = startTime
+        else:
+            courses[i]['meetings'][0]['start_time'] = ""
+
+
+        if courses[i]['meetings'][0]['end_time']:
+            raw_endTime = courses[i]['meetings'][0]['end_time']
+            if int(raw_endTime[:2].replace(':','')) > 12: 
+                raw_endTime = str(int(raw_endTime[:2]) - 12) + raw_endTime[2:5] + " PM"
+            else: 
+                raw_endTime = raw_endTime[:2] + raw_endTime[2:5] + " AM"
+            endTime = raw_endTime.replace('.',':')
+            courses[i]['meetings'][0]['end_time'] = endTime
+        else:
+            courses[i]['meetings'][0]['end_time'] = ""
+        if courses[i]['meetings'][0]['facility_description'] == '-':
+            courses[i]['meetings'][0]['facility_description'] = "No Set Location"
+
+        if courses[i]['meetings'][0]['days'] == '-':
+            courses[i]['meetings'][0]['days'] = "No Set Meeting Days -  "
+
+    return courses
+
 # dynamic routing based on which department the user clicked a list of all classes that belong to that department appear
 def deptclasses(request, dept):
     numFriendRequests = getFriendRequest(request)
@@ -98,6 +133,9 @@ def deptclasses(request, dept):
     response = requests.get(url)
     courses = response.json()
     coursesNoDup = { each['catalog_number'] : each for each in courses }.values()
+
+    courses = format_times(courses)
+
 
     # displaying to the user what items are in their shopping cart
     has_class = ShoppingCart.objects.filter(activeUser=request.user.id).first()
@@ -225,6 +263,8 @@ def searchclass(request):
 
     for classes in classesInCart:
         credits_amount = credits_amount + int(classes.credits)
+
+    filteredClass = format_times(filteredClass)
 
     context = {
         'department_results' : departments,
@@ -606,13 +646,7 @@ def addclass(request, dept, course_id, class_list, friend_id = 0):
     # only add classes to model when people need them for their schedule bc Heroku cant support all classes
     addedClass = list(filter(lambda course: course['course_number'] == course_id, courses))
 
-    startTime = '0000000'
-    endTime = '00000000'
-    if addedClass[0]['meetings'][0]['start_time']:
-        startTime = addedClass[0]['meetings'][0]['start_time']
-
-    if addedClass[0]['meetings'][0]['end_time']:
-        endTime = addedClass[0]['meetings'][0]['end_time']
+    addedClass = format_times(addedClass)
 
     newCourse, courseCreated = course.objects.get_or_create(
         id=addedClass[0]['course_number'],
@@ -623,8 +657,10 @@ def addclass(request, dept, course_id, class_list, friend_id = 0):
         credits=addedClass[0]['units'], catalogNumber=addedClass[0]['catalog_number'],
         lectureType=addedClass[0]['component'],
         meeting_days=addedClass[0]['meetings'][0]['days'],
-        start_time=addedClass[0]['meetings'][0]['start_time'],
-        end_time=addedClass[0]['meetings'][0]['end_time'],
+        # start_time=addedClass[0]['meetings'][0]['start_time'],
+        # end_time=addedClass[0]['meetings'][0]['end_time'],
+        start_time = startTime,
+        end_time = endTime,
         room_location=addedClass[0]['meetings'][0]['facility_description'],
         classCapacity=addedClass[0]['class_capacity'],classEnrollment=addedClass[0]['enrollment_total'],
         classSpotsOpen=addedClass[0]['enrollment_available'],waitlist=addedClass[0]['wait_list'],

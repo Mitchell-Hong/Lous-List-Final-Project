@@ -31,7 +31,11 @@
                                 <div class="displayClass">{{ classinfo.meetings.days  }}</div>
                                 {% comment %} #array access in django template with .index {% endcomment %}
                                 <div class="displayClass">{{ classinfo.meetings.0.days  }}</div>
-                                <div class="displayClass">{{ classinfo.meetings.0.start_time|slice:":5"  }} - {{ classinfo.meetings.0.end_time|slice:":5"  }}&nbsp &nbsp &nbsp &nbsp</div>
+                                {% if classinfo.meetings.0.start_time %}
+                                    <div class="displayClass">{{ classinfo.meetings.0.start_time  }} - {{ classinfo.meetings.0.end_time}}&nbsp &nbsp &nbsp &nbsp</div>
+                                {% else %}
+                                    <div class="displayClass">No Set Meeting Times - </div>
+                                {% endif %}
                                 <div class="displayClass">{{ classinfo.meetings.0.facility_description  }}&nbsp &nbsp &nbsp &nbsp</div>
                                 <div class="displayClass">{{ classinfo.component        }}</div>
                                 <div class="displayClass">({{ classinfo.units            }} Credits)</div>
