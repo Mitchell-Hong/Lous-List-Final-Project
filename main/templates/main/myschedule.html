@@ -30,7 +30,11 @@
                                             <p class="d-inline">{{ classinfo.department  }}</p>
                                             <p class="d-inline">{{ classinfo.catalogNumber  }} ({{classinfo.lectureType}}):</p>
                                             <p class="d-inline">{{ classinfo.description  }} :</p>
-                                            <p class="d-inline">{{ classinfo.start_time|slice:":5"}} - {{classinfo.end_time|slice:":5"}}</p>
+                                            {% if classinfo.start_time %}
+                                                <div class="displayClass">{{ classinfo.start_time  }} - {{ classinfo.end_time}}&nbsp &nbsp &nbsp &nbsp</div>
+                                            {% else %}
+                                                <div class="displayClass">No Set Meeting Times - </div>
+                                            {% endif %}                                            
                                             <p class="d-inline">({{ classinfo.credits}} Credits)</p>
                                             <a href="/main/myschedule/removefromschedule/{{classinfo.id}}" class="backCart" id="removeFromSchedule">Put Back in Cart</a>
                                         </li>
@@ -45,7 +49,7 @@
             <div class='mt-4 me-5' style="width:23%; height:10%; position:sticky; top:100px;" id='shoppingCart'>
                 <div class='text-white text-center px-3 py-1 fw-bold mt-2' style='background-image: linear-gradient(45deg, #A7ACD9, #9E8FB2);'>  <i class='bx bx-cart' style= "margin-top: 3px; margin-right: 5px;"></i>Shopping Cart || {{creditAmount}} Credits</div>
                     {% for classAdded in classesInCart %}
-                        <div class='text-center py-1' style="background-color:#f2f2f2; border-bottom: 1px solid;">{{classAdded.department}} {{classAdded.catalogNumber}} ({{classAdded.lectureType}}) {{classAdded.meeting_days}}: {{classAdded.start_time|slice:":5"}}-{{classAdded.end_time|slice:":5"}}
+                        <div class='text-center py-1' style="background-color:#f2f2f2; border-bottom: 1px solid;">{{classAdded.department}} {{classAdded.catalogNumber}} ({{classAdded.lectureType}}) {{classAdded.meeting_days}}: {{classAdded.start_time}}-{{classAdded.end_time}}
                         <a href="/main/coursecatalog/removeclass/{{classAdded.department}}/{{classAdded.id}}/2" class="float-end me-4 fw-bold" id="removeClass" style="color: #db5151;">X</a></div>
                     {% comment %} If the list is empty {% endcomment %}
                     {% empty %}

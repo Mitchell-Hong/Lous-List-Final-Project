@@ -156,14 +156,18 @@
                         <li class ="displayClass" style="width:9%;">{{ classinfo.course_number  }} &nbsp &nbsp &nbsp &nbsp</li>
                         <li class="displayClass">{{ classinfo.instructor.name  }} &nbsp &nbsp &nbsp &nbsp</li>
                         <li class="displayClass">{{ classinfo.enrollment_total }}/{{ classinfo.class_capacity }} Enrolled &nbsp &nbsp &nbsp &nbsp</li>
-                        <li class="displayClass">{{ classinfo.meetings.days  }}</li>
-                        {% comment %} #array access in django template with .index {% endcomment %}
-                        <li class="displayClass">{{ classinfo.meetings.0.days  }}</li>
-                        <li class="displayClass">{{ classinfo.meetings.0.start_time|slice:":5"  }} - {{ classinfo.meetings.0.end_time|slice:":5"  }} &nbsp &nbsp &nbsp &nbsp</li>
-                        <li class="displayClass" >{{ classinfo.meetings.0.facility_description  }}&nbsp &nbsp &nbsp &nbsp</li>
-                        <li class="displayClass">{{ classinfo.component        }}</li>
-                        <li class="displayClass">({{ classinfo.units            }} Credits)</li>
-                        {% if user.is_authenticated %}
+                        <div class="displayClass">{{ classinfo.meetings.days  }}</div>
+                                {% comment %} #array access in django template with .index {% endcomment %}
+                                <div class="displayClass">{{ classinfo.meetings.0.days  }}</div>
+                                {% if classinfo.meetings.0.start_time %}
+                                    <div class="displayClass">{{ classinfo.meetings.0.start_time  }} - {{ classinfo.meetings.0.end_time}}&nbsp &nbsp &nbsp &nbsp</div>
+                                {% else %}
+                                    <div class="displayClass">No Set Meeting Times - </div>
+                                {% endif %}
+                                <div class="displayClass">{{ classinfo.meetings.0.facility_description  }}&nbsp &nbsp &nbsp &nbsp</div>
+                                <div class="displayClass">{{ classinfo.component        }}</div>
+                                <div class="displayClass">({{ classinfo.units            }} Credits)</div>
+                                {% if user.is_authenticated %}
                             <div class='float-end'>
                                 <div class="cart">
                                     <a href="/main/coursecatalog/addclass/{{class.subject}}/{{classinfo.course_number}}/0/" class='text-success me-3' id="addCourse">Add to Cart</a>
@@ -182,7 +186,7 @@
         <div class='me-5' style="width:23%; height:10%; position:sticky; top:100px;" id='shoppingCart'>
             <div class='text-white text-center px-3 py-1 fw-bold mt-2' style='background-image: linear-gradient(45deg, #A7ACD9, #9E8FB2);'>  <i class='bx bx-cart' style= "margin-top: 3px; margin-right: 5px;"></i>Shopping Cart || {{creditAmount}} Credits</div>
                     {% for classAdded in classesInCart %}
-                        <div class='text-center py-1' style="background-color:#f2f2f2; border-bottom: 1px solid;">{{classAdded.department}} {{classAdded.catalogNumber}} ({{classAdded.lectureType}}) {{classAdded.meeting_days}}: {{classAdded.start_time|slice:":5"}}-{{classAdded.end_time|slice:":5"}}
+                        <div class='text-center py-1' style="background-color:#f2f2f2; border-bottom: 1px solid;">{{classAdded.department}} {{classAdded.catalogNumber}} ({{classAdded.lectureType}}) {{classAdded.meeting_days}}: {{classAdded.start_time}}-{{classAdded.end_time}}
 
                         {% comment %} 0 means it is coming from the searchClass page {% endcomment %}
                         <a href="/main/coursecatalog/removeclass/{{classAdded.department}}/{{classAdded.id}}/0/" class="float-end me-4 fw-bold" id="removeClass" style= "color: #db5151;" >X</a></div>

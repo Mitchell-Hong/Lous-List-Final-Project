@@ -26,9 +26,11 @@ def getFriendRequest(request):
 # turns a list of user courses and parses them into the appropriate day in the schedule
 def scheduleFormatter(courses):
     courses = courses.order_by('start_time_int')
+    courses = format_times_user(courses)
     meetings = {"Monday":[], "Tuesday":[], "Wednesday":[], "Thursday":[], "Friday":[], "Misc.":[]}
     for course in courses:
-        days = course.meeting_days
+        
+        days = course['meeting_days']
         if "Mo" in days:
             meetings['Monday'].append(course)
         if "Tu" in days:
@@ -99,6 +101,8 @@ def format_times(courses):
             raw_startTime = courses[i]['meetings'][0]['start_time']
             if int(raw_startTime[:2].replace(':','')) > 12: 
                 raw_startTime = str(int(raw_startTime[:2]) - 12) + raw_startTime[2:5] + " PM"
+            elif int(raw_startTime[:2].replace(':','')) == 12: 
+                raw_startTime = raw_startTime[:2] + raw_startTime[2:5] + " PM"
             else: 
                 raw_startTime = raw_startTime[:2] + raw_startTime[2:5] + " AM"
             startTime = raw_startTime.replace('.',':')
@@ -111,6 +115,8 @@ def format_times(courses):
             raw_endTime = courses[i]['meetings'][0]['end_time']
             if int(raw_endTime[:2].replace(':','')) > 12: 
                 raw_endTime = str(int(raw_endTime[:2]) - 12) + raw_endTime[2:5] + " PM"
+            elif int(raw_endTime[:2].replace(':','')) == 12: 
+                raw_endTime = raw_endTime[:2] + raw_endTime[2:5] + " PM"
             else: 
                 raw_endTime = raw_endTime[:2] + raw_endTime[2:5] + " AM"
             endTime = raw_endTime.replace('.',':')
@@ -151,7 +157,9 @@ def deptclasses(request, dept):
         has_class.save()
         # Credit System
     for classes in classesInCart:
-        credits_amount = credits_amount + int(classes.credits)
+        credits_amount = credits_amount + float(classes.credits)
+    
+    classesInCart = format_times_user(classesInCart)
     context = {
         'course_list': courses,
         'course_list_nodup':coursesNoDup,
@@ -262,10 +270,10 @@ def searchclass(request):
         # Credit System
 
     for classes in classesInCart:
-        credits_amount = credits_amount + int(classes.credits)
+        credits_amount = credits_amount + float(classes.credits)
 
     filteredClass = format_times(filteredClass)
-
+    classesInCart = format_times_user(classesInCart)
     context = {
         'department_results' : departments,
         'instructors': Instructors,
@@ -290,6 +298,46 @@ def searchclass(request):
 
 #######################         SCHEDULE VIEWS           ##################
 
+def format_times_user(courses):
+    startTime = '0000000'
+    endTime = '00000000'
+    courses = list(courses)
+    retList = []
+    for course in courses:
+        course = course.__dict__
+        if course['start_time']:
+            raw_startTime = course['start_time']
+            if int(raw_startTime[:2].replace(':','')) > 12: 
+                raw_startTime = str(int(raw_startTime[:2]) - 12) + raw_startTime[2:5] + " PM"
+            elif int(raw_startTime[:2].replace(':','')) == 12: 
+                raw_startTime = raw_startTime[:2] + raw_startTime[2:5] + " PM"
+            else: 
+                raw_startTime = raw_startTime[:2] + raw_startTime[2:5] + " AM"
+            startTime = raw_startTime.replace('.',':')
+            course['start_time'] = startTime
+        else:
+            course['start_time'] = ""
+
+
+        if course['end_time'] :
+            raw_endTime = course['end_time']
+            if int(raw_endTime[:2].replace(':','')) > 12: 
+                raw_endTime = str(int(raw_endTime[:2]) - 12) + raw_endTime[2:5] + " PM"
+            elif int(raw_endTime[:2].replace(':','')) == 12: 
+                raw_endTime = raw_endTime[:2] + raw_endTime[2:5] + " PM"
+            else: 
+                raw_endTime = raw_endTime[:2] + raw_endTime[2:5] + " AM"
+            endTime = raw_endTime.replace('.',':')
+            course['end_time'] = endTime
+        else:
+            course['end_time'] = ""
+        if course['room_location'] == '-':
+            course['room_location'] = "No Set Location"
+
+        if course['meeting_days'] == '-':
+            course['meeting_days'] = "No Set Meeting Days -  "
+        retList.append(course)
+    return retList
 
 # View for seeing your personal schedule and adding and subtracting course from it
 def myschedule(request):
@@ -318,13 +366,16 @@ def myschedule(request):
         cartActiveUser, created = ShoppingCart.objects.get_or_create(activeUser=activeUser)
 
         courses = scheduleFormatter(scheduleActiveUser.coursesInSchedule.all())
+
         classesInCart = cartActiveUser.coursesInCart.all()
+        
         coursesScheduled = scheduleActiveUser.coursesInSchedule.all()
 
         if request.user.id:
             shoppingCartMessage = ShoppingCart.objects.get(activeUser=request.user.id).message
     except:
         no_user = True
+    f_classesInCart = format_times_user(classesInCart)
 
     # Credit System -- cart
     for classes in classesInCart:
@@ -337,7 +388,7 @@ def myschedule(request):
 
     context = {
         'schedule_courses' : courses,
-        'classesInCart' : classesInCart,
+        'classesInCart' : f_classesInCart,
         'creditAmount': credits_amount,
         'scheduledCredits': schedule_credits,
         'logged_in' : no_user,
@@ -347,6 +398,7 @@ def myschedule(request):
         'numFriendRequests': numFriendRequests,
     }
     return render(request,'main/myschedule.html', context)
+
 
 # view for viewing and commenting on other users schedules
 def viewschedule(request, user_id):
@@ -646,8 +698,13 @@ def addclass(request, dept, course_id, class_list, friend_id = 0):
     # only add classes to model when people need them for their schedule bc Heroku cant support all classes
     addedClass = list(filter(lambda course: course['course_number'] == course_id, courses))
 
-    addedClass = format_times(addedClass)
+    startTime = '0000000'
+    endTime = '00000000'
+    if addedClass[0]['meetings'][0]['start_time']:
+        startTime = addedClass[0]['meetings'][0]['start_time']
 
+    if addedClass[0]['meetings'][0]['end_time']:
+        endTime = addedClass[0]['meetings'][0]['end_time']    
     newCourse, courseCreated = course.objects.get_or_create(
         id=addedClass[0]['course_number'],
         department=addedClass[0]['subject'],
